@@ -30,6 +30,7 @@ public class EditNameActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
+                finish();
                 //FragmentManager manager = getSupportFragmentManager();
                 //MyDialogFragment myDialogFragment = new MyDialogFragment();
                 //myDialogFragment.use("Ты пидор?", "Ты пидор?", "Да", "Не");
