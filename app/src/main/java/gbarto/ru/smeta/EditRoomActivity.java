@@ -1,7 +1,9 @@
 package gbarto.ru.smeta;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,7 +16,6 @@ public class EditRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_room);
 
-        //Button x = (Button)findViewById(R.id.nextButton);
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_room_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -22,10 +23,24 @@ public class EditRoomActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
-                //FragmentManager manager = getSupportFragmentManager();
-                //MyDialogFragment myDialogFragment = new MyDialogFragment();
-                //myDialogFragment.use("Ты пидор?", "Ты пидор?", "Да", "Не");
-                //myDialogFragment.show(manager, "dialog");
+                FragmentManager manager = getSupportFragmentManager();
+                MyDialogFragment myDialogFragment = new MyDialogFragment();
+                myDialogFragment.Message = "Если вы вернётесь, то потеряете всё.";
+                myDialogFragment.Title = "Вы уверены, что хотите вернуться?.";
+                myDialogFragment.PositiveButtonTitle = "Да";
+                myDialogFragment.NegativeButtonTitle = "Нет";
+                myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        Intent temp = new Intent();
+                        temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        setResult(RESULT_CANCELED, temp);
+                        finish();
+                    }
+                };
+                myDialogFragment.show(manager, "dialog");
             }
         });
     }
@@ -33,19 +48,23 @@ public class EditRoomActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        //FragmentManager manager = getSupportFragmentManager();
-        //MyDialogFragment myDialogFragment = new MyDialogFragment();
-        //myDialogFragment.show(manager, "dialog");
-        super.onBackPressed();
-    }
-
-    public void okClicked() {
-        Intent temp = new Intent();
-        temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        setResult(RESULT_CANCELED, temp);
-        finish();
-    }
-
-    public void cancelClicked() {
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.Message = "Если вы вернётесь, то потеряете всё.";
+        myDialogFragment.Title = "Вы уверены, что хотите вернуться?.";
+        myDialogFragment.PositiveButtonTitle = "Да";
+        myDialogFragment.NegativeButtonTitle = "Нет";
+        myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                Intent temp = new Intent();
+                temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                setResult(RESULT_CANCELED, temp);
+                finish();
+            }
+        };
+        myDialogFragment.show(manager, "dialog");
     }
 }

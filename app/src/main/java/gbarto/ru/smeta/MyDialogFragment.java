@@ -87,7 +87,6 @@ public class MyDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        System.out.println(2);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(Message)
                 .setTitle(Title)
