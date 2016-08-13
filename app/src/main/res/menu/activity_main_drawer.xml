@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- шторка layout/activity_main-->
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_new_project"
+            android:icon="@drawable/ic_nav_new_project"
+            android:title="@string/nav_new_project" />
+        <item
+            android:id="@+id/nav_price_work"
+            android:icon="@drawable/ic_nav_price_work"
+            android:title="@string/nav_price_work" />
+        <item
+            android:id="@+id/nav_price_material"
+            android:icon="@drawable/ic_nav_price_material"
+            android:title="@string/nav_price_material" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_menu_settings"
+                android:icon="@drawable/ic_nav_menu_settings"
+                android:title="@string/nav_menu_settings" />
+            <item
+                android:id="@+id/nav_menu_abut"
+                android:icon="@drawable/ic_nav_menu_abut"
+                android:title="@string/nav_menu_abut" />
+        </menu>
+    </item>
+
+</menu>
