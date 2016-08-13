@@ -55,6 +55,7 @@ public class ChooseWorksActivity extends AppCompatActivity {
                 Bundle b = new Bundle();
                 b.putSerializable("have", WorkSet);
                 x.putExtras(b);
+                x.putExtras(getIntent());
                 startActivityForResult(x, GETTING_NEW_MATERIAL);
             }
         });

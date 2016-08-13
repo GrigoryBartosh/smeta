@@ -51,7 +51,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ListOverviewNewMaterial"
-            android:label="@string/title_activity_list_overview_new_material"
+            android:label="@string/title_activity_choose_works"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

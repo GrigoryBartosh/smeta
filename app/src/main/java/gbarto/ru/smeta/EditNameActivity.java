@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 public class EditNameActivity extends AppCompatActivity {
 
-    public final static String APP = "com.example.noobgam.button.";
     private Button mButton;
     private EditText mText;
     private int BackRes;
@@ -48,7 +47,7 @@ public class EditNameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mText.getText().length() > 0) {
                     Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
-                    x.putExtra(APP + "name", mButton.getText());
+                    x.putExtra("ProjectName", mText.getText().toString());
                     x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(x, BackRes);
                 }
