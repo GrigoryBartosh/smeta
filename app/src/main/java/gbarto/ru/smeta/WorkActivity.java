@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -85,6 +86,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
+        WindowManager.LayoutParams wm = getWindow().getAttributes();
+        wm.alpha = 1.0f;
+        getWindow().setAttributes(wm);
         getList();
     }
 
@@ -113,6 +117,12 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 res = true;
                 break;
             case R.id.menu_work_help:
+                WindowManager.LayoutParams wm = getWindow().getAttributes();
+                wm.alpha = 0.2f;
+                getWindow().setAttributes(wm);
+
+                Intent intent = new Intent(WorkActivity.this, WorkAboutActivity.class);
+                startActivity(intent);
 
                 res = true;
                 break;
@@ -130,7 +140,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             //----------------------------------------------------------------------------------------------------------------
             //вызвать список материалов
         }
-    }
+    };
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

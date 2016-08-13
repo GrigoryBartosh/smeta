@@ -49,9 +49,9 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        WindowManager.LayoutParams t1 = getWindow().getAttributes();
-        t1.alpha = 1.0f;
-        getWindow().setAttributes(t1);
+        WindowManager.LayoutParams wm = getWindow().getAttributes();
+        wm.alpha = 1.0f;
+        getWindow().setAttributes(wm);
 
         getList();
     }
@@ -59,9 +59,9 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
     private View.OnClickListener fab_ocl = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            WindowManager.LayoutParams t1 = getWindow().getAttributes();
-            t1.alpha = 0.2f;
-            getWindow().setAttributes(t1);
+            WindowManager.LayoutParams wm = getWindow().getAttributes();
+            wm.alpha = 0.2f;
+            getWindow().setAttributes(wm);
 
             Intent intent = new Intent(PriceWorkCategoryActivity.this, PriceWorkCategoryPopUp.class);
             startActivityForResult(intent, CHOOSE_THIEF);

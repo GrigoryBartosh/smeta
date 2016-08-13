@@ -43,6 +43,11 @@
     <string name="work_new_work">Новая работа</string>
     <string name="work_toast_enter_name">Пожалуйста, введите название работы</string>
 
+    <string name="work_about_text">
+        Чтобы удалить <b>материал</b> из списака\n
+        <b>необходимых материалов</b>, нажмите и удерживайте.
+    </string>
+
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>
 
