@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PriceWorkCategoryActivity extends AppCompatActivity {
-    CoordinatorLayout mCoordinatorLayout;
     private ListView mListView;
     private ArrayList<HashMap<String,Object>> mCatList;
     private static final String TITLE = "title";
@@ -27,9 +27,6 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_work_category);
-
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.price_work_category_coordinatorLayout);
-        //mCoordinatorLayout.getForeground().setAlpha(0);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.price_work_category_toolbar);
         setSupportActionBar(toolbar);
@@ -51,14 +48,21 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //mCoordinatorLayout.getForeground().setAlpha(0);
+
+        WindowManager.LayoutParams t1 = getWindow().getAttributes();
+        t1.alpha = 1.0f;
+        getWindow().setAttributes(t1);
+
         getList();
     }
 
     private View.OnClickListener fab_ocl = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            //mCoordinatorLayout.getForeground().setAlpha(200);
+            WindowManager.LayoutParams t1 = getWindow().getAttributes();
+            t1.alpha = 0.2f;
+            getWindow().setAttributes(t1);
+
             Intent intent = new Intent(PriceWorkCategoryActivity.this, PriceWorkCategoryPopUp.class);
             startActivityForResult(intent, CHOOSE_THIEF);
         }
