@@ -12,7 +12,9 @@
     tools:context="gbarto.ru.smeta.WorkActivity"
     tools:showIn="@layout/activity_work"
     android:orientation="vertical"
-    android:gravity="top">
+    android:gravity="top"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <EditText
         android:id="@+id/work_editText_name"
@@ -86,6 +88,7 @@
             android:id="@+id/work_text_list" />
 
         <Button
+            android:id="@+id/work_button_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Button"

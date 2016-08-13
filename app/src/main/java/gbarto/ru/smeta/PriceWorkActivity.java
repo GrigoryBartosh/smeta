@@ -55,6 +55,7 @@ public class PriceWorkActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
+            intent.putExtra("new_work", true);
             startActivity(intent);
         }
     };
@@ -84,7 +85,10 @@ public class PriceWorkActivity extends AppCompatActivity {
             HashMap<String,Object> itemHashMap = (HashMap<String,Object>)adapterView.getItemAtPosition(i);
             String titleItem = itemHashMap.get(TITLE).toString();
 
-            Toast.makeText(getApplicationContext(), titleItem, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
+            intent.putExtra("new_work", false);
+            intent.putExtra("name", titleItem);
+            startActivity(intent);
         }
     };
 }
