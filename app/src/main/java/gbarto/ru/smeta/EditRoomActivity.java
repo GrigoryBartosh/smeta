@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 
 public class EditRoomActivity extends AppCompatActivity {
 
@@ -15,7 +14,7 @@ public class EditRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_room);
 
-        Button x = (Button)findViewById(R.id.nextButton);
+        //Button x = (Button)findViewById(R.id.nextButton);
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_room_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -29,17 +28,6 @@ public class EditRoomActivity extends AppCompatActivity {
                 //myDialogFragment.show(manager, "dialog");
             }
         });
-
-        x.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                Intent go = new Intent(EditRoomActivity.this, ChooseWorksActivity.class);
-                go.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(go);
-            }
-        });
-
     }
 
     @Override

@@ -31,6 +31,7 @@
 
     <string name="title_popup_price_work_category">Введите название группы работ</string>
     <string name="price_work_category_popup_need_name">Пожалуйста, введите название категории</string>
+    <string name="price_project_name_popup_need_name">Пожалуйста, введите название проекта</string>
 
     <string name="title_activity_price_work">PriceWorkActivity</string>
 
