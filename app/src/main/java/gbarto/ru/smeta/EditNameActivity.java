@@ -3,6 +3,7 @@ package gbarto.ru.smeta;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -22,6 +23,20 @@ public class EditNameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_name);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.edit_name_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                //FragmentManager manager = getSupportFragmentManager();
+                //MyDialogFragment myDialogFragment = new MyDialogFragment();
+                //myDialogFragment.use("Ты пидор?", "Ты пидор?", "Да", "Не");
+                //myDialogFragment.show(manager, "dialog");
+            }
+        });
+
         adapter = new DBAdapter(this);
         adapter.open();
 

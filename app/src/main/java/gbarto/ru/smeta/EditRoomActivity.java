@@ -2,7 +2,6 @@ package gbarto.ru.smeta;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,10 +23,10 @@ public class EditRoomActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
-                FragmentManager manager = getSupportFragmentManager();
-                MyDialogFragment myDialogFragment = new MyDialogFragment();
-                myDialogFragment.use("Ты пидор?", "Ты пидор?", "Да", "Не");
-                myDialogFragment.show(manager, "dialog");
+                //FragmentManager manager = getSupportFragmentManager();
+                //MyDialogFragment myDialogFragment = new MyDialogFragment();
+                //myDialogFragment.use("Ты пидор?", "Ты пидор?", "Да", "Не");
+                //myDialogFragment.show(manager, "dialog");
             }
         });
 
@@ -46,9 +45,9 @@ public class EditRoomActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        FragmentManager manager = getSupportFragmentManager();
-        MyDialogFragment myDialogFragment = new MyDialogFragment();
-        myDialogFragment.show(manager, "dialog");
+        //FragmentManager manager = getSupportFragmentManager();
+        //MyDialogFragment myDialogFragment = new MyDialogFragment();
+        //myDialogFragment.show(manager, "dialog");
         super.onBackPressed();
     }
 

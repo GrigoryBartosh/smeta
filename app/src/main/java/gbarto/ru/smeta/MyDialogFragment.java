@@ -13,19 +13,75 @@ import android.support.v4.app.DialogFragment;
 
 public class MyDialogFragment extends DialogFragment {
 
-    String s1, s2, s3, s4;
+    String Message;
+    String Title;
+    String PositiveButtonTitle;
+    String NegativeButtonTitle;
+    DialogInterface.OnClickListener PositiveClicked, NegativeClicked;
 
     public MyDialogFragment()
     {
-        System.out.println(1);
+
     }
 
-    public void use(String s1, String s2, String s3, String s4)
+    public String getMessage()
     {
-        this.s1 = s1;
-        this.s2 = s2;
-        this.s3 = s3;
-        this.s4 = s4;
+        return Message;
+    }
+
+    public void setMessage(String message)
+    {
+        Message = message;
+    }
+
+    public String getTitle()
+    {
+        return Title;
+    }
+
+    public void setTitle(String title)
+    {
+        Title = title;
+    }
+
+    public String getPositiveButtonTitle()
+    {
+        return PositiveButtonTitle;
+    }
+
+    public void setPositiveButtonTitle(String positiveButtonTitle)
+    {
+        PositiveButtonTitle = positiveButtonTitle;
+    }
+
+    public String getNegativeButtonTitle()
+    {
+        return NegativeButtonTitle;
+    }
+
+    public void setNegativeButtonTitle(String negativeButtonTitle)
+    {
+        NegativeButtonTitle = negativeButtonTitle;
+    }
+
+    public DialogInterface.OnClickListener getPositiveClicked()
+    {
+        return PositiveClicked;
+    }
+
+    public void setPositiveClicked(DialogInterface.OnClickListener positiveClicked)
+    {
+        PositiveClicked = positiveClicked;
+    }
+
+    public DialogInterface.OnClickListener getNegativeClicked()
+    {
+        return NegativeClicked;
+    }
+
+    public void setNegativeClicked(DialogInterface.OnClickListener negativeClicked)
+    {
+        NegativeClicked = negativeClicked;
     }
 
     @NonNull
@@ -33,19 +89,10 @@ public class MyDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         System.out.println(2);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(s1)
-                .setTitle(s2)
-                .setPositiveButton(s3, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ((EditRoomActivity) getActivity()).okClicked();
-                    }
-                })
-                .setNegativeButton(s4, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ((EditRoomActivity) getActivity()).cancelClicked();
-                    }
-                });
-
+        builder.setMessage(Message)
+                .setTitle(Title)
+                .setPositiveButton(PositiveButtonTitle, PositiveClicked)
+                .setNegativeButton(NegativeButtonTitle, NegativeClicked);
         return builder.create();
     }
 }
