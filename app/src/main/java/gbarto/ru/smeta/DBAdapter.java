@@ -104,7 +104,7 @@ public class DBAdapter {
         }
     }
 
-    private JSONObject ToJSON(WorkListView work)
+    private JSONObject ToJSON(WorkClass work)
     {
         JSONObject temp = new JSONObject();
         try
@@ -148,14 +148,14 @@ public class DBAdapter {
 
     }
 
-    private WorkListView JSONtoWorkListView (JSONObject x)
+    private WorkClass JSONtoWorkListView (JSONObject x)
     {
         try {
             JSONArray tmp = x.getJSONArray("materials");
             ArrayList <Integer> temp = new ArrayList<>();
             for (int i = 0; i < tmp.length(); ++i)
                 temp.add((Integer)tmp.getInt(i));
-            return new WorkListView(x.getBoolean("state"), x.getString("type"), temp, (float)x.getDouble("price"), x.getInt("measuring"));
+            return new WorkClass(x.getBoolean("state"), x.getString("type"), temp, (float)x.getDouble("price"), x.getInt("measuring"));
         }
         catch (JSONException e) {
             return null;
@@ -181,7 +181,7 @@ public class DBAdapter {
 	}
 
     // Adds new work to DB and returns you row_id
-    public long add(WorkListView work) {
+    public long add(WorkClass work) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(WORKS_KEY_TYPE, ToJSON(work).toString());
         work.rowID = db.insert(WORKS_TABLE, null, initialValues);
@@ -252,7 +252,7 @@ public class DBAdapter {
                         case WORKS_TABLE:
                         {
                             String structure = c.getString(1);
-                            WorkListView tmp = JSONtoWorkListView(FromString(structure));
+                            WorkClass tmp = JSONtoWorkListView(FromString(structure));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
@@ -307,7 +307,7 @@ public class DBAdapter {
                         case WORKS_TABLE:
                         {
                             String structure = c.getString(1);
-                            WorkListView tmp = JSONtoWorkListView(FromString(structure));
+                            WorkClass tmp = JSONtoWorkListView(FromString(structure));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;

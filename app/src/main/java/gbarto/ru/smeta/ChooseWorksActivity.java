@@ -19,7 +19,7 @@ public class ChooseWorksActivity extends AppCompatActivity {
 
     private ArrayList<TypeClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
-    ArrayAdapter<WorkListView> adapt;
+    ArrayAdapter<WorkClass> adapt;
     private static final int NAMING = 228;
     private static final int GETTING_NEW_MATERIAL = 1488;
 
@@ -120,7 +120,7 @@ public class ChooseWorksActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == NAMING) {
-            //adapter.add(new WorkListView())
+            //adapter.add(new WorkClass())
         }
         else if (requestCode == GETTING_NEW_MATERIAL) {
             ArrayList <DBObject> cur = (ArrayList <DBObject>) data.getExtras().getSerializable("added");

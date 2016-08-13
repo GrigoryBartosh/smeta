@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class EditNameActivity extends AppCompatActivity {
 
@@ -29,10 +30,16 @@ public class EditNameActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
-                x.putExtra(APP + "name", mButton.getText());
-                x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(x, BackRes);
+                if (mText.getText().length() > 0) {
+                    Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
+                    x.putExtra(APP + "name", mButton.getText());
+                    x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityForResult(x, BackRes);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Ты знаешь, что ты пидор?", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

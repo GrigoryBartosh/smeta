@@ -21,8 +21,8 @@ public class DBObject implements Serializable
 
     public int compareTo(DBObject a)
     {
-        if (this instanceof WorkListView && a instanceof WorkListView)
-            return ((WorkListView)this).compareTo((WorkListView)a);
+        if (this instanceof WorkClass && a instanceof WorkClass)
+            return ((WorkClass)this).compareTo((WorkClass)a);
         if (this instanceof MaterialClass && a instanceof MaterialClass)
             return ((MaterialClass)this).compareTo((MaterialClass)a);
         if (this instanceof TypeClass && a instanceof TypeClass)
@@ -33,12 +33,12 @@ public class DBObject implements Serializable
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof WorkListView)
-            return ((WorkListView)this).state == ((WorkListView)obj).state &&
-                    ((WorkListView)this).type.equals(((WorkListView)obj).type) &&
-                    ((WorkListView)this).measuring == ((WorkListView)obj).measuring &&
-                    ((WorkListView)this).price == ((WorkListView)obj).price &&
-                    ((WorkListView)this).Materials.equals(((WorkListView)obj).Materials);
+        if (obj instanceof WorkClass)
+            return ((WorkClass)this).state == ((WorkClass)obj).state &&
+                    ((WorkClass)this).type.equals(((WorkClass)obj).type) &&
+                    ((WorkClass)this).measuring == ((WorkClass)obj).measuring &&
+                    ((WorkClass)this).price == ((WorkClass)obj).price &&
+                    ((WorkClass)this).Materials.equals(((WorkClass)obj).Materials);
         
         if (obj instanceof TypeClass)
             return ((TypeClass)this).place.equals(((TypeClass)obj).place) &&

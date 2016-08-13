@@ -92,7 +92,7 @@ public class ListOverviewNewMaterial extends AppCompatActivity {
 
     private void AddAdapter()
     {
-        ArrayAdapter<WorkListView> adapter = new MyListAdapter();
+        ArrayAdapter<WorkClass> adapter = new MyListAdapter();
         ListView l = (ListView)findViewById(R.id.list_overview_new_material_listView);
         l.setOnItemClickListener(mItemListener);
         l.setAdapter(adapter);

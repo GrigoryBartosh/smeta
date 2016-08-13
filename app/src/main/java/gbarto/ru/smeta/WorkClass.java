@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by Noobgam on 08.08.2016.
  */
-public class WorkListView extends DBObject implements Comparable<WorkListView>
+public class WorkClass extends DBObject implements Comparable<WorkClass>
 {
 
     public boolean state;
@@ -67,7 +67,7 @@ public class WorkListView extends DBObject implements Comparable<WorkListView>
         Materials.add(newMaterial);
     }
 
-    public WorkListView(boolean state, String type)
+    public WorkClass(boolean state, String type)
     {
         this.state = state;
         this.type = type;
@@ -76,7 +76,7 @@ public class WorkListView extends DBObject implements Comparable<WorkListView>
         this.price = 0;
     }
 
-    public WorkListView()
+    public WorkClass()
     {
         this.state = false;
         this.type = "";
@@ -85,7 +85,7 @@ public class WorkListView extends DBObject implements Comparable<WorkListView>
         this.price = 0;
     }
 
-    public WorkListView(boolean state, String type, ArrayList<Integer> materials, float price, int measuring)
+    public WorkClass(boolean state, String type, ArrayList<Integer> materials, float price, int measuring)
     {
         this.state = state;
         this.type = type;
@@ -94,7 +94,7 @@ public class WorkListView extends DBObject implements Comparable<WorkListView>
         this.measuring = measuring;
     }
 
-    public int compareTo(WorkListView a)
+    public int compareTo(WorkClass a)
     {
         return a.getType().compareTo(a.getType());
     }
