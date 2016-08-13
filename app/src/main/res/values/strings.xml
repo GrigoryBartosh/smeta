@@ -51,6 +51,12 @@
     <string name="help">Помощь</string>
     <string name="removed">удалено</string>
 
+    <string name="room_kitchen">Кухня</string>
+    <string name="room_bathroom">Ванная</string>
+    <string name="room_corridor">Корридор</string>
+    <string name="room_dining_room">Гостиная</string>
+    <string name="room_sleeping_room">Спальня</string>
+
     <string name="ruble_short">руб</string>
 
     <string-array name="measurements">

@@ -41,7 +41,7 @@ public class EditNameActivity extends AppCompatActivity {
         adapter = new DBAdapter(this);
         adapter.open();
 
-        mButton = (Button)findViewById(R.id.button);
+        mButton = (Button)findViewById(R.id.edit_name_next_button);
         mText = (EditText) findViewById(R.id.ProjectName);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +54,7 @@ public class EditNameActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), "Ты знаешь, что ты пидор?", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.price_project_name_popup_need_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });
