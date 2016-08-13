@@ -65,7 +65,7 @@ public class ListOverviewNewMaterial extends AppCompatActivity {
     {
 
         String [] args = new String[1];
-        args[0] = "Кухня";
+        args[0] = getIntent().getStringExtra("room");
         DBObject[] temp = adapter.getSelectionRows(adapter.TYPES_TABLE, adapter.TYPES_KEY_PLACE + " = ?", args);
         ArrayList<DBObject> tmp3 = (ArrayList <DBObject>) (getIntent().getExtras().getSerializable("have"));
         DBObject[] tmp2 = new DBObject[tmp3.size()];
