@@ -42,28 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void onClick(View view) {
             createNewProject();
 
-            /*FragmentManager manager = getSupportFragmentManager();
-
-            MyDialogFragment myDialogFragment = new MyDialogFragment();
-            myDialogFragment.title = "Важное сообщение!";
-            myDialogFragment.message = "Покормите кота!";
-            myDialogFragment.positive_button = "Да";
-            myDialogFragment.negative_button = "Нет";
-            myDialogFragment.pb_ocl = new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Toast.makeText(getApplicationContext(), "да", Toast.LENGTH_SHORT).show();
-                    dialog.cancel();
-                }
-            };
-            myDialogFragment.nb_ocl = new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Toast.makeText(getApplicationContext(), "нет", Toast.LENGTH_SHORT).show();
-                    dialog.cancel();
-                }
-            };
-
-            myDialogFragment.show(manager, "dialog");*/
-
             Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
             startActivity(intent);
         }

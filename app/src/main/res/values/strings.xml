@@ -43,10 +43,15 @@
     <string name="work_necessary_materials">Необходимые материалы</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_toast_enter_name">Пожалуйста, введите название работы</string>
-
     <string name="work_about_text">
-        Чтобы удалить <b>материал</b> из списака\n
-        <b>необходимых материалов</b>, нажмите и удерживайте.
+        Чтобы удалить <b>материал</b> из списка
+        <b>необходимых материалов</b>,
+        нажмите и удерживайте.\n
+        \n
+        Для добавления нового <b>материала</b>,
+        в список <b>необходимых
+        материалов</b>, нажмите на кнопку
+        <b>добавить</b>.
     </string>
 
     <string name="button_done">Готово</string>
@@ -57,6 +62,8 @@
     <string name="delete">Удалить</string>
     <string name="help">Помощь</string>
     <string name="removed">удалено</string>
+    <string name="ok">Ок</string>
+    <string name="add">Добавить</string>
 
     <string name="room_kitchen">Кухня</string>
     <string name="room_bathroom">Ванная</string>

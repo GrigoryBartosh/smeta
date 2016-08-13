@@ -18,6 +18,7 @@ public class MyDialogFragment extends DialogFragment {
     String PositiveButtonTitle;
     String NegativeButtonTitle;
     DialogInterface.OnClickListener PositiveClicked, NegativeClicked;
+    Boolean UseNegativeButton = true;
 
     public MyDialogFragment()
     {
@@ -84,15 +85,30 @@ public class MyDialogFragment extends DialogFragment {
         NegativeClicked = negativeClicked;
     }
 
+    public Boolean getUseNegativeButton()
+    {
+        return UseNegativeButton;
+    }
+
+    public void setUseNegativeButton(Boolean useNegativeButton)
+    {
+        UseNegativeButton = useNegativeButton;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        System.out.println(2);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(Message)
-                .setTitle(Title)
-                .setPositiveButton(PositiveButtonTitle, PositiveClicked)
-                .setNegativeButton(NegativeButtonTitle, NegativeClicked);
+        if (UseNegativeButton) {
+            builder.setMessage(Message)
+                    .setTitle(Title)
+                    .setPositiveButton(PositiveButtonTitle, PositiveClicked)
+                    .setNegativeButton(NegativeButtonTitle, NegativeClicked);
+        } else{
+            builder.setMessage(Message)
+                    .setTitle(Title)
+                    .setPositiveButton(PositiveButtonTitle, PositiveClicked);
+        }
         return builder.create();
     }
 }

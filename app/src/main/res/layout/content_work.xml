@@ -91,7 +91,7 @@
             android:id="@+id/work_button_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="@string/add"
             android:layout_alignBottom="@+id/work_text_list"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
@@ -102,6 +102,7 @@
         android:id="@+id/work_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"/>
+        android:paddingTop="10dp"
+        />
 
 </LinearLayout>
