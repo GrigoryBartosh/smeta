@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:title=""
+        android:title=" "
         android:id="@+id/menu_work_done"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_save"
