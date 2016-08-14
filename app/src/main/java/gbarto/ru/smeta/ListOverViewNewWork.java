@@ -138,7 +138,9 @@ public class ListOverViewNewWork extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            View item = getLayoutInflater().inflate(R.layout.listlayout_works, parent, false);
+            View item = convertView;
+            if (item == null)
+                getLayoutInflater().inflate(R.layout.listlayout_works, parent, false);
 
             WorkClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
