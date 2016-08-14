@@ -119,7 +119,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
 
             TypeClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
-            t1.setText(w1.type);
+            t1.setText(w1.name);
             ImageView img = (ImageView) item.findViewById(R.id.icon_right);
             img.setImageResource(R.drawable.ic_button_next);
             return item;
@@ -133,7 +133,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
         {
             TypeClass tmp = (TypeClass) adapterView.getItemAtPosition(i);
             Intent x = new Intent(ChooseTypeActivity.this, ListOverview.class);
-            x.putExtra("room_type", tmp.getType());
+            x.putExtra("room_type", tmp.getName());
             x.putExtras(getIntent());
             startActivityForResult(x, NAMING);
         }

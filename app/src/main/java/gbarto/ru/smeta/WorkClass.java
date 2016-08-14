@@ -9,7 +9,6 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
 {
 
     public boolean state;
-    public String type;
     public ArrayList<Integer> Materials;
     public float price;
     public int measuring;
@@ -54,14 +53,6 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         Materials = materials;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public void addMaterial(int newMaterial)
     {
         Materials.add(newMaterial);
@@ -70,32 +61,32 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public WorkClass(boolean state, String type)
     {
         this.state = state;
-        this.type = type;
         this.Materials = new ArrayList<>();
         this.measuring = -1;
         this.price = 0;
+        this.name = type;
     }
 
     public WorkClass()
     {
         this.state = false;
-        this.type = "";
         this.Materials = new ArrayList<>();
         this.measuring = -1;
         this.price = 0;
+        this.name = "";
     }
 
-    public WorkClass(boolean state, String type, ArrayList<Integer> materials, float price, int measuring)
+    public WorkClass(boolean state, String name, ArrayList<Integer> materials, float price, int measuring)
     {
         this.state = state;
-        this.type = type;
         Materials = materials;
         this.price = price;
+        this.name = name;
         this.measuring = measuring;
     }
 
     public int compareTo(WorkClass a)
     {
-        return type.compareTo(a.getType());
+        return name.compareTo(a.getName());
     }
 }

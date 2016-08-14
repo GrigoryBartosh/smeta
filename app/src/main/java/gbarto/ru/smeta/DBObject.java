@@ -8,6 +8,17 @@ import java.io.Serializable;
 public class DBObject implements Serializable
 {
     long rowID;
+    String name;
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
     public long getRowID()
     {
@@ -35,17 +46,17 @@ public class DBObject implements Serializable
     {
         if (obj instanceof WorkClass)
             return ((WorkClass)this).state == ((WorkClass)obj).state &&
-                    ((WorkClass)this).type.equals(((WorkClass)obj).type) &&
+                    ((WorkClass)this).name.equals(((WorkClass)obj).name) &&
                     ((WorkClass)this).measuring == ((WorkClass)obj).measuring &&
                     ((WorkClass)this).price == ((WorkClass)obj).price &&
                     ((WorkClass)this).Materials.equals(((WorkClass)obj).Materials);
         
         if (obj instanceof TypeClass)
             return ((TypeClass)this).place.equals(((TypeClass)obj).place) &&
-                    ((TypeClass)this).type.equals(((TypeClass)obj).type);
+                    ((TypeClass)this).name.equals(((TypeClass)obj).name);
 
         if (obj instanceof MaterialClass)
-            return ((MaterialClass)this).material.equals(((MaterialClass)obj).material) &&
+            return ((MaterialClass)this).name.equals(((MaterialClass)obj).name) &&
                     ((MaterialClass)this).price == ((MaterialClass)obj).price &&
                     ((MaterialClass)this).measuring == ((MaterialClass)obj).measuring &&
                     ((MaterialClass)this).iconID == ((MaterialClass)obj).iconID;

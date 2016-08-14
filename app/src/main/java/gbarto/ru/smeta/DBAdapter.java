@@ -93,7 +93,7 @@ public class DBAdapter {
         JSONObject temp = new JSONObject();
         try
         {
-            temp.put("material", material.getMaterial());
+            temp.put("material", material.getName());
             temp.put("price", material.getPrice());
             temp.put("measuring", material.getMeasuring());
             temp.put("iconID", material.getIconID());
@@ -109,7 +109,7 @@ public class DBAdapter {
         JSONObject temp = new JSONObject();
         try
         {
-            temp.put("type", work.getType());
+            temp.put("type", work.getName());
             temp.put("state", work.isState());
             temp.put("measuring", work.getMeasuring());
             temp.put("price", work.getPrice());
@@ -129,7 +129,7 @@ public class DBAdapter {
         JSONObject temp = new JSONObject();
         try
         {
-            temp.put("type", type.getType());
+            temp.put("type", type.getName());
             return temp;
         }
         catch (JSONException e) {
@@ -192,7 +192,7 @@ public class DBAdapter {
     public long add(TypeClass type) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(TYPES_KEY_PLACE, type.getPlace());
-        initialValues.put(TYPES_KEY_TYPE, type.getType());
+        initialValues.put(TYPES_KEY_TYPE, type.getName());
         type.rowID = db.insert(TYPES_TABLE, null, initialValues);
         return type.rowID;
     }
@@ -364,7 +364,7 @@ public class DBAdapter {
 	{
 		String where = KEY_ROWID + "=" + rowId;
 		ContentValues newValues = new ContentValues();
-		newValues.put(MATERIAL_KEY_MATERIAL,  material.material);
+		newValues.put(MATERIAL_KEY_MATERIAL,  material.name);
 		//newValues.put(MATERIAL_KEY_PRICE,     material.price);
 		//newValues.put(MATERIAL_KEY_MEASURING, material.measuring);
 		return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
@@ -427,7 +427,7 @@ public class DBAdapter {
             JSONObject temp = new JSONObject();
             try
             {
-                temp.put("type", work.getType());
+                temp.put("type", work.getName());
                 temp.put("state", work.isState());
                 temp.put("measuring", work.getMeasuring());
                 temp.put("price", work.getPrice());

@@ -5,7 +5,6 @@ package gbarto.ru.smeta;
  */
 public class MaterialClass extends DBObject implements Comparable <MaterialClass>
 {
-    public String material;
     public float price;
     public int measuring;
     public int iconID;
@@ -18,14 +17,6 @@ public class MaterialClass extends DBObject implements Comparable <MaterialClass
     public void setIconID(int iconID)
     {
         this.iconID = iconID;
-    }
-
-    public String getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(String material) {
-        this.material = material;
     }
 
     public float getPrice() {
@@ -46,9 +37,9 @@ public class MaterialClass extends DBObject implements Comparable <MaterialClass
         this.measuring = measuring;
     }
 
-    public MaterialClass(String material, float price, int measuring, int iconID)
+    public MaterialClass(String name, float price, int measuring, int iconID)
     {
-        this.material = material;
+        this.name = name;
         this.price = price;
         this.measuring = measuring;
         this.iconID = iconID;
@@ -56,6 +47,6 @@ public class MaterialClass extends DBObject implements Comparable <MaterialClass
 
     public int compareTo(MaterialClass a)
     {
-        return a.getMaterial().compareTo(a.getMaterial());
+        return name.compareTo(a.name);
     }
 }

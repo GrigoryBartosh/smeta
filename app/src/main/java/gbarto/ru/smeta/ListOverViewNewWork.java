@@ -139,7 +139,7 @@ public class ListOverViewNewWork extends AppCompatActivity {
 
             WorkClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
-            t1.setText(w1.type);
+            t1.setText(w1.name);
 
             CheckBox cb1 = (CheckBox)item.findViewById(R.id.checkBox);
             cb1.setOnClickListener(new View.OnClickListener()
@@ -161,7 +161,7 @@ public class ListOverViewNewWork extends AppCompatActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
         {
             TypeClass tmp = (TypeClass) adapterView.getItemAtPosition(i);
-            System.out.println(tmp.getType());
+            System.out.println(tmp.getName());
         }
     };
 
