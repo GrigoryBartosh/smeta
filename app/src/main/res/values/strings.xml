@@ -54,6 +54,8 @@
         <b>добавить</b>.
     </string>
 
+    <string name="title_activity_work_new_material">Новый материал</string>
+
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>
 
@@ -72,9 +74,26 @@
 
     <string name="ruble_short">руб</string>
 
-    <string-array name="measurements">
+    <string-array name="measurements_work">
         <item>Метр</item>
         <item>Квадратный метр</item>
         <item>Единица</item>
+    </string-array>
+
+    <string-array name="measurements_material">
+        <item>Метр</item>
+        <item>Квадратный метр</item>
+        <item>Кубический метр</item>
+        <item>Килограмм</item>
+        <item>Литр</item>
+        <item>Единица</item>
+    </string-array>
+    <string-array name="measurements_material_short">
+        <item>м</item>
+        <item>м2</item>
+        <item>м3</item>
+        <item>кг</item>
+        <item>л</item>
+        <item>ед</item>
     </string-array>
 </resources>

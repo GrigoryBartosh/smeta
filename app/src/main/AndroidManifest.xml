@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="gbarto.ru.smeta">
+    package="gbarto.ru.smeta">
 
     <application
         android:allowBackup="true"
@@ -13,47 +13,51 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".PriceWorkCategoryActivity"
             android:label="@string/title_activity_price_work_category"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PriceWorkCategoryPopUp"
-            android:theme="@style/AppTheme.PopUp"/>
+            android:theme="@style/AppTheme.PopUp" />
         <activity
             android:name=".PriceWorkActivity"
             android:label="@string/title_activity_price_work"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".WorkActivity"
             android:label="@string/title_activity_work"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".EditNameActivity"
             android:label="@string/title_activity_edit_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EditRoomActivity"
             android:label="@string/title_activity_edit_room"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ChooseWorksActivity"
             android:label="@string/title_activity_choose_works"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ListOverview"
             android:label="@string/title_activity_list_overview"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ListOverviewNewMaterial"
             android:label="@string/title_activity_choose_works"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".WorkNewMaterialActivity"
+            android:label="@string/title_activity_work_new_material"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

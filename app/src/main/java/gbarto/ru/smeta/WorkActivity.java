@@ -142,7 +142,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void onClick(View view) {
             //----------------------------------------------------------------------------------------------------------------
-            //вызвать список материалов
+
+            Intent intent = new Intent(WorkActivity.this, WorkNewMaterialActivity.class);
+            startActivity(intent);
         }
     };
 
