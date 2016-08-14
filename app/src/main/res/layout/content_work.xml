@@ -39,7 +39,7 @@
             android:id="@+id/work_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/measurements"/>
+            android:entries="@array/measurements_work"/>
 
     </LinearLayout>
 
