@@ -2,7 +2,6 @@ package gbarto.ru.smeta;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +20,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
     private ArrayList<HashMap<String,Object>> mCatList;
     private static final String TITLE = "title";
     private static final String ICON = "icon";
-    static final private int CHOOSE_THIEF = 0;
+    static final private int ENTER_NAME = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
             getWindow().setAttributes(wm);
 
             Intent intent = new Intent(PriceWorkCategoryActivity.this, PriceWorkCategoryPopUp.class);
-            startActivityForResult(intent, CHOOSE_THIEF);
+            startActivityForResult(intent, ENTER_NAME);
         }
     };
 
@@ -73,7 +72,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHOOSE_THIEF)
+        if (requestCode == ENTER_NAME)
         {
             if (resultCode == RESULT_OK)
             {

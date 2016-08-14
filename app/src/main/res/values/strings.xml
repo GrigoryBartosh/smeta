@@ -36,7 +36,6 @@
     <string name="title_activity_price_work">PriceWorkActivity</string>
 
     <string name="title_activity_work">WorkActivity</string>
-
     <string name="work_work_name">Название работы</string>
     <string name="work_snipper">Цена за </string>
     <string name="work_price">Равна </string>
@@ -54,7 +53,8 @@
         <b>добавить</b>.
     </string>
 
-    <string name="title_activity_work_new_material">Новый материал</string>
+    <string name="title_activity_search">Выберите необходимое</string>
+    <string name="search_empty_list">Список пуст</string>
 
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>

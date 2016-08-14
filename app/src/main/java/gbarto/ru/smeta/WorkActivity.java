@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +31,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayList<HashMap<String,Object>> mCatList;
     private static final String TITLE = "title";
     private static final String MEASUREMENT = "measurement";
+    static final private int CHOOSE_MATERIAL = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +143,41 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         public void onClick(View view) {
             //----------------------------------------------------------------------------------------------------------------
 
-            Intent intent = new Intent(WorkActivity.this, WorkNewMaterialActivity.class);
-            startActivity(intent);
+            ArrayList<MaterialClass> list = new ArrayList<MaterialClass>();
+            list.add(new MaterialClass("Арбуз", 22, 1, 0));
+            list.add(new MaterialClass("Арнольд", 22, 1, 0));
+            list.add(new MaterialClass("орбита", 22, 1, 0));
+            list.add(new MaterialClass("мусорка", 22, 1, 0));
+            list.add(new MaterialClass("мусорная ордита", 22, 1, 0));
+            list.add(new MaterialClass("кот", 22, 1, 0));
+            list.add(new MaterialClass("котопес", 22, 1, 0));
+
+            Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
+            intent.putExtra("list", list);
+            startActivityForResult(intent, CHOOSE_MATERIAL);
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CHOOSE_MATERIAL)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                ArrayList<MaterialClass> new_list = (ArrayList<MaterialClass>)data.getSerializableExtra("result");
+                String s = "";
+                if (new_list != null)
+                    for (int i = 0; i < new_list.size(); i++) {
+                        s += new_list.get(i).name + "\n";
+                    }
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                getList();
+            }
+        }
+    }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

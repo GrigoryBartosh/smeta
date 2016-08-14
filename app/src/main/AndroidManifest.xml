@@ -55,9 +55,10 @@
             android:label="@string/title_activity_choose_works"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".WorkNewMaterialActivity"
-            android:label="@string/title_activity_work_new_material"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
