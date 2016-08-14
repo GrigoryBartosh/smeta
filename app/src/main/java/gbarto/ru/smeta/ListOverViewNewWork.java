@@ -40,9 +40,6 @@ public class ListOverViewNewWork extends AppCompatActivity {
             public void onClick(View view) {
                 Intent temp = new Intent();
                 temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //for (int i = 0; i < WorkSet.size(); ++i)
-                    //if (using[i] == 1)
-                        //returning.add(WorkSet.get(i));
 
                 Bundle b = new Bundle();
                 b.putSerializable("new_works", returning);
@@ -55,6 +52,20 @@ public class ListOverViewNewWork extends AppCompatActivity {
         adapter.open();
         default_values();
         AddAdapter();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent temp = new Intent();
+        temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Bundle b = new Bundle();
+        b.putSerializable("new_works", returning);
+        temp.putExtras(b);
+
+        setResult(RESULT_CANCELED, temp);
+        finish();
     }
 
     @Override
