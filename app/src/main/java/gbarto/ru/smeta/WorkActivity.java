@@ -1,7 +1,9 @@
 package gbarto.ru.smeta;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,6 +31,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private ListView mListView;
     private ArrayList<HashMap<String,Object>> mCatList;
     private static final String TITLE = "title";
+    private static final String MEASUREMENT = "measurement";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +49,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             name = getString(R.string.work_new_work);
         } else {
             name = intent.getExtras().getString("name");
+            mEditName.setText(name);
         }
         setTitle(name);
-        mEditName.setText(name);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
         setSupportActionBar(toolbar);
@@ -83,9 +86,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        WindowManager.LayoutParams wm = getWindow().getAttributes();
-        wm.alpha = 1.0f;
-        getWindow().setAttributes(wm);
         getList();
     }
 
@@ -114,12 +114,19 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 res = true;
                 break;
             case R.id.menu_work_help:
-                WindowManager.LayoutParams wm = getWindow().getAttributes();
-                wm.alpha = 0.2f;
-                getWindow().setAttributes(wm);
 
-                Intent intent = new Intent(WorkActivity.this, WorkAboutActivity.class);
-                startActivity(intent);
+                FragmentManager manager = getSupportFragmentManager();
+                MyDialogFragment myDialogFragment = new MyDialogFragment();
+                myDialogFragment.setTitle(getString(R.string.help));
+                myDialogFragment.setMessage(getString(R.string.work_about_text));
+                myDialogFragment.setPositiveButtonTitle(getString(R.string.ok));
+                myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                myDialogFragment.setUseNegativeButton(false);
+                myDialogFragment.show(manager, "dialog");
 
                 res = true;
                 break;
@@ -164,13 +171,19 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         for (int i = 0; i < 20; i++){
             hm = new HashMap<>();
             hm.put(TITLE, "Барсик");
+            hm.put(MEASUREMENT, "кг");
             mCatList.add(hm);
         }
+        hm = new HashMap<>();
+        hm.put(TITLE, "Хуярсик");
+        hm.put(MEASUREMENT, "кг");
+        mCatList.add(hm);
+
 
         SimpleAdapter adapter = new SimpleAdapter(  WorkActivity.this,
                 mCatList, R.layout.list_item_work,
-                new String[]{TITLE},
-                new int[]{R.id.text});
+                new String[]{TITLE, MEASUREMENT},
+                new int[]{R.id.text_name, R.id.text_measurement});
         mListView.setAdapter(adapter);
     }
 
