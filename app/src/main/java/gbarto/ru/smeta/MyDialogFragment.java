@@ -99,16 +99,11 @@ public class MyDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        if (UseNegativeButton) {
-            builder.setMessage(Message)
-                    .setTitle(Title)
-                    .setPositiveButton(PositiveButtonTitle, PositiveClicked)
-                    .setNegativeButton(NegativeButtonTitle, NegativeClicked);
-        } else{
-            builder.setMessage(Message)
-                    .setTitle(Title)
-                    .setPositiveButton(PositiveButtonTitle, PositiveClicked);
-        }
+        builder.setMessage(Message)
+                .setTitle(Title)
+                .setPositiveButton(PositiveButtonTitle, PositiveClicked);
+        if (UseNegativeButton)
+            builder.setNegativeButton(NegativeButtonTitle, NegativeClicked);
         return builder.create();
     }
 }
