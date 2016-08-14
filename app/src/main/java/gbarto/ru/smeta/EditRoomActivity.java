@@ -30,7 +30,7 @@ public class EditRoomActivity extends AppCompatActivity {
             public void onClick(View view)
             {
 
-                Intent go = new Intent(EditRoomActivity.this, ChooseWorksActivity.class);
+                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 go.putExtra("room", getString(R.string.room_kitchen));
                 go.putExtras(getIntent());
                 startActivity(go);
@@ -42,7 +42,7 @@ public class EditRoomActivity extends AppCompatActivity {
             public void onClick(View view)
             {
 
-                Intent go = new Intent(EditRoomActivity.this, ChooseWorksActivity.class);
+                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 go.putExtra("room", getString(R.string.room_bathroom));
                 go.putExtras(getIntent());
                 startActivity(go);
@@ -54,7 +54,7 @@ public class EditRoomActivity extends AppCompatActivity {
             public void onClick(View view)
             {
 
-                Intent go = new Intent(EditRoomActivity.this, ChooseWorksActivity.class);
+                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 go.putExtra("room", getString(R.string.room_dining_room));
                 go.putExtras(getIntent());
                 startActivity(go);
@@ -66,7 +66,7 @@ public class EditRoomActivity extends AppCompatActivity {
             public void onClick(View view)
             {
 
-                Intent go = new Intent(EditRoomActivity.this, ChooseWorksActivity.class);
+                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 go.putExtra("room", getString(R.string.room_bedroom));
                 go.putExtras(getIntent());
                 startActivity(go);

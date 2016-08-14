@@ -271,7 +271,7 @@ public class DBAdapter {
 		return tmp2;
 	}
 
-    public DBObject[] getSelectionRows(String tablename, String where, String[] Args) //returns whole
+    public DBObject[] getSelectionRows(String tablename, String where, String[] Args)
     {
         ArrayList<DBObject> temp = new ArrayList<>();
         Cursor c = null;

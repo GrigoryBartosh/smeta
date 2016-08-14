@@ -45,7 +45,7 @@ public class EditNameActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mText.getText().length() > 0) {
+                if (mText.getText().length() >= 0) {
                     Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
                     x.putExtra("ProjectName", mText.getText().toString());
                     x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,19 +18,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ListOverviewNewMaterial extends AppCompatActivity {
+public class ListOverViewNewWork extends AppCompatActivity {
 
-    private ArrayList<TypeClass> WorkSet = new ArrayList<>();
+    private ArrayList<WorkClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
     private int[] using;
-    private ArrayList<TypeClass> returning = new ArrayList<>();
+    private ArrayList<WorkClass> returning = new ArrayList<>();
     private static final int NAMING = 228;
     private static final int GETTING_NEW_MATERIAL = 1488;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_overview_new_material);
+        setContentView(R.layout.activity_list_overview_new_work);
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.list_overview_new_material_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -37,12 +40,12 @@ public class ListOverviewNewMaterial extends AppCompatActivity {
             public void onClick(View view) {
                 Intent temp = new Intent();
                 temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                for (int i = 0; i < WorkSet.size(); ++i)
-                    if (using[i] == 1)
-                        returning.add(WorkSet.get(i));
+                //for (int i = 0; i < WorkSet.size(); ++i)
+                    //if (using[i] == 1)
+                        //returning.add(WorkSet.get(i));
 
                 Bundle b = new Bundle();
-                b.putSerializable("added", returning);
+                b.putSerializable("new_works", returning);
                 temp.putExtras(b);
 
                 setResult(RESULT_CANCELED, temp);
@@ -64,10 +67,9 @@ public class ListOverviewNewMaterial extends AppCompatActivity {
     private void default_values()
     {
 
-        String [] args = new String[1];
-        args[0] = getIntent().getStringExtra("room");
-        DBObject[] temp = adapter.getSelectionRows(adapter.TYPES_TABLE, adapter.TYPES_KEY_PLACE + " = ?", args);
-        ArrayList<DBObject> tmp3 = (ArrayList <DBObject>) (getIntent().getExtras().getSerializable("have"));
+        DBObject[] temp = adapter.getAllRows(adapter.WORKS_TABLE);
+        //DBObject[] temp = adapter.getSelectionRows(adapter.TYPES_TABLE, adapter.TYPES_KEY_PLACE + " = ?", args);
+        ArrayList<DBObject> tmp3 = (ArrayList <DBObject>) (getIntent().getExtras().getSerializable("have_works"));
         DBObject[] tmp2 = new DBObject[tmp3.size()];
         tmp2 = tmp3.toArray(tmp2);
         Arrays.sort(tmp2);
@@ -82,12 +84,12 @@ public class ListOverviewNewMaterial extends AppCompatActivity {
                     l = mid;
             }
             if (tmp2.length == 0)
-                WorkSet.add((TypeClass) x);
+                WorkSet.add((WorkClass) x);
             else
                 if (!tmp2[l].equals(x))
-                    WorkSet.add((TypeClass) x);
+                    WorkSet.add((WorkClass) x);
         }
-        using = new int[temp.length];
+        using = new int[WorkSet.size()];
     }
 
     private void AddAdapter()
@@ -98,17 +100,43 @@ public class ListOverviewNewMaterial extends AppCompatActivity {
         l.setAdapter(adapter);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Intent temp = new Intent();
+        temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        for (int i = 0; i < WorkSet.size(); ++i)
+            if (using[i] == 1)
+                returning.add(WorkSet.get(i));
+
+        Bundle b = new Bundle();
+        b.putSerializable("new_works", returning);
+        temp.putExtras(b);
+
+        setResult(RESULT_CANCELED, temp);
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_list_overview_new_works, menu);
+        return true;
+    }
+
     private class MyListAdapter extends ArrayAdapter
     {
         public MyListAdapter() {
-            super(ListOverviewNewMaterial.this, R.layout.listlayout_works, WorkSet);
+            super(ListOverViewNewWork.this, R.layout.listlayout_works, WorkSet);
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View item = getLayoutInflater().inflate(R.layout.listlayout_works, parent, false);
 
-            TypeClass w1 = WorkSet.get(position);
+            WorkClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
             t1.setText(w1.type);
 

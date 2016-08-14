@@ -42,7 +42,7 @@
             android:label="@string/title_activity_edit_room"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ChooseWorksActivity"
+            android:name=".ChooseTypeActivity"
             android:label="@string/title_activity_choose_works"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
@@ -50,7 +50,7 @@
             android:label="@string/title_activity_list_overview"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ListOverviewNewMaterial"
+            android:name=".ListOverViewNewWork"
             android:label="@string/title_activity_choose_works"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>

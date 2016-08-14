@@ -2,7 +2,6 @@ package gbarto.ru.smeta;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ChooseWorksActivity extends AppCompatActivity {
+public class ChooseTypeActivity extends AppCompatActivity {
 
     private ArrayList<TypeClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
@@ -26,7 +25,7 @@ public class ChooseWorksActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_works);
+        setContentView(R.layout.activity_choose_type);
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.choose_works_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -43,22 +42,6 @@ public class ChooseWorksActivity extends AppCompatActivity {
         adapter.open();
         default_values();
         AddAdapter();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent x = new Intent(ChooseWorksActivity.this, ListOverviewNewMaterial.class);
-                x.putExtra("new_material", 1);
-                Bundle b = new Bundle();
-                b.putSerializable("have", WorkSet);
-                x.putExtras(b);
-                x.putExtras(getIntent());
-                startActivityForResult(x, GETTING_NEW_MATERIAL);
-            }
-        });
     }
 
     @Override
@@ -73,8 +56,8 @@ public class ChooseWorksActivity extends AppCompatActivity {
 
         DBObject[] temp = adapter.getAllRows(adapter.TYPES_TABLE);
         //Arrays.sort(temp);
-        //for (DBObject x : temp)
-        //WorkSet.add((TypeClass) x);
+        for (DBObject x : temp)
+            WorkSet.add((TypeClass) x);
     }
 
     private void AddAdapter()
@@ -88,7 +71,7 @@ public class ChooseWorksActivity extends AppCompatActivity {
     private class MyListAdapter extends ArrayAdapter
     {
         public MyListAdapter() {
-            super(ChooseWorksActivity.this, R.layout.listlayout, WorkSet);
+            super(ChooseTypeActivity.this, R.layout.listlayout, WorkSet);
         }
 
         @Override
@@ -110,25 +93,11 @@ public class ChooseWorksActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
         {
             TypeClass tmp = (TypeClass) adapterView.getItemAtPosition(i);
-            Intent x = new Intent(ChooseWorksActivity.this, ListOverview.class);
-            x.putExtra("room_place", tmp.getPlace());
+            Intent x = new Intent(ChooseTypeActivity.this, ListOverview.class);
             x.putExtra("room_type", tmp.getType());
+            x.putExtras(getIntent());
             startActivityForResult(x, NAMING);
         }
     };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == NAMING) {
-            //adapter.add(new WorkClass())
-        }
-        else if (requestCode == GETTING_NEW_MATERIAL) {
-            ArrayList <DBObject> cur = (ArrayList <DBObject>) data.getExtras().getSerializable("added");
-            for (DBObject x : cur)
-                WorkSet.add((TypeClass) x);
-            adapt.notifyDataSetChanged();
-        }
-    }
 
 }
