@@ -9,9 +9,21 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
 {
 
     public boolean state;
+    public long workType;
+
     public ArrayList<Integer> Materials;
     public float price;
     public int measuring;
+
+    public long getWorkType()
+    {
+        return workType;
+    }
+
+    public void setWorkType(long workType)
+    {
+        this.workType = workType;
+    }
 
     public boolean isState()
     {
@@ -58,13 +70,14 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         Materials.add(newMaterial);
     }
 
-    public WorkClass(boolean state, String type)
+    public WorkClass(boolean state, String name)
     {
         this.state = state;
         this.Materials = new ArrayList<>();
         this.measuring = -1;
         this.price = 0;
-        this.name = type;
+        this.name = name;
+        this.workType = -1;
     }
 
     public WorkClass()
@@ -74,15 +87,17 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.measuring = -1;
         this.price = 0;
         this.name = "";
+        this.workType = -1;
     }
 
-    public WorkClass(boolean state, String name, ArrayList<Integer> materials, float price, int measuring)
+    public WorkClass(boolean state, String name, ArrayList<Integer> materials, float price, int measuring, long workType)
     {
         this.state = state;
         Materials = materials;
         this.price = price;
         this.name = name;
         this.measuring = measuring;
+        this.workType = workType;
     }
 
     public int compareTo(WorkClass a)

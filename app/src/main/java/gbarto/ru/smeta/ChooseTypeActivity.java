@@ -135,6 +135,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
             Intent x = new Intent(ChooseTypeActivity.this, ListOverview.class);
             x.putExtra("room_type", tmp.getName());
             x.putExtras(getIntent());
+            x.putExtra("keep_type", tmp);
             startActivityForResult(x, NAMING);
         }
     };

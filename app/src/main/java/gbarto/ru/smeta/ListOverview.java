@@ -20,6 +20,7 @@ public class ListOverview extends AppCompatActivity
 
     ArrayList<WorkClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
+    private TypeClass TypeHere;
     ArrayAdapter<WorkClass> adapt;
     final private int GETTING_NEW_WORK = 1488;
     private String worktype;
@@ -31,6 +32,7 @@ public class ListOverview extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.list_overview_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        TypeHere = (TypeClass) getIntent().getSerializableExtra("keep_type");
         worktype = getIntent().getStringExtra("room") + ":" + getIntent().getStringExtra("room_type");
         setTitle(worktype);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
@@ -57,6 +59,7 @@ public class ListOverview extends AppCompatActivity
             {
                 Intent x = new Intent(ListOverview.this, ListOverViewNewWork.class);
                 x.putExtra("have_works", WorkSet);
+                x.putExtra("keep_type", TypeHere);
                 startActivityForResult(x, GETTING_NEW_WORK);
             }
         });

@@ -1,24 +1,11 @@
 package gbarto.ru.smeta;
 
-import java.util.ArrayList;
-
 /**
  * Created by Noobgam on 10.08.2016.
  */
 public class TypeClass extends DBObject implements Comparable<TypeClass>
 {
     public String place;
-    public ArrayList<Integer> availableWorks;
-
-    public ArrayList<Integer> getAvailableWorks()
-    {
-        return availableWorks;
-    }
-
-    public void setAvailableWorks(ArrayList<Integer> availableWorks)
-    {
-        this.availableWorks = availableWorks;
-    }
 
     public String getPlace()
     {
@@ -34,7 +21,6 @@ public class TypeClass extends DBObject implements Comparable<TypeClass>
     {
         this.place = place;
         this.name = name;
-        this.availableWorks = new ArrayList<Integer>();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class DBAdapter {
 	
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 2;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -39,7 +39,7 @@ public class DBAdapter {
 
 	// BASE 2:
 
-	public static final String WORKS_KEY_TYPE = "type";
+	public static final String WORKS_KEY_TYPE = "workType";
 	public static final String[] WORKS_ALL_KEYS = new String[] {KEY_ROWID, WORKS_KEY_TYPE};
 	public static final String WORKS_TABLE = "worksTable";
 	private static final String WORKS_CREATE_SQL =
@@ -51,7 +51,7 @@ public class DBAdapter {
     // BASE 3:
 
     public static final String TYPES_KEY_PLACE = "place";
-    public static final String TYPES_KEY_TYPE = "type";
+    public static final String TYPES_KEY_TYPE = "workType";
     public static final String[] TYPES_ALL_KEYS = new String[] {KEY_ROWID, TYPES_KEY_PLACE, TYPES_KEY_TYPE};
     public static final String TYPES_TABLE = "typesTable";
     private static final String TYPES_CREATE_SQL =
@@ -93,7 +93,7 @@ public class DBAdapter {
         JSONObject temp = new JSONObject();
         try
         {
-            temp.put("material", material.getName());
+            temp.put("name", material.getName());
             temp.put("price", material.getPrice());
             temp.put("measuring", material.getMeasuring());
             temp.put("iconID", material.getIconID());
@@ -109,10 +109,11 @@ public class DBAdapter {
         JSONObject temp = new JSONObject();
         try
         {
-            temp.put("type", work.getName());
+            temp.put("name", work.getName());
             temp.put("state", work.isState());
             temp.put("measuring", work.getMeasuring());
             temp.put("price", work.getPrice());
+            temp.put("worktype", work.getWorkType());
             JSONArray tmp = new JSONArray();
             for (int x : work.getMaterials())
                 tmp.put(x);
@@ -129,7 +130,7 @@ public class DBAdapter {
         JSONObject temp = new JSONObject();
         try
         {
-            temp.put("type", type.getName());
+            temp.put("name", type.getName());
             return temp;
         }
         catch (JSONException e) {
@@ -155,7 +156,7 @@ public class DBAdapter {
             ArrayList <Integer> temp = new ArrayList<>();
             for (int i = 0; i < tmp.length(); ++i)
                 temp.add((Integer)tmp.getInt(i));
-            return new WorkClass(x.getBoolean("state"), x.getString("type"), temp, (float)x.getDouble("price"), x.getInt("measuring"));
+            return new WorkClass(x.getBoolean("state"), x.getString("name"), temp, (float)x.getDouble("price"), x.getInt("measuring"), x.getInt("worktype"));
         }
         catch (JSONException e) {
             return null;
@@ -165,13 +166,22 @@ public class DBAdapter {
     private MaterialClass JSONtoMaterialClass (JSONObject x)
     {
         try {
-            return new MaterialClass(x.getString("material"), (float)x.getDouble("price"), x.getInt("measuring"), x.getInt("iconID"));
+            return new MaterialClass(x.getString("name"), (float)x.getDouble("price"), x.getInt("measuring"), x.getInt("iconID"));
         }
         catch (JSONException e) {
             return null;
         }
     }
 
+    private TypeClass JSONtoTypeClass (JSONObject x)
+    {
+        try {
+            return new TypeClass("", x.getString("name"));
+        }
+        catch (JSONException e) {
+            return null;
+        }
+    }
 	// Adds new material to DB and returns you row_id
 	public long add(MaterialClass material) {
 		ContentValues initialValues = new ContentValues();
@@ -179,6 +189,14 @@ public class DBAdapter {
         material.rowID = db.insert(MATERIAL_TABLE, null, initialValues);
         return material.rowID;
 	}
+
+    public boolean update(MaterialClass material)
+    {
+        String where = KEY_ROWID + "=" + material.rowID;
+        ContentValues newValues = new ContentValues();
+        newValues.put(MATERIAL_KEY_MATERIAL,  ToJSON(material).toString());
+        return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
+    }
 
     // Adds new work to DB and returns you row_id
     public long add(WorkClass work) {
@@ -188,13 +206,29 @@ public class DBAdapter {
         return work.rowID;
     }
 
-    // Adds new type to DB and returns you row_id
+    public boolean update(WorkClass work)
+    {
+        String where = KEY_ROWID + "=" + work.rowID;
+        ContentValues newValues = new ContentValues();
+        newValues.put(MATERIAL_KEY_MATERIAL,  ToJSON(work).toString());
+        return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
+    }
+
+    // Adds new workType to DB and returns you row_id
     public long add(TypeClass type) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(TYPES_KEY_PLACE, type.getPlace());
-        initialValues.put(TYPES_KEY_TYPE, type.getName());
+        initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
         type.rowID = db.insert(TYPES_TABLE, null, initialValues);
         return type.rowID;
+    }
+
+    public boolean update(TypeClass type)
+    {
+        String where = KEY_ROWID + "=" + type.rowID;
+        ContentValues newValues = new ContentValues();
+        newValues.put(MATERIAL_KEY_MATERIAL,  ToJSON(type).toString());
+        return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
     }
 
 	// Delete a row from the database, by rowId (primary key)
@@ -202,7 +236,7 @@ public class DBAdapter {
 		String where = KEY_ROWID + "=" + rowId;
 		return db.delete(tablename, where, null) != 0;
 	}
-	
+
 	public void clear(String tablename) {
 		Cursor c = db.query(true, tablename, MATERIAL_ALL_KEYS,
                 null, null, null, null, null, null);
@@ -259,7 +293,9 @@ public class DBAdapter {
                         }
                         case TYPES_TABLE:
                         {
-                            TypeClass tmp = new TypeClass(c.getString(1), c.getString(2));
+                            String structure = c.getString(2);
+                            TypeClass tmp = JSONtoTypeClass(FromString(structure));
+                            tmp.setPlace(c.getString(1));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
@@ -314,7 +350,9 @@ public class DBAdapter {
                         }
                         case TYPES_TABLE:
                         {
-                            TypeClass tmp = new TypeClass(c.getString(1), c.getString(2));
+                            String structure = c.getString(2);
+                            TypeClass tmp = JSONtoTypeClass(FromString(structure));
+                            tmp.setPlace(c.getString(1));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
@@ -359,33 +397,6 @@ public class DBAdapter {
         }
 		return null;
 	}
-
-	public boolean updateRow(long rowId, MaterialClass material) //updates material
-	{
-		String where = KEY_ROWID + "=" + rowId;
-		ContentValues newValues = new ContentValues();
-		newValues.put(MATERIAL_KEY_MATERIAL,  material.name);
-		//newValues.put(MATERIAL_KEY_PRICE,     material.price);
-		//newValues.put(MATERIAL_KEY_MEASURING, material.measuring);
-		return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
-	}
-
-
-	public boolean updateRow(long rowId, String material, float price, String measuring)
-	{
-		String where = KEY_ROWID + "=" + rowId;
-
-		// Create row's data:
-		ContentValues newValues = new ContentValues();
-		newValues.put(MATERIAL_KEY_MATERIAL,  material);
-		//newValues.put(MATERIAL_KEY_PRICE,     price);
-		//newValues.put(MATERIAL_KEY_MEASURING, measuring);
-		
-		// Insert it into the database.
-		return db.update("", newValues, where, null) != 0;
-	}
-	
-	
 	
 	/////////////////////////////////////////////////////////////////////
 	//	Private Helper Classes:
@@ -397,6 +408,7 @@ public class DBAdapter {
 	 */
 	private static class DatabaseHelper extends SQLiteOpenHelper
 	{
+
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
@@ -413,9 +425,8 @@ public class DBAdapter {
                     initialValues.put(WORKS_KEY_TYPE, s);
                     break;
                 case TYPES_TABLE:
-                    String[] tmp = s.split(":;");
-                    initialValues.put(TYPES_KEY_PLACE, tmp[0]);
-                    initialValues.put(TYPES_KEY_TYPE, tmp[1]);
+                    initialValues.put(TYPES_KEY_PLACE, "");
+                    initialValues.put(TYPES_KEY_TYPE, s);
                     break;
             }
             _db.insert(tablename, null, initialValues);
@@ -427,7 +438,7 @@ public class DBAdapter {
             JSONObject temp = new JSONObject();
             try
             {
-                temp.put("type", work.getName());
+                temp.put("name", work.getName());
                 temp.put("state", work.isState());
                 temp.put("measuring", work.getMeasuring());
                 temp.put("price", work.getPrice());
@@ -448,21 +459,19 @@ public class DBAdapter {
 			_db.execSQL(MATERIAL_CREATE_SQL);
 			_db.execSQL(WORKS_CREATE_SQL);
             _db.execSQL(TYPES_CREATE_SQL);
-            add(_db, TYPES_TABLE, "Кухня:;Полы");
-            add(_db, TYPES_TABLE, "Кухня:;Стены");
-            add(_db, TYPES_TABLE, "Кухня:;Потолки");
-            add(_db, TYPES_TABLE, "Хуй:;Член");
-            add(_db, TYPES_TABLE, "Пидор:;Гомик");
-            // public WorkClass(boolean state, String type, ArrayList<Integer> materials, float price, int measuring)
-            WorkClass t1 = new WorkClass(false, "Намазать пол говном", new ArrayList<Integer>(), 1.15f, 1);
-            add(_db, WORKS_TABLE, ToJSON(t1).toString());
-            t1 = new WorkClass(false, "Намазать стены говном", new ArrayList<Integer>(), 1.15f, 1);
-            add(_db, WORKS_TABLE, ToJSON(t1).toString());
-            t1 = new WorkClass(false, "Намазать потолок говном", new ArrayList<Integer>(), 1.15f, 1);
-            add(_db, WORKS_TABLE, ToJSON(t1).toString());
-            //add(_db, WORKS_TABLE, "{\"type\":\"Стены\",\"state\":false,\"measuring\":\"\",\"price\":0,\"materials\":[]}");
-            //add(_db, WORKS_TABLE, "{\"type\":\"Полы\",\"state\":false,\"measuring\":\"\",\"price\":0,\"materials\":[]}");
-            //add(_db, WORKS_TABLE, "{\"type\":\"Потолки\",\"state\":false,\"measuring\":\"\",\"price\":0,\"materials\":[]}");
+
+            add(_db, TYPES_TABLE, "{\"name\":\"Пол\"}");
+            add(_db, TYPES_TABLE, "{\"name\":\"Стены\"}");
+            add(_db, TYPES_TABLE, "{\"name\":\"Потолок\"}");
+            add(_db, TYPES_TABLE, "{\"name\":\"Член\"}");
+            add(_db, TYPES_TABLE, "{\"name\":\"Говно\"}");
+            add(_db, TYPES_TABLE, "{\"name\":\"Моча\"}");
+
+            add(_db, WORKS_TABLE, "{\"name\":\"Намазать пол говном\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":1}");
+            add(_db, WORKS_TABLE, "{\"name\":\"Намазать стены говном\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":2}");
+            add(_db, WORKS_TABLE, "{\"name\":\"Намазать потолок говном\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":3}");
+            add(_db, WORKS_TABLE, "{\"name\":\"Намазать потолок дерьмом\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":3}");
+
 		}
 
 		@Override
