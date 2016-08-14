@@ -69,25 +69,26 @@ public class ListOverViewNewWork extends AppCompatActivity {
 
         DBObject[] temp = adapter.getAllRows(adapter.WORKS_TABLE);
         //DBObject[] temp = adapter.getSelectionRows(adapter.TYPES_TABLE, adapter.TYPES_KEY_PLACE + " = ?", args);
-        ArrayList<DBObject> tmp3 = (ArrayList <DBObject>) (getIntent().getExtras().getSerializable("have_works"));
-        DBObject[] tmp2 = new DBObject[tmp3.size()];
+        ArrayList<WorkClass> tmp3 = (ArrayList <WorkClass>) (getIntent().getExtras().getSerializable("have_works"));
+        WorkClass[] tmp2 = new WorkClass[tmp3.size()];
         tmp2 = tmp3.toArray(tmp2);
         Arrays.sort(tmp2);
         for (DBObject x : temp) {
+            WorkClass y = (WorkClass) x;
             int l = 0, r = tmp2.length;
             while (l < r - 1)
             {
                 int mid = (l + r) >> 1;
-                if (tmp2[mid].compareTo(x) > 0)
+                if (tmp2[mid].compareTo(y) > 0)
                     r = mid;
                 else
                     l = mid;
             }
             if (tmp2.length == 0)
-                WorkSet.add((WorkClass) x);
+                WorkSet.add(y);
             else
                 if (!tmp2[l].equals(x))
-                    WorkSet.add((WorkClass) x);
+                    WorkSet.add(y);
         }
         using = new int[WorkSet.size()];
     }

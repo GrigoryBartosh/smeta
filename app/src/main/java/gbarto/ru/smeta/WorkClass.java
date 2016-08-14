@@ -96,6 +96,6 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
 
     public int compareTo(WorkClass a)
     {
-        return a.getType().compareTo(a.getType());
+        return type.compareTo(a.getType());
     }
 }

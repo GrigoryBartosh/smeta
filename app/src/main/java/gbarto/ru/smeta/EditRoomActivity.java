@@ -79,24 +79,7 @@ public class EditRoomActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
-                FragmentManager manager = getSupportFragmentManager();
-                MyDialogFragment myDialogFragment = new MyDialogFragment();
-                myDialogFragment.Message = "Если вы вернётесь, то потеряете всё.";
-                myDialogFragment.Title = "Вы уверены, что хотите вернуться?.";
-                myDialogFragment.PositiveButtonTitle = "Да";
-                myDialogFragment.NegativeButtonTitle = "Нет";
-                myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        Intent temp = new Intent();
-                        temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        setResult(RESULT_CANCELED, temp);
-                        finish();
-                    }
-                };
-                myDialogFragment.show(manager, "dialog");
+                finish();
             }
         });
     }

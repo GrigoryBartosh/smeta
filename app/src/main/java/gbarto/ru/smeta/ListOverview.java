@@ -22,7 +22,7 @@ public class ListOverview extends AppCompatActivity
     DBAdapter adapter = new DBAdapter(this);
     ArrayAdapter<WorkClass> adapt;
     final private int GETTING_NEW_WORK = 1488;
-
+    private String worktype;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -31,13 +31,16 @@ public class ListOverview extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.list_overview_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        String worktype = getIntent().getStringExtra("room") + " : " + getIntent().getStringExtra("room_type");
+        worktype = getIntent().getStringExtra("room") + ":" + getIntent().getStringExtra("room_type");
         setTitle(worktype);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view) {
                 Intent temp = new Intent();
+                Bundle b = new Bundle();
+                b.putSerializable(worktype + ":WorkSet", WorkSet);
+                temp.putExtras(b);
                 setResult(RESULT_CANCELED, temp);
                 finish();
             }
@@ -53,14 +56,21 @@ public class ListOverview extends AppCompatActivity
             public void onClick(View view)
             {
                 Intent x = new Intent(ListOverview.this, ListOverViewNewWork.class);
-                x.putExtra("new_material", 1);
-                Bundle b = new Bundle();
-                b.putSerializable("have_works", WorkSet);
-                x.putExtras(b);
-                x.putExtras(getIntent());
+                x.putExtra("have_works", WorkSet);
                 startActivityForResult(x, GETTING_NEW_WORK);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent temp = new Intent();
+        Bundle b = new Bundle();
+        b.putSerializable(worktype + ":WorkSet", WorkSet);
+        temp.putExtras(b);
+        setResult(RESULT_CANCELED, temp);
+        finish();
     }
 
     @Override
@@ -72,7 +82,8 @@ public class ListOverview extends AppCompatActivity
 
     private void default_values()
     {
-        DBObject[] temp = adapter.getAllRows(adapter.WORKS_TABLE);
+        if (getIntent().getSerializableExtra(worktype + ":WorkSet") != null)
+            WorkSet = (ArrayList <WorkClass>)getIntent().getSerializableExtra(worktype + ":WorkSet");
     }
 
     private void AddAdapter()
@@ -98,14 +109,7 @@ public class ListOverview extends AppCompatActivity
             t1.setText(w1.type);
 
             CheckBox cb1 = (CheckBox)item.findViewById(R.id.checkBox);
-            cb1.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    //using[position] ^= 1;
-                }
-            });
+            cb1.setVisibility(View.INVISIBLE);
 
             return item;
         }
@@ -128,6 +132,9 @@ public class ListOverview extends AppCompatActivity
             ArrayList <WorkClass> temp = (ArrayList <WorkClass>) data.getSerializableExtra("new_works");
             for (WorkClass x : temp)
                 WorkSet.add(x);
+            if (getIntent().getSerializableExtra(worktype + ":WorkSet") != null)
+                getIntent().removeExtra(worktype + ":WorkSet");
+            getIntent().putExtra(worktype + ":WorkSet", WorkSet);
             adapt.notifyDataSetChanged();
         }
     }

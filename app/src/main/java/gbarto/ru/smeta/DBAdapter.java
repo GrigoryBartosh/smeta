@@ -23,7 +23,7 @@ public class DBAdapter {
 	
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -422,6 +422,26 @@ public class DBAdapter {
 
         }
 
+        private JSONObject ToJSON(WorkClass work)
+        {
+            JSONObject temp = new JSONObject();
+            try
+            {
+                temp.put("type", work.getType());
+                temp.put("state", work.isState());
+                temp.put("measuring", work.getMeasuring());
+                temp.put("price", work.getPrice());
+                JSONArray tmp = new JSONArray();
+                for (int x : work.getMaterials())
+                    tmp.put(x);
+                temp.put("materials", tmp);
+                return temp;
+            }
+            catch (JSONException e) {
+                return null;
+            }
+        }
+
 		@Override
 		public void onCreate(SQLiteDatabase _db)
 		{
@@ -433,6 +453,13 @@ public class DBAdapter {
             add(_db, TYPES_TABLE, "Кухня:;Потолки");
             add(_db, TYPES_TABLE, "Хуй:;Член");
             add(_db, TYPES_TABLE, "Пидор:;Гомик");
+            // public WorkClass(boolean state, String type, ArrayList<Integer> materials, float price, int measuring)
+            WorkClass t1 = new WorkClass(false, "Намазать пол говном", new ArrayList<Integer>(), 1.15f, 1);
+            add(_db, WORKS_TABLE, ToJSON(t1).toString());
+            t1 = new WorkClass(false, "Намазать стены говном", new ArrayList<Integer>(), 1.15f, 1);
+            add(_db, WORKS_TABLE, ToJSON(t1).toString());
+            t1 = new WorkClass(false, "Намазать потолок говном", new ArrayList<Integer>(), 1.15f, 1);
+            add(_db, WORKS_TABLE, ToJSON(t1).toString());
             //add(_db, WORKS_TABLE, "{\"type\":\"Стены\",\"state\":false,\"measuring\":\"\",\"price\":0,\"materials\":[]}");
             //add(_db, WORKS_TABLE, "{\"type\":\"Полы\",\"state\":false,\"measuring\":\"\",\"price\":0,\"materials\":[]}");
             //add(_db, WORKS_TABLE, "{\"type\":\"Потолки\",\"state\":false,\"measuring\":\"\",\"price\":0,\"materials\":[]}");
