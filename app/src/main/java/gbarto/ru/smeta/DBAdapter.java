@@ -20,7 +20,7 @@ public class DBAdapter {
 	/////////////////////////////////////////////////////////////////////
 	// For logging:
 	private static final String TAG = "DBAdapter";
-	
+
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
 	public static final int DATABASE_VERSION = 1;
@@ -107,6 +107,7 @@ public class DBAdapter {
             temp.put("price", material.getPrice());
             temp.put("measuring", material.getMeasuring());
             temp.put("iconID", material.getIconID());
+            temp.put("per_object", material.getPer_object());
             return temp;
         }
         catch (JSONException e) {
@@ -177,7 +178,7 @@ public class DBAdapter {
     private MaterialClass JSONtoMaterialClass (JSONObject x)
     {
         try {
-            return new MaterialClass(x.getString("name"), (float)x.getDouble("price"), x.getInt("measuring"), x.getInt("iconID"));
+            return new MaterialClass(x.getString("name"), (float)x.getDouble("price"), x.getInt("measuring"), x.getInt("iconID"), (float)x.getDouble("per_object"));
         }
         catch (JSONException e) {
             return null;
@@ -526,6 +527,12 @@ public class DBAdapter {
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Вымазать потолок говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 3);
             add(_db, WORKS_TABLE, t2);
+
+            //public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
+            MaterialClass t3 = new MaterialClass("Говно", 0f, 3, 0, 1f);
+            add(_db, MATERIAL_TABLE, t3);
+            t3 = new MaterialClass("Моча", 0f, 4, 0, 1f);
+            add(_db, MATERIAL_TABLE, t3);
 		}
 
 		@Override
