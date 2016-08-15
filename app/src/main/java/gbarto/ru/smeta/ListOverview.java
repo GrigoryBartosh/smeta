@@ -1,8 +1,10 @@
 package gbarto.ru.smeta;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -93,7 +95,42 @@ public class ListOverview extends AppCompatActivity
     {
         adapt = new MyListAdapter();
         ListView l = (ListView)findViewById(R.id.list_overview_listview);
-        l.setOnItemClickListener(mItemListener);
+        l.setOnItemClickListener(
+                new AdapterView.OnItemClickListener()
+                {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+                    {
+                        WorkClass tmp = (WorkClass) adapterView.getItemAtPosition(i);
+                        System.out.println(tmp.getName());
+                    }
+                });
+        l.setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener()
+                {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
+                    {
+                        final int position = i;
+                        FragmentManager manager = getSupportFragmentManager();
+                        MyDialogFragment myDialogFragment = new MyDialogFragment();
+                        myDialogFragment.Message = "Уверены, что хотите удалить работу?.";
+                        myDialogFragment.Title = "";
+                        myDialogFragment.PositiveButtonTitle = "Да";
+                        myDialogFragment.NegativeButtonTitle = "Нет";
+                        myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i)
+                            {
+                                WorkSet.remove(position);
+                                adapt.notifyDataSetChanged();
+                            }
+                        };
+                        myDialogFragment.show(manager, "dialog");
+                        return false;
+                    }
+                });
         l.setAdapter(adapt);
     }
 
@@ -118,15 +155,6 @@ public class ListOverview extends AppCompatActivity
         }
     }
 
-    AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener()
-    {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-        {
-            WorkClass tmp = (WorkClass) adapterView.getItemAtPosition(i);
-            System.out.println(tmp.getName());
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
