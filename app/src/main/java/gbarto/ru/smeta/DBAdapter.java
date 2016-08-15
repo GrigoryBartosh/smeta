@@ -311,7 +311,7 @@ public class DBAdapter {
 		return tmp2;
 	}
 
-    public DBObject[] getSelectionRows(String tablename, String where, String[] Args)
+    public DBObject[] getSelectionRows(String tablename, String where)
     {
         ArrayList<DBObject> temp = new ArrayList<>();
         Cursor c = null;
@@ -319,15 +319,15 @@ public class DBAdapter {
         {
             case MATERIAL_TABLE:
                 c =	db.query(true, tablename, MATERIAL_ALL_KEYS,
-                        where, Args, null, null, null, null);
+                        where, null, null, null, null, null);
                 break;
             case WORKS_TABLE:
                 c =	db.query(true, tablename, WORKS_ALL_KEYS,
-                        where, Args, null, null, null, null);
+                        where, null, null, null, null, null);
                 break;
             case TYPES_TABLE:
                 c =	db.query(true, tablename, TYPES_ALL_KEYS,
-                        where, Args, null, null, null, null);
+                        where, null, null, null, null, null);
                 break;
         }
         if (c != null)
@@ -346,7 +346,7 @@ public class DBAdapter {
                         }
                         case WORKS_TABLE:
                         {
-                            String structure = c.getString(1);
+                            String structure = c.getString(3);
                             WorkClass tmp = JSONtoWorkListView(FromString(structure));
                             tmp.setState(c.getInt(1) == 1);
                             tmp.setName(c.getString(2));
@@ -369,6 +369,12 @@ public class DBAdapter {
         DBObject[] tmp2 = new DBObject[temp.size()];
         tmp2 = temp.toArray(tmp2);
         return tmp2;
+    }
+
+    public DBObject[] getWorksByType(long type)
+    {
+        String where = WORKS_KEY_WORKTYPE + "=" + Long.toString(type);
+        return getSelectionRows(WORKS_TABLE, where);
     }
 
 	// Get a specific row (by rowId)

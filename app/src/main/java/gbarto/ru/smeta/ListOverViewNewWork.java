@@ -78,7 +78,7 @@ public class ListOverViewNewWork extends AppCompatActivity {
     private void default_values()
     {
 
-        DBObject[] temp = adapter.getAllRows(adapter.WORKS_TABLE);
+        DBObject[] temp = adapter.getWorksByType(((TypeClass) getIntent().getSerializableExtra("keep_type")).rowID);
         //DBObject[] temp = adapter.getSelectionRows(adapter.TYPES_TABLE, adapter.TYPES_KEY_PLACE + " = ?", args);
         ArrayList<WorkClass> tmp3 = (ArrayList <WorkClass>) (getIntent().getExtras().getSerializable("have_works"));
         WorkClass[] tmp2 = new WorkClass[tmp3.size()];
