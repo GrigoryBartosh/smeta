@@ -10,6 +10,7 @@
     tools:showIn="@layout/activity_list_overview_new_work">
 
     <ListView
+    android:longClickable="true"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/list_overview_new_material_listView"
