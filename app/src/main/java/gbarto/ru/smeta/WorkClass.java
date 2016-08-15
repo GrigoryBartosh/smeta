@@ -11,7 +11,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public boolean state;
     public long workType;
 
-    public ArrayList<Long> Materials;
+    public ArrayList<Pair <Long, Float> > Materials;
     public float price;
     public int measuring;
 
@@ -55,19 +55,19 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.measuring = measuring;
     }
 
-    public ArrayList<Long> getMaterials()
+    public ArrayList<Pair <Long, Float> > getMaterials()
     {
         return Materials;
     }
 
-    public void setMaterials(ArrayList<Long> materials)
+    public void setMaterials( ArrayList<Pair <Long, Float>> materials)
     {
         Materials = materials;
     }
 
     public void addMaterial(long newMaterial)
     {
-        Materials.add(newMaterial);
+        Materials.add(new Pair(newMaterial, 0.0f));
     }
 
     public WorkClass(boolean state, String name)
@@ -90,7 +90,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.workType = -1;
     }
 
-    public WorkClass(boolean state, String name, ArrayList<Long> materials, float price, int measuring, long workType)
+    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, float price, int measuring, long workType)
     {
         this.state = state;
         Materials = materials;

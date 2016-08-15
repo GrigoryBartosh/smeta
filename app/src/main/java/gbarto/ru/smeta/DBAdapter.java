@@ -23,7 +23,7 @@ public class DBAdapter {
 	
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -120,9 +120,14 @@ public class DBAdapter {
         try
         {
             JSONArray tmp = new JSONArray();
-            for (long x : work.getMaterials())
-                tmp.put(x);
+            JSONArray tmp2 = new JSONArray();
+            for (Pair <Long, Float> x : work.getMaterials())
+            {
+                tmp.put(x.first);
+                tmp2.put(x.second);
+            }
             temp.put("materials", tmp);
+            temp.put("requirements", tmp);
             return temp;
         }
         catch (JSONException e) {
@@ -158,9 +163,10 @@ public class DBAdapter {
     {
         try {
             JSONArray tmp = x.getJSONArray("materials");
-            ArrayList <Long> temp = new ArrayList<>();
+            JSONArray tmp2 = x.getJSONArray("requirements");
+            ArrayList <Pair <Long, Float> > temp = new ArrayList<>();
             for (int i = 0; i < tmp.length(); ++i)
-                temp.add(tmp.getLong(i));
+                temp.add(new Pair(tmp.getLong(i), (float)tmp2.getDouble(i)));
             return new WorkClass(false, "", temp, 0, 0, 0);
         }
         catch (JSONException e) {
@@ -460,14 +466,15 @@ public class DBAdapter {
             JSONObject temp = new JSONObject();
             try
             {
-                temp.put("name", work.getName());
-                temp.put("state", work.isState());
-                temp.put("measuring", work.getMeasuring());
-                temp.put("price", work.getPrice());
                 JSONArray tmp = new JSONArray();
-                for (long x : work.getMaterials())
-                    tmp.put(x);
+                JSONArray tmp2 = new JSONArray();
+                for (Pair <Long, Float> x : work.getMaterials())
+                {
+                    tmp.put(x.first);
+                    tmp2.put(x.second);
+                }
                 temp.put("materials", tmp);
+                temp.put("requirements", tmp);
                 return temp;
             }
             catch (JSONException e) {
@@ -489,13 +496,13 @@ public class DBAdapter {
             t1 = new TypeClass("", "Потолок");
             add(_db, TYPES_TABLE, t1);
 
-            WorkClass t2 = new WorkClass(false, "Намазать пол говном", new ArrayList<Long>(), 1.15f, 1, 1);
+            WorkClass t2 = new WorkClass(false, "Намазать пол говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);
             add(_db, WORKS_TABLE, t2);
-            t2 = new WorkClass(false, "Намазать стены говном", new ArrayList<Long>(), 1.15f, 1, 2);
+            t2 = new WorkClass(false, "Намазать стены говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 2);
             add(_db, WORKS_TABLE, t2);
-            t2 = new WorkClass(false, "Намазать потолок говном", new ArrayList<Long>(), 1.15f, 1,3);
+            t2 = new WorkClass(false, "Намазать потолок говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1,3);
             add(_db, WORKS_TABLE, t2);
-            t2 = new WorkClass(false, "Вымазать потолок говном", new ArrayList<Long>(), 1.15f, 1, 3);
+            t2 = new WorkClass(false, "Вымазать потолок говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 3);
             add(_db, WORKS_TABLE, t2);
 		}
 
