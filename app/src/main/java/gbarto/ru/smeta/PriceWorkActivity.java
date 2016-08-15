@@ -118,7 +118,6 @@ public class PriceWorkActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK)
             {
                 WorkClass work = (WorkClass)data.getSerializableExtra("work");
-                Toast.makeText(getApplicationContext(), work.name, Toast.LENGTH_SHORT).show();
                 work_list.set(work_line, work);
                 dbAdapter.update(work);
                 setList();

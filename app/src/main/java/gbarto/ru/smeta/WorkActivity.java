@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -314,7 +316,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = convertView;
+            View view = null;
             if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_work, parent, false);
 
             TextView mTextName = (TextView) view.findViewById(R.id.text_name);
@@ -328,22 +330,25 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mEditSum.setText(Float.toString(work.Materials.get(position).second));
 
             final View v = view;
-            mEditSum.setOnKeyListener(new View.OnKeyListener() {
+            mEditSum.addTextChangedListener(new TextWatcher() {
                 @Override
-                public boolean onKey(View view_edit, int i, KeyEvent keyEvent) {
-                    final int tp = position;
-                    System.out.println("----------------");
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                    EditText mEditSum = (EditText) v.findViewById(R.id.editText_sum);
+                }
 
-                    String cnt = mEditSum.getText().toString();
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    String cnt = charSequence.toString();
                     if (cnt.equals("") || cnt.equals("-") || cnt.equals("-.")) {
-                        work.Materials.get(tp).second = 0f;
+                        work.Materials.get(position).second = 0f;
                     } else {
-                        work.Materials.get(tp).second = Float.valueOf(cnt);
+                        work.Materials.get(position).second = Float.valueOf(cnt);
                     }
+                }
 
-                    return true;
+                @Override
+                public void afterTextChanged(Editable editable) {
+
                 }
             });
 
