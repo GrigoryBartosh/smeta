@@ -115,15 +115,37 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, float price, int measuring, long workType)
     {
         this.state = state;
+        Materials = new ArrayList<>();
+        RealMaterials = new ArrayList<>();
+        for (Pair <Long, Float> x : materials) {
+            Materials.add(new Pair(x.first, x.second));
+            RealMaterials.add(new Pair(-1, -1));
+        }
         Materials = new ArrayList<>(materials);
         this.price = price;
         this.name = new String(name);
         this.measuring = measuring;
         this.workType = workType;
-        RealMaterials = new ArrayList<>(materials);
-        for (int i = 0; i < materials.size(); ++i)
-            RealMaterials.get(i).first = -1L;
     }
+
+    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, ArrayList<Pair <Long, Float>> realMaterials,  float price, int measuring, long workType)
+    {
+        this.state = state;
+        Materials = new ArrayList<>();
+        RealMaterials = new ArrayList<>();
+        for (Pair <Long, Float> x : materials) {
+            Materials.add(new Pair(x.first, x.second));
+        }
+        for (Pair <Long, Float> x : realMaterials) {
+            RealMaterials.add(new Pair(x.first, x.second));
+        }
+        Materials = new ArrayList<>(materials);
+        this.price = price;
+        this.name = new String(name);
+        this.measuring = measuring;
+        this.workType = workType;
+    }
+
 
     public int compareTo(WorkClass a)
     {

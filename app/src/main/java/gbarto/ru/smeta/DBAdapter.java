@@ -23,7 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -161,10 +161,10 @@ public class DBAdapter {
             temp.put("requirements", tmp2);
             JSONArray tmp3 = new JSONArray();
             JSONArray tmp4 = new JSONArray();
-            for (Pair <Long, Float> x : work.getMaterials())
+            for (Pair <Long, Float> x : work.getRealMaterials())
             {
-                tmp3.put(-1);
-                tmp4.put(-1);
+                tmp3.put(x.first);
+                tmp4.put(x.second);
             }
             temp.put("realMaterials", tmp3);
             temp.put("realRequirements", tmp4);
@@ -212,7 +212,8 @@ public class DBAdapter {
                 temp.add(new Pair(tmp.getLong(i), (float)tmp2.getDouble(i)));
                 temp2.add(new Pair(tmp3.getLong(i), (float)tmp4.getDouble(i)));
             }
-            return new WorkClass(false, "", temp, 0, 0, 0);
+            WorkClass x1 = new WorkClass(false, "", temp, temp2, 0, 0, 0);
+            return x1;
         }
         catch (JSONException e) {
             return null;
