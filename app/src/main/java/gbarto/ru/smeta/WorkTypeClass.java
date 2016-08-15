@@ -17,6 +17,11 @@ public class WorkTypeClass extends DBObject implements Comparable<WorkTypeClass>
         this.place = place;
     }
 
+    public WorkTypeClass(String name)
+    {
+        this.name = name;
+    }
+
     public WorkTypeClass(String place, String name)
     {
         this.place = new String(place);
