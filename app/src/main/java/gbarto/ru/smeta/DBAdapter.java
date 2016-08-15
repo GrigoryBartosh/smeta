@@ -287,7 +287,6 @@ public class DBAdapter {
         newValues.put(MATERIAL_TYPES_KEY_MATERIALS, ToJSON(materialTypeClass).toString());
         newValues.put(MATERIAL_TYPES_KEY_NAME, materialTypeClass.getName());
         newValues.put(MATERIAL_TYPES_KEY_MEASUREMENT, materialTypeClass.getMeasurement());
-        materialTypeClass.rowID = db.insert(MATERIAL_TYPES_TABLE, null, newValues);
         return db.update(MATERIAL_TYPES_TABLE, newValues, where, null) != 0;
     }
 
@@ -331,7 +330,6 @@ public class DBAdapter {
         initialValues.put(WORKS_KEY_MATERIALS, ToJSON(work).toString());
         initialValues.put(WORKS_KEY_PRICE, work.getPrice());
         initialValues.put(WORKS_KEY_WORKTYPE, work.getWorkType());
-        work.rowID = db.insert(WORKS_TABLE, null, initialValues);
         return db.update(WORKS_TABLE, initialValues, where, null) != 0;
     }
 
@@ -350,7 +348,6 @@ public class DBAdapter {
         ContentValues initialValues = new ContentValues();
         initialValues.put(TYPES_KEY_PLACE, type.getPlace());
         initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
-        type.rowID = db.insert(TYPES_TABLE, null, initialValues);
         return db.update(TYPES_TABLE, initialValues, where, null) != 0;
     }
 
