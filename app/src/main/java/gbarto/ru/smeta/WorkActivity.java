@@ -333,8 +333,16 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 public boolean onKey(View view_edit, int i, KeyEvent keyEvent) {
                     final int tp = position;
                     System.out.println("----------------");
+
                     EditText mEditSum = (EditText) v.findViewById(R.id.editText_sum);
-                    work.Materials.get(tp).second = Float.valueOf(mEditSum.getText().toString());
+
+                    String cnt = mEditSum.getText().toString();
+                    if (cnt.equals("") || cnt.equals("-") || cnt.equals("-.")) {
+                        work.Materials.get(tp).second = 0f;
+                    } else {
+                        work.Materials.get(tp).second = Float.valueOf(cnt);
+                    }
+
                     return true;
                 }
             });
