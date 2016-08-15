@@ -95,14 +95,11 @@ public class ListOverViewNewWork extends AppCompatActivity {
                 else
                     l = mid;
             }
-            if (tmp2.length == 0) {
-                if (y.workType == ((TypeClass) getIntent().getSerializableExtra("keep_type")).rowID)
-                    WorkSet.add(y);
-            }
+            if (tmp2.length == 0)
+                WorkSet.add(y);
             else
                 if (!tmp2[l].equals(x))
-                    if (y.workType == ((TypeClass) getIntent().getSerializableExtra("keep_type")).rowID)
-                        WorkSet.add(y);
+                    WorkSet.add(y);
         }
         using = new int[WorkSet.size()];
     }
