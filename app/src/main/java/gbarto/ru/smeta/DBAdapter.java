@@ -461,8 +461,8 @@ public class DBAdapter {
             switch (tablename)
             {
                 case MATERIAL_TABLE:
-                    //public static final String[] MATERIAL_ALL_KEYS = new String[] {KEY_ROWID, MATERIAL_KEY_MATERIAL};
-                    initialValues.put(MATERIAL_KEY_MATERIAL, t.getName());
+                    //public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
+                    initialValues.put(MATERIAL_KEY_MATERIAL, ToJSON((MaterialClass)t).toString());
                     break;
                 case WORKS_TABLE:
                     //public static final String[] WORKS_ALL_KEYS = new String[] {KEY_ROWID, WORKS_KEY_STATE, WORKS_KEY_NAME, WORKS_KEY_MATERIALS, WORKS_KEY_PRICE, WORKS_KEY_MEASURING, WORKS_KEY_WORKTYPE};
@@ -498,6 +498,23 @@ public class DBAdapter {
                 }
                 temp.put("materials", tmp);
                 temp.put("requirements", tmp);
+                return temp;
+            }
+            catch (JSONException e) {
+                return null;
+            }
+        }
+
+        private JSONObject ToJSON(MaterialClass material)
+        {
+            JSONObject temp = new JSONObject();
+            try
+            {
+                temp.put("name", material.getName());
+                temp.put("price", material.getPrice());
+                temp.put("measuring", material.getMeasuring());
+                temp.put("iconID", material.getIconID());
+                temp.put("per_object", material.getPer_object());
                 return temp;
             }
             catch (JSONException e) {
