@@ -35,11 +35,11 @@
 
     <string name="title_activity_price_work">PriceWorkActivity</string>
 
-    <string name="title_activity_work">WorkActivity</string>
+    <string name="title_activity_work">Новыая работа</string>
     <string name="work_work_name">Название работы</string>
     <string name="work_snipper">Цена за </string>
     <string name="work_price">Равна </string>
-    <string name="work_necessary_materials">Необходимые материалы</string>
+    <string name="work_necessary_materials">Необходимые матерьялы</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_toast_enter_name">Пожалуйста, введите название работы</string>
     <string name="work_about_text">
@@ -52,6 +52,9 @@
         материалов</b>, нажмите на кнопку
         <b>добавить</b>.
     </string>
+    <string name="work_alert_delete_title">Удаление</string>
+    <string name="work_alert_delete_summary">Вы уверены, что хотите удалить этот матерьял?</string>
+    <string name="work_empty_list">Список матерьялов пуст. Нажмите ДОБАВИТЬ, чтобы добавить новый матерьял</string>
 
     <string name="title_activity_search">Выберите необходимое</string>
     <string name="search_empty_list">Список пуст</string>
@@ -66,6 +69,8 @@
     <string name="removed">удалено</string>
     <string name="ok">Ок</string>
     <string name="add">Добавить</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
     <string name="room_kitchen">Кухня</string>
     <string name="room_bathroom">Ванная</string>
@@ -86,7 +91,7 @@
         <item>Кубический метр</item>
         <item>Килограмм</item>
         <item>Литр</item>
-        <item>Единица</item>
+        <item>Штука</item>
     </string-array>
     <string-array name="measurements_material_short">
         <item>м</item>
@@ -94,6 +99,6 @@
         <item>м3</item>
         <item>кг</item>
         <item>л</item>
-        <item>ед</item>
+        <item>шт</item>
     </string-array>
 </resources>

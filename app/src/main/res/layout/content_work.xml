@@ -20,7 +20,8 @@
         android:id="@+id/work_editText_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/work_work_name"/>
+        android:hint="@string/work_work_name"
+        android:text=""/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -80,12 +81,12 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/work_text_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/work_necessary_materials"
             android:textSize="16sp"
-            android:paddingTop="25dp"
-            android:id="@+id/work_text_list" />
+            android:paddingTop="25dp" />
 
         <Button
             android:id="@+id/work_button_new"
@@ -104,5 +105,11 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         />
+
+    <TextView
+        android:id="@+id/work_text_list_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
 
 </LinearLayout>

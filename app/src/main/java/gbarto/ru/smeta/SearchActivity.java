@@ -25,7 +25,6 @@ public class SearchActivity extends AppCompatActivity {
     private TextView mTextView;
 
     private ListView mListView;
-    private static final String TITLE = "title";
 
     private ArrayList<DBObject> list;
     ArrayList<Integer> num = new ArrayList<Integer>();
@@ -139,7 +138,7 @@ public class SearchActivity extends AppCompatActivity {
         return true;
     }
 
-    class Adapter extends SimpleAdapter{
+    private class Adapter extends SimpleAdapter{
         public Adapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
             super(context, data, resource, from, to);
         }

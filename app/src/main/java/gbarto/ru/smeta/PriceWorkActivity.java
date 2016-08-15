@@ -20,6 +20,9 @@ public class PriceWorkActivity extends AppCompatActivity {
     private static final String TITLE = "title";
     private String work_category_name;
 
+    static final private int UPDATE_WORK = 1;
+    static final private int CREATE_WORK = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +59,8 @@ public class PriceWorkActivity extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
             intent.putExtra("new_work", true);
-            startActivity(intent);
+            intent.putExtra("work", new WorkClass());
+            startActivityForResult(intent, CREATE_WORK);
         }
     };
 
@@ -85,10 +89,31 @@ public class PriceWorkActivity extends AppCompatActivity {
             HashMap<String,Object> itemHashMap = (HashMap<String,Object>)adapterView.getItemAtPosition(i);
             String titleItem = itemHashMap.get(TITLE).toString();
 
-            Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
+            /*Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
             intent.putExtra("new_work", false);
             intent.putExtra("name", titleItem);
-            startActivity(intent);
+            startActivity(intent);*/
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == UPDATE_WORK)
+        {
+            if (resultCode == RESULT_OK)
+            {
+
+            }
+        }
+        if (requestCode == CREATE_WORK)
+        {
+            if (resultCode == RESULT_OK)
+            {
+
+            }
+        }
+    }
 }
