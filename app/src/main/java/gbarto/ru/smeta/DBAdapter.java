@@ -309,7 +309,7 @@ public class DBAdapter {
                         {
                             String structure = c.getString(1);
                             MaterialClass tmp = JSONtoMaterialClass(FromString(structure));
-                            tmp.setRowID(c.getInt(0));
+                            tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
                         }
@@ -322,14 +322,14 @@ public class DBAdapter {
                             tmp.setPrice(c.getFloat(4));
                             tmp.setMeasuring(c.getInt(5));
                             tmp.setWorkType(c.getInt(6));
-                            tmp.setRowID(c.getInt(0));
+                            tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
                         }
                         case TYPES_TABLE:
                         {
                             WorkTypeClass tmp = new WorkTypeClass(c.getString(1), c.getString(2));
-                            tmp.setRowID(c.getInt(0));
+                            tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
                         }
@@ -369,7 +369,7 @@ public class DBAdapter {
                         {
                             String structure = c.getString(1);
                             MaterialClass tmp = JSONtoMaterialClass(FromString(structure));
-                            tmp.setRowID(c.getInt(0));
+                            tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
                         }
@@ -382,14 +382,14 @@ public class DBAdapter {
                             tmp.setPrice(c.getFloat(4));
                             tmp.setMeasuring(c.getInt(5));
                             tmp.setWorkType(c.getInt(6));
-                            tmp.setRowID(c.getInt(0));
+                            tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
                         }
                         case TYPES_TABLE:
                         {
                             WorkTypeClass tmp = new WorkTypeClass(c.getString(1), c.getString(2));
-                            tmp.setRowID(c.getInt(0));
+                            tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
                         }
