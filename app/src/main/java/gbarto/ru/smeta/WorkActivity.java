@@ -325,12 +325,15 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             Pair<String, Integer> p = material_info_from_id.get(rowID);
             mTextName.setText(p.first);
             mTextMeasurement.setText(measurements_material[p.second]);
+            mEditSum.setText(Float.toString(work.Materials.get(position).second));
 
+            final View v = view;
             mEditSum.setOnKeyListener(new View.OnKeyListener() {
                 @Override
-                public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                public boolean onKey(View view_edit, int i, KeyEvent keyEvent) {
                     final int tp = position;
-                    EditText mEditSum = (EditText) view.findViewById(R.id.editText_sum);
+                    System.out.println("----------------");
+                    EditText mEditSum = (EditText) v.findViewById(R.id.editText_sum);
                     work.Materials.get(tp).second = Float.valueOf(mEditSum.getText().toString());
                     return true;
                 }

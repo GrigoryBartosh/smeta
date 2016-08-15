@@ -112,7 +112,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
             //int imageItem = (int)itemHashMap.get(ICON);
 
             Intent intent = new Intent(PriceWorkCategoryActivity.this, PriceWorkActivity.class);
-            intent.putExtra("work_type", new WorkTypeClass("Барсик"));
+            intent.putExtra("work_type", new WorkTypeClass("сик"));
             startActivity(intent);
         }
     };

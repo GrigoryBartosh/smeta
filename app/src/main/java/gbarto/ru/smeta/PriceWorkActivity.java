@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public class PriceWorkActivity extends AppCompatActivity {
     static final private int CREATE_WORK = 2;
 
     DBAdapter dbAdapter = new DBAdapter(this);
+    int work_line;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +100,11 @@ public class PriceWorkActivity extends AppCompatActivity {
     AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            work_line = i;
             Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
             intent.putExtra("new_work", false);
             intent.putExtra("work", work_list.get(i));
-            startActivity(intent);
+            startActivityForResult(intent, UPDATE_WORK);
         }
     };
 
@@ -115,6 +118,8 @@ public class PriceWorkActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK)
             {
                 WorkClass work = (WorkClass)data.getSerializableExtra("work");
+                Toast.makeText(getApplicationContext(), work.name, Toast.LENGTH_SHORT).show();
+                work_list.set(work_line, work);
                 dbAdapter.update(work);
                 setList();
             }
