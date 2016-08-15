@@ -20,7 +20,7 @@ public class ListOverview extends AppCompatActivity
 
     ArrayList<WorkClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
-    private TypeClass TypeHere;
+    private WorkTypeClass TypeHere;
     ArrayAdapter<WorkClass> adapt;
     final private int GETTING_NEW_WORK = 1488;
     private String worktype;
@@ -32,7 +32,7 @@ public class ListOverview extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.list_overview_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        TypeHere = (TypeClass) getIntent().getSerializableExtra("keep_type");
+        TypeHere = (WorkTypeClass) getIntent().getSerializableExtra("keep_type");
         worktype = getIntent().getStringExtra("room") + ":" + getIntent().getStringExtra("room_type");
         setTitle(worktype);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()

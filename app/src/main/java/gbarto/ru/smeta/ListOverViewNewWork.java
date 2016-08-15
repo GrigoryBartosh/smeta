@@ -78,7 +78,7 @@ public class ListOverViewNewWork extends AppCompatActivity {
     private void default_values()
     {
 
-        DBObject[] temp = adapter.getWorksByType(((TypeClass) getIntent().getSerializableExtra("keep_type")).rowID);
+        DBObject[] temp = adapter.getWorksByType(((WorkTypeClass) getIntent().getSerializableExtra("keep_type")).rowID);
         //DBObject[] temp = adapter.getSelectionRows(adapter.TYPES_TABLE, adapter.TYPES_KEY_PLACE + " = ?", args);
         ArrayList<WorkClass> tmp3 = (ArrayList <WorkClass>) (getIntent().getExtras().getSerializable("have_works"));
         WorkClass[] tmp2 = new WorkClass[tmp3.size()];
@@ -171,7 +171,7 @@ public class ListOverViewNewWork extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
         {
-            TypeClass tmp = (TypeClass) adapterView.getItemAtPosition(i);
+            WorkTypeClass tmp = (WorkTypeClass) adapterView.getItemAtPosition(i);
             System.out.println(tmp.getName());
         }
     };

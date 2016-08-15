@@ -135,7 +135,7 @@ public class DBAdapter {
         }
     }
 
-    private JSONObject ToJSON(TypeClass type)
+    private JSONObject ToJSON(WorkTypeClass type)
     {
         JSONObject temp = new JSONObject();
         try
@@ -188,8 +188,8 @@ public class DBAdapter {
     {
         if (x instanceof WorkClass)
             return add((WorkClass)x);
-        if (x instanceof TypeClass)
-            return add((TypeClass)x);
+        if (x instanceof WorkTypeClass)
+            return add((WorkTypeClass)x);
         if (x instanceof MaterialClass)
             return add((MaterialClass)x);
         return -1;
@@ -199,8 +199,8 @@ public class DBAdapter {
     {
         if (x instanceof WorkClass)
             return update((WorkClass)x);
-        if (x instanceof TypeClass)
-            return update((TypeClass)x);
+        if (x instanceof WorkTypeClass)
+            return update((WorkTypeClass)x);
         if (x instanceof MaterialClass)
             return update((MaterialClass)x);
         return false;
@@ -244,7 +244,7 @@ public class DBAdapter {
     }
 
     // Adds new workType to DB and returns you row_id
-    public long add(TypeClass type) {
+    public long add(WorkTypeClass type) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(TYPES_KEY_PLACE, type.getPlace());
         initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
@@ -252,7 +252,7 @@ public class DBAdapter {
         return type.rowID;
     }
 
-    public boolean update(TypeClass type)
+    public boolean update(WorkTypeClass type)
     {
         String where = KEY_ROWID + "=" + type.rowID;
         ContentValues newValues = new ContentValues();
@@ -327,7 +327,7 @@ public class DBAdapter {
                         }
                         case TYPES_TABLE:
                         {
-                            TypeClass tmp = new TypeClass(c.getString(1), c.getString(2));
+                            WorkTypeClass tmp = new WorkTypeClass(c.getString(1), c.getString(2));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
@@ -387,7 +387,7 @@ public class DBAdapter {
                         }
                         case TYPES_TABLE:
                         {
-                            TypeClass tmp = new TypeClass(c.getString(1), c.getString(2));
+                            WorkTypeClass tmp = new WorkTypeClass(c.getString(1), c.getString(2));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
@@ -511,11 +511,11 @@ public class DBAdapter {
 			_db.execSQL(WORKS_CREATE_SQL);
             _db.execSQL(TYPES_CREATE_SQL);
 
-            TypeClass t1 = new TypeClass("", "Пол");
+            WorkTypeClass t1 = new WorkTypeClass("", "Пол");
             add(_db, TYPES_TABLE, t1);
-            t1 = new TypeClass("", "Стены");
+            t1 = new WorkTypeClass("", "Стены");
             add(_db, TYPES_TABLE, t1);
-            t1 = new TypeClass("", "Потолок");
+            t1 = new WorkTypeClass("", "Потолок");
             add(_db, TYPES_TABLE, t1);
 
             WorkClass t2 = new WorkClass(false, "Намазать пол говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);

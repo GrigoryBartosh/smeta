@@ -3,7 +3,7 @@ package gbarto.ru.smeta;
 /**
  * Created by Noobgam on 10.08.2016.
  */
-public class TypeClass extends DBObject implements Comparable<TypeClass>
+public class WorkTypeClass extends DBObject implements Comparable<WorkTypeClass>
 {
     public String place;
 
@@ -17,15 +17,15 @@ public class TypeClass extends DBObject implements Comparable<TypeClass>
         this.place = place;
     }
 
-    public TypeClass(String place, String name)
+    public WorkTypeClass(String place, String name)
     {
         this.place = place;
         this.name = name;
     }
 
     @Override
-    public int compareTo(TypeClass typeClass)
+    public int compareTo(WorkTypeClass workTypeClass)
     {
-        return name.compareTo(typeClass.name);
+        return name.compareTo(workTypeClass.name);
     }
 }

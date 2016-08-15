@@ -36,8 +36,8 @@ public class DBObject implements Serializable
             return ((WorkClass)this).compareTo((WorkClass)a);
         if (this instanceof MaterialClass && a instanceof MaterialClass)
             return ((MaterialClass)this).compareTo((MaterialClass)a);
-        if (this instanceof TypeClass && a instanceof TypeClass)
-            return ((TypeClass)this).compareTo((TypeClass)a);
+        if (this instanceof WorkTypeClass && a instanceof WorkTypeClass)
+            return ((WorkTypeClass)this).compareTo((WorkTypeClass)a);
         return 0;
     }
 
@@ -51,9 +51,9 @@ public class DBObject implements Serializable
                     ((WorkClass)this).price == ((WorkClass)obj).price &&
                     ((WorkClass)this).Materials.equals(((WorkClass)obj).Materials);
         
-        if (obj instanceof TypeClass)
-            return ((TypeClass)this).place.equals(((TypeClass)obj).place) &&
-                    ((TypeClass)this).name.equals(((TypeClass)obj).name);
+        if (obj instanceof WorkTypeClass)
+            return ((WorkTypeClass)this).place.equals(((WorkTypeClass)obj).place) &&
+                    ((WorkTypeClass)this).name.equals(((WorkTypeClass)obj).name);
 
         if (obj instanceof MaterialClass)
             return ((MaterialClass)this).name.equals(((MaterialClass)obj).name) &&

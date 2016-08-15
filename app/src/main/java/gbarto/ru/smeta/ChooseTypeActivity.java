@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class ChooseTypeActivity extends AppCompatActivity {
 
-    private ArrayList<TypeClass> WorkSet = new ArrayList<>();
+    private ArrayList<WorkTypeClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
     ArrayAdapter<WorkClass> adapt;
     private static final int NAMING = 228;
@@ -96,7 +96,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
         DBObject[] temp = adapter.getAllRows(adapter.TYPES_TABLE);
         //Arrays.sort(temp);
         for (DBObject x : temp)
-            WorkSet.add((TypeClass) x);
+            WorkSet.add((WorkTypeClass) x);
     }
 
     private void AddAdapter()
@@ -117,7 +117,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View item = getLayoutInflater().inflate(R.layout.listlayout, parent, false);
 
-            TypeClass w1 = WorkSet.get(position);
+            WorkTypeClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
             t1.setText(w1.name);
             ImageView img = (ImageView) item.findViewById(R.id.icon_right);
@@ -131,7 +131,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
         {
-            TypeClass tmp = (TypeClass) adapterView.getItemAtPosition(i);
+            WorkTypeClass tmp = (WorkTypeClass) adapterView.getItemAtPosition(i);
             Intent x = new Intent(ChooseTypeActivity.this, ListOverview.class);
             x.putExtra("room_type", tmp.getName());
             x.putExtras(getIntent());
