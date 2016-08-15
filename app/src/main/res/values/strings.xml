@@ -39,7 +39,7 @@
     <string name="work_work_name">Название работы</string>
     <string name="work_snipper">Цена за </string>
     <string name="work_price">Равна </string>
-    <string name="work_necessary_materials">Необходимые матерьялы</string>
+    <string name="work_necessary_materials">Необходимые материалы</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_toast_enter_name">Пожалуйста, введите название работы</string>
     <string name="work_about_text">
@@ -53,8 +53,8 @@
         <b>добавить</b>.
     </string>
     <string name="work_alert_delete_title">Удаление</string>
-    <string name="work_alert_delete_summary">Вы уверены, что хотите удалить этот матерьял?</string>
-    <string name="work_empty_list">Список матерьялов пуст. Нажмите ДОБАВИТЬ, чтобы добавить новый матерьял</string>
+    <string name="work_alert_delete_summary">Вы уверены, что хотите удалить этот материал?</string>
+    <string name="work_empty_list">Список материалов пуст. Нажмите ДОБАВИТЬ, чтобы добавить новый материал</string>
 
     <string name="title_activity_search">Выберите необходимое</string>
     <string name="search_empty_list">Список пуст</string>
