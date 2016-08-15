@@ -23,7 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 3;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -287,7 +287,7 @@ public class DBAdapter {
         newValues.put(MATERIAL_TYPES_KEY_NAME, materialTypeClass.getName());
         newValues.put(MATERIAL_TYPES_KEY_MEASUREMENT, materialTypeClass.getMeasurement());
         materialTypeClass.rowID = db.insert(MATERIAL_TYPES_TABLE, null, newValues);
-        return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
+        return db.update(MATERIAL_TYPES_TABLE, newValues, where, null) != 0;
     }
 
 	// Adds new material to DB and returns you row_id
@@ -317,14 +317,21 @@ public class DBAdapter {
         initialValues.put(WORKS_KEY_WORKTYPE, work.getWorkType());
         work.rowID = db.insert(WORKS_TABLE, null, initialValues);
         return work.rowID;
+
     }
 
     public boolean update(WorkClass work)
     {
         String where = KEY_ROWID + "=" + work.rowID;
-        ContentValues newValues = new ContentValues();
-        newValues.put(MATERIAL_KEY_MATERIAL,  ToJSON(work).toString());
-        return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(WORKS_KEY_NAME, work.getName());
+        initialValues.put(WORKS_KEY_STATE, work.isState());
+        initialValues.put(WORKS_KEY_MEASURING, work.getMeasuring());
+        initialValues.put(WORKS_KEY_MATERIALS, ToJSON(work).toString());
+        initialValues.put(WORKS_KEY_PRICE, work.getPrice());
+        initialValues.put(WORKS_KEY_WORKTYPE, work.getWorkType());
+        work.rowID = db.insert(WORKS_TABLE, null, initialValues);
+        return db.update(WORKS_TABLE, initialValues, where, null) != 0;
     }
 
     // Adds new workType to DB and returns you row_id
@@ -339,9 +346,11 @@ public class DBAdapter {
     public boolean update(WorkTypeClass type)
     {
         String where = KEY_ROWID + "=" + type.rowID;
-        ContentValues newValues = new ContentValues();
-        newValues.put(MATERIAL_KEY_MATERIAL,  ToJSON(type).toString());
-        return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(TYPES_KEY_PLACE, type.getPlace());
+        initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
+        type.rowID = db.insert(TYPES_TABLE, null, initialValues);
+        return db.update(TYPES_TABLE, initialValues, where, null) != 0;
     }
 
 	// Delete a row from the database, by rowId (primary key)
