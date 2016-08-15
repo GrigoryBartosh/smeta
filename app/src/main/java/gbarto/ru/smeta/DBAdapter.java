@@ -39,13 +39,23 @@ public class DBAdapter {
 
 	// BASE 2:
 
-	public static final String WORKS_KEY_TYPE = "workType";
-	public static final String[] WORKS_ALL_KEYS = new String[] {KEY_ROWID, WORKS_KEY_TYPE};
+    public static final String WORKS_KEY_STATE = "workState";
+	public static final String WORKS_KEY_NAME = "workName";
+    public static final String WORKS_KEY_MATERIALS = "workMaterials";
+    public static final String WORKS_KEY_PRICE = "workPrice";
+    public static final String WORKS_KEY_MEASURING = "workMeasuring";
+    public static final String WORKS_KEY_WORKTYPE = "workType";
+	public static final String[] WORKS_ALL_KEYS = new String[] {KEY_ROWID, WORKS_KEY_STATE, WORKS_KEY_NAME, WORKS_KEY_MATERIALS, WORKS_KEY_PRICE, WORKS_KEY_MEASURING, WORKS_KEY_WORKTYPE};
 	public static final String WORKS_TABLE = "worksTable";
 	private static final String WORKS_CREATE_SQL =
 			"create table " + WORKS_TABLE + " ("
 					+ KEY_ROWID + " integer primary key autoincrement, "
-					+ WORKS_KEY_TYPE + " text not null"
+					+ WORKS_KEY_STATE + " int not null, "
+                    + WORKS_KEY_NAME + " text not null, "
+                    + WORKS_KEY_MATERIALS + " text not null, "
+                    + WORKS_KEY_PRICE + " float not null, "
+                    + WORKS_KEY_MEASURING + " int not null, "
+                    + WORKS_KEY_WORKTYPE + " int not null"
 					+ ");";
 
     // BASE 3:
@@ -109,13 +119,8 @@ public class DBAdapter {
         JSONObject temp = new JSONObject();
         try
         {
-            temp.put("name", work.getName());
-            temp.put("state", work.isState());
-            temp.put("measuring", work.getMeasuring());
-            temp.put("price", work.getPrice());
-            temp.put("worktype", work.getWorkType());
             JSONArray tmp = new JSONArray();
-            for (int x : work.getMaterials())
+            for (long x : work.getMaterials())
                 tmp.put(x);
             temp.put("materials", tmp);
             return temp;
@@ -153,10 +158,10 @@ public class DBAdapter {
     {
         try {
             JSONArray tmp = x.getJSONArray("materials");
-            ArrayList <Integer> temp = new ArrayList<>();
+            ArrayList <Long> temp = new ArrayList<>();
             for (int i = 0; i < tmp.length(); ++i)
-                temp.add((Integer)tmp.getInt(i));
-            return new WorkClass(x.getBoolean("state"), x.getString("name"), temp, (float)x.getDouble("price"), x.getInt("measuring"), x.getInt("worktype"));
+                temp.add(tmp.getLong(i));
+            return new WorkClass(false, "", temp, 0, 0, 0);
         }
         catch (JSONException e) {
             return null;
@@ -173,15 +178,6 @@ public class DBAdapter {
         }
     }
 
-    private TypeClass JSONtoTypeClass (JSONObject x)
-    {
-        try {
-            return new TypeClass("", x.getString("name"));
-        }
-        catch (JSONException e) {
-            return null;
-        }
-    }
 	// Adds new material to DB and returns you row_id
 	public long add(MaterialClass material) {
 		ContentValues initialValues = new ContentValues();
@@ -201,7 +197,12 @@ public class DBAdapter {
     // Adds new work to DB and returns you row_id
     public long add(WorkClass work) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(WORKS_KEY_TYPE, ToJSON(work).toString());
+        initialValues.put(WORKS_KEY_NAME, work.getName());
+        initialValues.put(WORKS_KEY_STATE, work.isState());
+        initialValues.put(WORKS_KEY_MEASURING, work.getMeasuring());
+        initialValues.put(WORKS_KEY_MATERIALS, ToJSON(work).toString());
+        initialValues.put(WORKS_KEY_PRICE, work.getPrice());
+        initialValues.put(WORKS_KEY_WORKTYPE, work.getWorkType());
         work.rowID = db.insert(WORKS_TABLE, null, initialValues);
         return work.rowID;
     }
@@ -285,17 +286,20 @@ public class DBAdapter {
                         }
                         case WORKS_TABLE:
                         {
-                            String structure = c.getString(1);
+                            String structure = c.getString(3);
                             WorkClass tmp = JSONtoWorkListView(FromString(structure));
+                            tmp.setState(c.getInt(1) == 1);
+                            tmp.setName(c.getString(2));
+                            tmp.setPrice(c.getFloat(4));
+                            tmp.setMeasuring(c.getInt(5));
+                            tmp.setWorkType(c.getInt(6));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
                         }
                         case TYPES_TABLE:
                         {
-                            String structure = c.getString(2);
-                            TypeClass tmp = JSONtoTypeClass(FromString(structure));
-                            tmp.setPlace(c.getString(1));
+                            TypeClass tmp = new TypeClass(c.getString(1), c.getString(2));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
@@ -344,15 +348,18 @@ public class DBAdapter {
                         {
                             String structure = c.getString(1);
                             WorkClass tmp = JSONtoWorkListView(FromString(structure));
+                            tmp.setState(c.getInt(1) == 1);
+                            tmp.setName(c.getString(2));
+                            tmp.setPrice(c.getFloat(4));
+                            tmp.setMeasuring(c.getInt(5));
+                            tmp.setWorkType(c.getInt(6));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
                         }
                         case TYPES_TABLE:
                         {
-                            String structure = c.getString(2);
-                            TypeClass tmp = JSONtoTypeClass(FromString(structure));
-                            tmp.setPlace(c.getString(1));
+                            TypeClass tmp = new TypeClass(c.getString(1), c.getString(2));
                             tmp.setRowID(c.getInt(0));
                             temp.add(tmp);
                             break;
@@ -413,20 +420,29 @@ public class DBAdapter {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
 
-        void add(SQLiteDatabase _db, String tablename, String s)
+        void add(SQLiteDatabase _db, String tablename, DBObject t)
         {
             ContentValues initialValues = new ContentValues();
             switch (tablename)
             {
                 case MATERIAL_TABLE:
-                    initialValues.put(MATERIAL_KEY_MATERIAL, s);
+                    //public static final String[] MATERIAL_ALL_KEYS = new String[] {KEY_ROWID, MATERIAL_KEY_MATERIAL};
+                    initialValues.put(MATERIAL_KEY_MATERIAL, t.getName());
                     break;
                 case WORKS_TABLE:
-                    initialValues.put(WORKS_KEY_TYPE, s);
+                    //public static final String[] WORKS_ALL_KEYS = new String[] {KEY_ROWID, WORKS_KEY_STATE, WORKS_KEY_NAME, WORKS_KEY_MATERIALS, WORKS_KEY_PRICE, WORKS_KEY_MEASURING, WORKS_KEY_WORKTYPE};
+                    WorkClass s = (WorkClass)t;
+                    initialValues.put(WORKS_KEY_STATE, s.isState());
+                    initialValues.put(WORKS_KEY_NAME, s.getName());
+                    initialValues.put(WORKS_KEY_MATERIALS, ToJSON(s).toString());
+                    initialValues.put(WORKS_KEY_PRICE, s.getPrice());
+                    initialValues.put(WORKS_KEY_MEASURING, s.getMeasuring());
+                    initialValues.put(WORKS_KEY_WORKTYPE, s.getWorkType());
                     break;
                 case TYPES_TABLE:
+                    //public static final String[] TYPES_ALL_KEYS = new String[] {KEY_ROWID, TYPES_KEY_PLACE, TYPES_KEY_TYPE};
                     initialValues.put(TYPES_KEY_PLACE, "");
-                    initialValues.put(TYPES_KEY_TYPE, s);
+                    initialValues.put(TYPES_KEY_TYPE, t.getName());
                     break;
             }
             _db.insert(tablename, null, initialValues);
@@ -443,7 +459,7 @@ public class DBAdapter {
                 temp.put("measuring", work.getMeasuring());
                 temp.put("price", work.getPrice());
                 JSONArray tmp = new JSONArray();
-                for (int x : work.getMaterials())
+                for (long x : work.getMaterials())
                     tmp.put(x);
                 temp.put("materials", tmp);
                 return temp;
@@ -460,18 +476,21 @@ public class DBAdapter {
 			_db.execSQL(WORKS_CREATE_SQL);
             _db.execSQL(TYPES_CREATE_SQL);
 
-            add(_db, TYPES_TABLE, "{\"name\":\"Пол\"}");
-            add(_db, TYPES_TABLE, "{\"name\":\"Стены\"}");
-            add(_db, TYPES_TABLE, "{\"name\":\"Потолок\"}");
-            add(_db, TYPES_TABLE, "{\"name\":\"Член\"}");
-            add(_db, TYPES_TABLE, "{\"name\":\"Говно\"}");
-            add(_db, TYPES_TABLE, "{\"name\":\"Моча\"}");
+            TypeClass t1 = new TypeClass("", "Пол");
+            add(_db, TYPES_TABLE, t1);
+            t1 = new TypeClass("", "Стены");
+            add(_db, TYPES_TABLE, t1);
+            t1 = new TypeClass("", "Потолок");
+            add(_db, TYPES_TABLE, t1);
 
-            add(_db, WORKS_TABLE, "{\"name\":\"Намазать пол говном\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":1}");
-            add(_db, WORKS_TABLE, "{\"name\":\"Намазать стены говном\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":2}");
-            add(_db, WORKS_TABLE, "{\"name\":\"Намазать потолок говном\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":3}");
-            add(_db, WORKS_TABLE, "{\"name\":\"Намазать потолок дерьмом\",\"state\":false,\"measuring\":1,\"price\":1.15,\"materials\":[],\"worktype\":3}");
-
+            WorkClass t2 = new WorkClass(false, "Намазать пол говном", new ArrayList<Long>(), 1.15f, 1, 1);
+            add(_db, WORKS_TABLE, t2);
+            t2 = new WorkClass(false, "Намазать стены говном", new ArrayList<Long>(), 1.15f, 1, 2);
+            add(_db, WORKS_TABLE, t2);
+            t2 = new WorkClass(false, "Намазать потолок говном", new ArrayList<Long>(), 1.15f, 1,3);
+            add(_db, WORKS_TABLE, t2);
+            t2 = new WorkClass(false, "Вымазать потолок говном", new ArrayList<Long>(), 1.15f, 1, 3);
+            add(_db, WORKS_TABLE, t2);
 		}
 
 		@Override
