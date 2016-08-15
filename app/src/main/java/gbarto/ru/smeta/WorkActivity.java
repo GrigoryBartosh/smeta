@@ -48,6 +48,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private HashMap<Long, Pair<String, Integer> > material_info_from_id;
     String[] measurements_material;
 
+    DBAdapter dbAdapter = new DBAdapter(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mEditSum = (EditText) findViewById(R.id.work_editText_sum);
         mButtonNew = (Button) findViewById(R.id.work_button_new);
         mTextListEmpty = (TextView) findViewById(R.id.work_text_list_empty);
+
+        dbAdapter.open();
 
         spinner_adapter = ArrayAdapter.createFromResource(this, R.array.measurements_work, android.R.layout.simple_spinner_item);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -90,6 +94,12 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        dbAdapter.close();
+        super.onDestroy();
     }
 
     @Override
@@ -324,8 +334,12 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private ArrayList<MaterialClass> getAllMaterial() {
-        //--------------------------------------------------------------------------------------------------------
-        return new ArrayList<MaterialClass>();
+        DBObject[] arr = dbAdapter.getAllRows(DBAdapter.MATERIAL_TABLE);
+        ArrayList<MaterialClass> res = new ArrayList<MaterialClass>();
+        for (int i = 0; i < arr.length; i++){
+            res.add((MaterialClass) arr[i]);
+        }
+        return res;
     }
 
 }
