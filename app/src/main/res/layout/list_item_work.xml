@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:text="This is Title"
         android:textSize="18sp"
-        android:layout_weight="6"/>
+        android:layout_weight="6"
+        />
 
     <EditText
         android:id="@+id/editText_sum"

@@ -45,7 +45,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     static final private int CHOOSE_MATERIAL = 0;
 
     private ArrayList<MaterialClass> all_material;
-    private HashMap<Long, Pair<String, Integer> > material_info_from_id;
+    private HashMap<Long, Pair<String, Integer> > material_info_from_id = new HashMap<Long, Pair<String, Integer> >();
     String[] measurements_material;
 
     DBAdapter dbAdapter = new DBAdapter(this);
@@ -60,6 +60,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mEditSum = (EditText) findViewById(R.id.work_editText_sum);
         mButtonNew = (Button) findViewById(R.id.work_button_new);
         mTextListEmpty = (TextView) findViewById(R.id.work_text_list_empty);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
 
         dbAdapter.open();
 
@@ -67,6 +68,14 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(spinner_adapter);
         mButtonNew.setOnClickListener(btn_ocl);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         mListView = (ListView)findViewById(R.id.work_listView);
         mListView.setOnItemLongClickListener(WorkActivity.this);
@@ -76,24 +85,16 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             material_info_from_id.put(  all_material.get(i).rowID,
                                         new Pair(all_material.get(i).name, all_material.get(i).measuring));
 
-        measurements_material = getResources().getStringArray(R.array.measurements_material);
+        measurements_material = getResources().getStringArray(R.array.measurements_material_short);
 
         Intent intent = getIntent();
         new_work = intent.getExtras().getBoolean("new_work");
         work = (WorkClass) intent.getExtras().getSerializable("work");
         if (!new_work) {
             setFromWork();
+        } else {
+            mTextListEmpty.setText(getString(R.string.work_empty_list));
         }
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
     }
 
     @Override
@@ -168,6 +169,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     View.OnClickListener btn_ocl = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
+            setToWork();
+
             HashSet<Long> used_material = new HashSet<Long>();
             if (work.Materials != null)
                 for (int i = 0; i < work.Materials.size(); i++)
@@ -224,13 +227,14 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private void setToWork()
     {
         work.name = mEditName.getText().toString();
-        work.measuring = spinner_adapter.getPosition(mSpinner.getSelectedItem().toString());//?????????????????????????????????????????????????????????
+        work.measuring = spinner_adapter.getPosition(mSpinner.getSelectedItem().toString());
         String price = mEditSum.getText().toString();
-        if (price.equals(""))
+        if (price.equals("") || price.equals("-") || price.equals("-."))
         {
             work.price = 0;
         } else {
             work.price = Float.valueOf(price);
+            if (work.price < 0.5) work.price = 0;
         }
     }
 
@@ -238,7 +242,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         mEditName.setText(work.name);
 
-        mSpinner.setSelection(work.measuring);//????????????????????????????????????????????????????????????????????????????????????????????????????????
+        mSpinner.setSelection(work.measuring);
 
         if (Math.abs(work.price) < 1e-8)
             mEditSum.setText("");
@@ -267,6 +271,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         if (adapter.getCount() == 0)
         {
             mTextListEmpty.setText(getString(R.string.work_empty_list));
+        } else {
+            mTextListEmpty.setText("");
         }
     }
 
@@ -309,10 +315,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = convertView;
-            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_search, parent, false);
+            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_work, parent, false);
 
             TextView mTextName = (TextView) view.findViewById(R.id.text_name);
-            final EditText mEditSum = (EditText) view.findViewById(R.id.editText_sum);
+            EditText mEditSum = (EditText) view.findViewById(R.id.editText_sum);
             TextView mTextMeasurement = (TextView) view.findViewById(R.id.text_measurement);
 
             Long rowID = work.Materials.get(position).first;
@@ -324,12 +330,21 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 @Override
                 public boolean onKey(View view, int i, KeyEvent keyEvent) {
                     final int tp = position;
+                    EditText mEditSum = (EditText) view.findViewById(R.id.editText_sum);
                     work.Materials.get(tp).second = Float.valueOf(mEditSum.getText().toString());
                     return true;
                 }
             });
 
+            mTextName.setLongClickable(true);
+            mTextMeasurement.setLongClickable(true);
+
             return view;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return true;
         }
     }
 
