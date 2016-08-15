@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by Noobgam on 15.08.2016.
  */
-public class MaterialTypeClass
+public class MaterialTypeClass extends DBObject
 {
     public ArrayList<Long> Materials;
     public int measurement;
@@ -33,6 +33,11 @@ public class MaterialTypeClass
     }
 
     public void setMaterials(ArrayList<Long> materials)
+    {
+        Materials = materials;
+    }
+
+    public MaterialTypeClass(ArrayList<Long> materials)
     {
         Materials = materials;
     }

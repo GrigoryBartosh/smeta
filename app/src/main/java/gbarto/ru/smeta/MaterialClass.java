@@ -50,7 +50,7 @@ public class MaterialClass extends DBObject implements Comparable <MaterialClass
 
     public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
     {
-        this.name = name;
+        this.name = new String(name);
         this.price = price;
         this.measuring = measuring;
         this.iconID = iconID;

@@ -71,7 +71,21 @@ public class DBAdapter {
                     + TYPES_KEY_TYPE + " text not null"
                     + ");";
 
-	
+    // BASE 4:
+
+    public static final String MATERIAL_TYPES_KEY_NAME = "name";
+    public static final String MATERIAL_TYPES_KEY_MEASUREMENT = "measurement";
+    public static final String MATERIAL_TYPES_KEY_MATERIALS = "materials";
+    public static final String[] MATERIAL_TYPES_ALL_KEYS = new String[] {KEY_ROWID, MATERIAL_TYPES_KEY_NAME, MATERIAL_TYPES_KEY_MEASUREMENT, MATERIAL_TYPES_KEY_MATERIALS};
+    public static final String MATERIAL_TYPES_TABLE = "materialTypesTable";
+    private static final String MATERIAL_TYPES_CREATE_SQL =
+            "create table " + MATERIAL_TYPES_TABLE + " ("
+                    + KEY_ROWID + " integer primary key autoincrement, "
+                    + MATERIAL_TYPES_KEY_NAME + " text not null, "
+                    + MATERIAL_TYPES_KEY_MEASUREMENT + " text not null, "
+                    + MATERIAL_TYPES_KEY_MATERIALS + " text not null"
+                    + ");";
+
 	// Context of application who uses us.
 
 	protected final Context context;
@@ -81,22 +95,38 @@ public class DBAdapter {
 	/////////////////////////////////////////////////////////////////////
 	//	Public methods:
 	/////////////////////////////////////////////////////////////////////
-	
+
 	public DBAdapter(Context ctx) {
 		this.context = ctx;
 		myDBHelper = new DatabaseHelper(context);
 	}
-	
+
 	// Open the database connection.
 	public DBAdapter open() {
 		db = myDBHelper.getWritableDatabase();
 		return this;
 	}
-	
+
 	// Close the database connection.
 	public void close() {
 		myDBHelper.close();
 	}
+
+    private JSONObject ToJSON(MaterialTypeClass materialTypeClass)
+    {
+        JSONObject temp = new JSONObject();
+        try
+        {
+            JSONArray tmp2 = new JSONArray();
+            for (Long x : materialTypeClass.Materials)
+                tmp2.put(x);
+            temp.put("Materials", tmp2);
+            return temp;
+        }
+        catch (JSONException e) {
+            return null;
+        }
+    }
 
     private JSONObject ToJSON(MaterialClass material)
     {
@@ -166,8 +196,13 @@ public class DBAdapter {
             JSONArray tmp = x.getJSONArray("materials");
             JSONArray tmp2 = x.getJSONArray("requirements");
             ArrayList <Pair <Long, Float> > temp = new ArrayList<>();
-            for (int i = 0; i < tmp.length(); ++i)
+            ArrayList <Pair <Long, Float> > temp2 = new ArrayList<>();
+            JSONArray tmp3 = x.getJSONArray("realMaterials");
+            JSONArray tmp4 = x.getJSONArray("realRequirements");
+            for (int i = 0; i < tmp.length(); ++i){
                 temp.add(new Pair(tmp.getLong(i), (float)tmp2.getDouble(i)));
+                temp2.add(new Pair(tmp3.getLong(i), (float)tmp4.getDouble(i)));
+            }
             return new WorkClass(false, "", temp, 0, 0, 0);
         }
         catch (JSONException e) {
@@ -185,6 +220,20 @@ public class DBAdapter {
         }
     }
 
+    private MaterialTypeClass JSONtoMaterialTypeClass(JSONObject x)
+    {
+        try {
+            ArrayList <Long> temp = new ArrayList<>();
+            JSONArray tmp = x.getJSONArray("Materials");
+            for (int i = 0; i < tmp.length(); ++i)
+                temp.add(tmp.getLong(i));
+            return new MaterialTypeClass(temp);
+        }
+        catch (JSONException e) {
+            return null;
+        }
+    }
+
     public long add(DBObject x)
     {
         if (x instanceof WorkClass)
@@ -193,6 +242,8 @@ public class DBAdapter {
             return add((WorkTypeClass)x);
         if (x instanceof MaterialClass)
             return add((MaterialClass)x);
+        if (x instanceof MaterialTypeClass)
+            return add((MaterialTypeClass)x);
         return -1;
     }
 
@@ -204,7 +255,30 @@ public class DBAdapter {
             return update((WorkTypeClass)x);
         if (x instanceof MaterialClass)
             return update((MaterialClass)x);
+        if (x instanceof MaterialTypeClass)
+            return update((MaterialTypeClass)x);
         return false;
+    }
+
+    public long add(MaterialTypeClass materialTypeClass)
+    {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(MATERIAL_TYPES_KEY_MATERIALS, ToJSON(materialTypeClass).toString());
+        initialValues.put(MATERIAL_TYPES_KEY_NAME, materialTypeClass.getName());
+        initialValues.put(MATERIAL_TYPES_KEY_MEASUREMENT, materialTypeClass.getMeasurement());
+        materialTypeClass.rowID = db.insert(MATERIAL_TYPES_TABLE, null, initialValues);
+        return materialTypeClass.rowID;
+    }
+
+    public boolean update(MaterialTypeClass materialTypeClass)
+    {
+        String where = KEY_ROWID + "=" + materialTypeClass.rowID;
+        ContentValues newValues = new ContentValues();
+        newValues.put(MATERIAL_TYPES_KEY_MATERIALS, ToJSON(materialTypeClass).toString());
+        newValues.put(MATERIAL_TYPES_KEY_NAME, materialTypeClass.getName());
+        newValues.put(MATERIAL_TYPES_KEY_MEASUREMENT, materialTypeClass.getMeasurement());
+        materialTypeClass.rowID = db.insert(MATERIAL_TYPES_TABLE, null, newValues);
+        return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
     }
 
 	// Adds new material to DB and returns you row_id
@@ -282,62 +356,7 @@ public class DBAdapter {
 	public DBObject[] getAllRows(String tablename) //returns whole
 	{
 		String where = null;
-        ArrayList<DBObject> temp = new ArrayList<>();
-		Cursor c = null;
-		switch (tablename)
-		{
-			case MATERIAL_TABLE:
-				c =	db.query(true, tablename, MATERIAL_ALL_KEYS,
-						where, null, null, null, null, null);
-				break;
-			case WORKS_TABLE:
-				c =	db.query(true, tablename, WORKS_ALL_KEYS,
-						where, null, null, null, null, null);
-				break;
-            case TYPES_TABLE:
-                c =	db.query(true, tablename, TYPES_ALL_KEYS,
-                        where, null, null, null, null, null);
-                break;
-		}
-		if (c != null)
-            if (c.moveToFirst())
-                do
-                {
-                    switch (tablename)
-                    {
-                        case MATERIAL_TABLE:
-                        {
-                            String structure = c.getString(1);
-                            MaterialClass tmp = JSONtoMaterialClass(FromString(structure));
-                            tmp.setRowID(c.getLong(0));
-                            temp.add(tmp);
-                            break;
-                        }
-                        case WORKS_TABLE:
-                        {
-                            String structure = c.getString(3);
-                            WorkClass tmp = JSONtoWorkListView(FromString(structure));
-                            tmp.setState(c.getInt(1) == 1);
-                            tmp.setName(c.getString(2));
-                            tmp.setPrice(c.getFloat(4));
-                            tmp.setMeasuring(c.getInt(5));
-                            tmp.setWorkType(c.getInt(6));
-                            tmp.setRowID(c.getLong(0));
-                            temp.add(tmp);
-                            break;
-                        }
-                        case TYPES_TABLE:
-                        {
-                            WorkTypeClass tmp = new WorkTypeClass(c.getString(1), c.getString(2));
-                            tmp.setRowID(c.getLong(0));
-                            temp.add(tmp);
-                            break;
-                        }
-                    }
-                } while (c.moveToNext());
-        DBObject[] tmp2 = new DBObject[temp.size()];
-        tmp2 = temp.toArray(tmp2);
-		return tmp2;
+        return getSelectionRows(tablename, where);
 	}
 
     public DBObject[] getSelectionRows(String tablename, String where)
@@ -358,6 +377,9 @@ public class DBAdapter {
                 c =	db.query(true, tablename, TYPES_ALL_KEYS,
                         where, null, null, null, null, null);
                 break;
+            case MATERIAL_TYPES_TABLE:
+                c = db.query(true, tablename, MATERIAL_TYPES_ALL_KEYS,
+                        where, null, null, null, null, null);
         }
         if (c != null)
             if (c.moveToFirst())
@@ -393,6 +415,14 @@ public class DBAdapter {
                             temp.add(tmp);
                             break;
                         }
+                        case MATERIAL_TYPES_TABLE:
+                        {
+                            String structure = c.getString(3);
+                            MaterialTypeClass tmp = JSONtoMaterialTypeClass(FromString(structure));
+                            tmp.setName(c.getString(1));
+                            tmp.setMeasurement(c.getInt(2));
+                            break;
+                        }
                     }
                 } while (c.moveToNext());
         DBObject[] tmp2 = new DBObject[temp.size()];
@@ -406,44 +436,19 @@ public class DBAdapter {
         return getSelectionRows(WORKS_TABLE, where);
     }
 
-	// Get a specific row (by rowId)
-	public DBObject getRow(String tablename, long rowId) {
-		String where = KEY_ROWID + "=" + rowId;
-		Cursor c = null;
-        switch (tablename)
-        {
-            case MATERIAL_TABLE:
-                c =	db.query(true, tablename, MATERIAL_ALL_KEYS,
-                        where, null, null, null, null, null);
-                break;
-            case WORKS_TABLE:
-                c =	db.query(true, tablename, WORKS_ALL_KEYS,
-                        where, null, null, null, null, null);
-                break;
-        }
-        if (c != null) {
-            c.moveToFirst();
-        }
-        switch (tablename)
-        {
-            case MATERIAL_TABLE:
-            {
-                String structure = c.getString(1);
-                return JSONtoMaterialClass(FromString(structure));
-            }
-            case WORKS_TABLE:
-            {
-                String structure = c.getString(1);
-                return JSONtoWorkListView(FromString(structure));
-            }
-        }
-		return null;
-	}
-	
+    public DBObject getRow(String tablename, long row)
+    {
+        String where = KEY_ROWID + "=" + Long.toString(row);
+        DBObject[] temp = getSelectionRows(KEY_ROWID, where);
+        if (temp == null || temp.length == 0)
+            return null;
+        return getSelectionRows(KEY_ROWID, where)[0];
+    }
+
 	/////////////////////////////////////////////////////////////////////
 	//	Private Helper Classes:
 	/////////////////////////////////////////////////////////////////////
-	
+
 	/**
 	 * Private class which handles database creation and upgrading.
 	 * Used to handle low-level database access.
@@ -491,13 +496,19 @@ public class DBAdapter {
             {
                 JSONArray tmp = new JSONArray();
                 JSONArray tmp2 = new JSONArray();
+                JSONArray tmp3 = new JSONArray();
+                JSONArray tmp4 = new JSONArray();
                 for (Pair <Long, Float> x : work.getMaterials())
                 {
                     tmp.put(x.first);
                     tmp2.put(x.second);
+                    tmp3.put(-1);
+                    tmp4.put(-1);
                 }
                 temp.put("materials", tmp);
-                temp.put("requirements", tmp);
+                temp.put("requirements", tmp2);
+                temp.put("realMaterials", tmp3);
+                temp.put("realRequirements", tmp4);
                 return temp;
             }
             catch (JSONException e) {
@@ -528,6 +539,7 @@ public class DBAdapter {
 			_db.execSQL(MATERIAL_CREATE_SQL);
 			_db.execSQL(WORKS_CREATE_SQL);
             _db.execSQL(TYPES_CREATE_SQL);
+            _db.execSQL(MATERIAL_TYPES_CREATE_SQL);
 
             WorkTypeClass t1 = new WorkTypeClass("", "Пол");
             add(_db, TYPES_TABLE, t1);
@@ -537,12 +549,16 @@ public class DBAdapter {
             add(_db, TYPES_TABLE, t1);
 
             WorkClass t2 = new WorkClass(false, "Намазать пол говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);
+            t2.addMaterial(0L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Намазать стены говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 2);
+            t2.addMaterial(0L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Намазать потолок говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1,3);
+            t2.addMaterial(0L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Вымазать потолок говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 3);
+            t2.addMaterial(0L);
             add(_db, WORKS_TABLE, t2);
 
             //public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
@@ -553,17 +569,19 @@ public class DBAdapter {
 		}
 
 		@Override
-		public void onUpgrade(SQLiteDatabase _db, int oldVersion, int newVersion) {
-			Log.w(TAG, "Upgrading application's database from version " + oldVersion
-					+ " to " + newVersion + ", which will destroy all old data!");
-			
-			// Destroy old database:
-			_db.execSQL("DROP TABLE IF EXISTS " + MATERIAL_TABLE);
-			_db.execSQL("DROP TABLE IF EXISTS " + WORKS_TABLE);
+		public void onUpgrade(SQLiteDatabase _db, int oldVersion, int newVersion)
+        {
+            Log.w(TAG, "Upgrading application's database from version " + oldVersion
+                    + " to " + newVersion + ", which will destroy all old data!");
+
+            // Destroy old database:
+            _db.execSQL("DROP TABLE IF EXISTS " + MATERIAL_TABLE);
+            _db.execSQL("DROP TABLE IF EXISTS " + WORKS_TABLE);
             _db.execSQL("DROP TABLE IF EXISTS " + TYPES_TABLE);
-			
-			// Recreate new database:
-			onCreate(_db);
+            _db.execSQL("DROP TABLE IF EXISTS " + MATERIAL_TYPES_TABLE);
+
+            // Recreate new database:
+            onCreate(_db);
 		}
 
         @Override
@@ -576,6 +594,7 @@ public class DBAdapter {
             _db.execSQL("DROP TABLE IF EXISTS " + MATERIAL_TABLE);
             _db.execSQL("DROP TABLE IF EXISTS " + WORKS_TABLE);
             _db.execSQL("DROP TABLE IF EXISTS " + TYPES_TABLE);
+            _db.execSQL("DROP TABLE IF EXISTS " + MATERIAL_TYPES_TABLE);
 
             // Recreate new database:
             onCreate(_db);

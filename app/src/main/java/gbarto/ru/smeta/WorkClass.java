@@ -11,7 +11,27 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public boolean state;
     public long workType;
 
+    public WorkClass(WorkClass a)
+    {
+        this.name = new String(a.name);
+        this.rowID = a.rowID;
+        this.state = a.state;
+        this.workType = a.workType;
+    }
+
     public ArrayList<Pair <Long, Float> > Materials;
+    public ArrayList<Pair <Long, Float> > RealMaterials;
+
+    public ArrayList<Pair<Long, Float>> getRealMaterials()
+    {
+        return RealMaterials;
+    }
+
+    public void setRealMaterials(ArrayList<Pair<Long, Float>> realMaterials)
+    {
+        RealMaterials = realMaterials;
+    }
+
     public float price;
     public int measuring;
 
@@ -68,6 +88,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public void addMaterial(long newMaterial)
     {
         Materials.add(new Pair(newMaterial, 0.0f));
+        RealMaterials.add(new Pair(-1L, -1.0f));
     }
 
     public WorkClass(boolean state, String name)
@@ -87,17 +108,21 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.measuring = -1;
         this.price = 0;
         this.name = "";
+        this.RealMaterials = new ArrayList<>();
         this.workType = -1;
     }
 
     public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, float price, int measuring, long workType)
     {
         this.state = state;
-        Materials = materials;
+        Materials = new ArrayList<>(materials);
         this.price = price;
-        this.name = name;
+        this.name = new String(name);
         this.measuring = measuring;
         this.workType = workType;
+        RealMaterials = new ArrayList<>(materials);
+        for (int i = 0; i < materials.size(); ++i)
+            RealMaterials.get(i).first = -1L;
     }
 
     public int compareTo(WorkClass a)

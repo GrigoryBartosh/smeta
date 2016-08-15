@@ -2,6 +2,7 @@ package gbarto.ru.smeta;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -103,6 +104,8 @@ public class ListOverview extends AppCompatActivity
                     {
                         WorkClass tmp = (WorkClass) adapterView.getItemAtPosition(i);
                         System.out.println(tmp.getName());
+                        Intent x = new Intent(ListOverview.this, WorkActivity.class);
+                        x.putExtra("work", new WorkClass(tmp));
                     }
                 });
         l.setOnItemLongClickListener(
@@ -148,9 +151,19 @@ public class ListOverview extends AppCompatActivity
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
             t1.setText(w1.name);
 
+            boolean lmao = false;
+            for (int i = 0; !lmao && i < w1.Materials.size(); ++i)
+                if (w1.RealMaterials.get(i).first == -1)
+                {
+                    lmao = true;
+                    break;
+                }
+            if (lmao)
+                item.setBackgroundColor(Color.RED);
+            else
+                item.setBackgroundColor(Color.GREEN);
             CheckBox cb1 = (CheckBox)item.findViewById(R.id.checkBox);
             cb1.setVisibility(View.INVISIBLE);
-
             return item;
         }
     }
