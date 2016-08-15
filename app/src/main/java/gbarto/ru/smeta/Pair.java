@@ -1,9 +1,11 @@
 package gbarto.ru.smeta;
 
+import java.io.Serializable;
+
 /**
  * Created by Noobgam on 15.08.2016.
  */
-public class Pair<T, X>
+public class Pair<T, X> implements Serializable
 {
     public T first;
     public X second;

@@ -184,6 +184,28 @@ public class DBAdapter {
         }
     }
 
+    public long add(DBObject x)
+    {
+        if (x instanceof WorkClass)
+            return add((WorkClass)x);
+        if (x instanceof TypeClass)
+            return add((TypeClass)x);
+        if (x instanceof MaterialClass)
+            return add((MaterialClass)x);
+        return -1;
+    }
+
+    public boolean update(DBObject x)
+    {
+        if (x instanceof WorkClass)
+            return update((WorkClass)x);
+        if (x instanceof TypeClass)
+            return update((TypeClass)x);
+        if (x instanceof MaterialClass)
+            return update((MaterialClass)x);
+        return false;
+    }
+
 	// Adds new material to DB and returns you row_id
 	public long add(MaterialClass material) {
 		ContentValues initialValues = new ContentValues();
