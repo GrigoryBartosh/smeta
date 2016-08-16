@@ -83,6 +83,9 @@ public class ChooseTypeActivity extends AppCompatActivity {
         else {
             FileManager temp = new FileManager(this);
             temp.Save(Project);
+            ArrayList<String> fetch = temp.Load();
+            temp.LoadFromFile(fetch.get(0));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

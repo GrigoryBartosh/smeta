@@ -17,6 +17,12 @@ public class WorkTypeClass extends DBObject implements Comparable<WorkTypeClass>
     }
 
     @Override
+    public String toString()
+    {
+        return name + "&" + rowID;
+    }
+
+    @Override
     public int compareTo(WorkTypeClass workTypeClass)
     {
         return name.compareTo(workTypeClass.name);
