@@ -20,6 +20,7 @@ import java.util.Map;
 public class FileManager
 {
     Context x;
+    final private String extension = ".prj";
     public FileManager(Context t)
     {
         this.x = t;
@@ -28,18 +29,18 @@ public class FileManager
     public void Save(ProjectClass Project)
     {
         try {
-            File path = new File(x.getFilesDir(), Project.name + ".prj");
+            File path = new File(x.getFilesDir(), Project.name + extension);
             path.createNewFile();
             FileWriter fileWriter = new FileWriter(path);
             BufferedWriter printer = new BufferedWriter(fileWriter);
             printer.append("//This is automatically generated file, do not edit on your own.\n");
-            printer.append("place^" + Project.place);
+            printer.append("place&" + Project.place + '\n');
             for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
                 WorkTypeClass x1 = new WorkTypeClass(x.getKey());
-                printer.append("Object^");
+                printer.append("Object&" + x1.toString() + '\n');
                 ArrayList <WorkClass> tmp = new ArrayList<>();
                 for (WorkClass y : x.getValue())
-                    printer.append(y.toString() + '\n');
+                    printer.append("Thing&" + y.toString() + '\n');
             }
             printer.append("_END_OF_FILE_");
             printer.close();
@@ -58,7 +59,8 @@ public class FileManager
             ArrayList <String> tmp = new ArrayList<>();
             for (int i = 0; i < AllNames.length; ++i) {
                 String s = AllNames[i].getName();
-                tmp.add(s.substring(s.length() - 4));
+                if (s.substring(s.length() - 4).equals(extension))
+                    tmp.add(s.substring(0, s.length() - 4));
             }
             return tmp;
         }
@@ -121,7 +123,7 @@ public class FileManager
     {
         try
         {
-            File file = new File(x.getFilesDir(), path + ".prj");
+            File file = new File(x.getFilesDir(), path + extension);
             FileReader fileReader = new FileReader(file);
             ProjectClass Project = new ProjectClass(path);
             BufferedReader reader = new BufferedReader(fileReader);
@@ -135,20 +137,20 @@ public class FileManager
                 WorkTypeClass temp = null;
                 if (s.substring(0, 2).equals("//"))
                     continue;
-                String tmp[] = s.split("^", 1);
+                String tmp[] = s.split("&", 2);
                 if (tmp[0].equals("place"))
                     Project.place = tmp[1];
                 else {
                     if (tmp[0].equals("Object")) //then this is new KEY, otherwise whole string is VALUE
                     {
-                        String[] crap = tmp[1].split("&", 2);
+                        String[] crap = tmp[1].split("&", 3);
                         String name = crap[0];
                         Long rowID = Long.valueOf(crap[1]);
                         temp = new WorkTypeClass(name);
                         temp.rowID = rowID;
                     }
                     else {
-                        Project.get(temp).add(WorkFromString(s));
+                        Project.get(temp).add(WorkFromString(tmp[1]));
                     }
                 }
 
