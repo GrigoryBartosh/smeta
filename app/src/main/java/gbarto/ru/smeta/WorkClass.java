@@ -25,10 +25,10 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.price = a.price;
         this.Materials = new ArrayList<>();
         for (Pair <Long, Float> x : a.Materials)
-            this.Materials.add(x);
+            this.Materials.add(new Pair<>(Long.valueOf(x.first), Float.valueOf(x.second)));
         this.RealMaterials = new ArrayList<>();
         for (Long x : a.RealMaterials)
-            this.RealMaterials.add(x);
+            this.RealMaterials.add(Long.valueOf(x));
     }
 
     public long getWorkType()

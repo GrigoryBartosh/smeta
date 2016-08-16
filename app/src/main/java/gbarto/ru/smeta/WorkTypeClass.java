@@ -5,26 +5,14 @@ package gbarto.ru.smeta;
  */
 public class WorkTypeClass extends DBObject implements Comparable<WorkTypeClass>
 {
-    public String place;
-
-    public String getPlace()
+    WorkTypeClass(WorkTypeClass a)
     {
-        return place;
-    }
-
-    public void setPlace(String place)
-    {
-        this.place = place;
+        this.name = new String(a.name);
+        this.rowID = a.rowID;
     }
 
     public WorkTypeClass(String name)
     {
-        this.name = name;
-    }
-
-    public WorkTypeClass(String place, String name)
-    {
-        this.place = new String(place);
         this.name = new String(name);
     }
 

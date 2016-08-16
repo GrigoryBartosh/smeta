@@ -29,11 +29,8 @@ public class EditNameActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
+                setResult(RESULT_CANCELED);
                 finish();
-                //FragmentManager manager = getSupportFragmentManager();
-                //MyDialogFragment myDialogFragment = new MyDialogFragment();
-                //myDialogFragment.use("Ты пидор?", "Ты пидор?", "Да", "Не");
-                //myDialogFragment.show(manager, "dialog");
             }
         });
 
@@ -47,7 +44,10 @@ public class EditNameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mText.getText().length() >= 0) {
                     Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
-                    x.putExtra("ProjectName", mText.getText().toString());
+                    ProjectClass Project = new ProjectClass();
+                    Project.name = new String(mText.getText().toString());
+                    x.putExtra("Project", Project);
+
                     x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(x, BackRes);
                 }

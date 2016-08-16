@@ -52,8 +52,7 @@ public class DBObject implements Serializable
                     ((WorkClass)this).Materials.equals(((WorkClass)obj).Materials);
         
         if (obj instanceof WorkTypeClass)
-            return ((WorkTypeClass)this).place.equals(((WorkTypeClass)obj).place) &&
-                    ((WorkTypeClass)this).name.equals(((WorkTypeClass)obj).name);
+            return ((WorkTypeClass)this).name.equals(((WorkTypeClass)obj).name);
 
         if (obj instanceof MaterialClass)
             return ((MaterialClass)this).name.equals(((MaterialClass)obj).name) &&

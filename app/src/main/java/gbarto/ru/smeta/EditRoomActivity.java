@@ -9,10 +9,12 @@ import android.widget.ImageButton;
 
 public class EditRoomActivity extends AppCompatActivity {
 
+    ProjectClass Project;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(getIntent().getStringExtra("ProjectName"));
+        Project = (ProjectClass)getIntent().getSerializableExtra("Project");
+        setTitle(Project.name);
         setContentView(R.layout.activity_edit_room);
 
 
@@ -29,8 +31,9 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("room", getString(R.string.room_kitchen));
                 go.putExtras(getIntent());
+                Project.place = getString(R.string.room_kitchen);
+                go.putExtra("Project", Project);
                 startActivity(go);
             }
         });
@@ -41,8 +44,8 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("room", getString(R.string.room_bathroom));
-                go.putExtras(getIntent());
+                Project.place = getString(R.string.room_bathroom);
+                go.putExtra("Project", Project);
                 startActivity(go);
             }
         });
@@ -53,8 +56,8 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("room", getString(R.string.room_dining_room));
-                go.putExtras(getIntent());
+                Project.place = getString(R.string.room_dining_room);
+                go.putExtra("Project", Project);
                 startActivity(go);
             }
         });
@@ -65,8 +68,8 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("room", getString(R.string.room_bedroom));
-                go.putExtras(getIntent());
+                Project.place = getString(R.string.room_bedroom);
+                go.putExtra("Project", Project);
                 startActivity(go);
             }
         });

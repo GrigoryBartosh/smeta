@@ -23,7 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 3;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -60,14 +60,12 @@ public class DBAdapter {
 
     // BASE 3:
 
-    public static final String TYPES_KEY_PLACE = "place";
     public static final String TYPES_KEY_TYPE = "workType";
-    public static final String[] TYPES_ALL_KEYS = new String[] {KEY_ROWID, TYPES_KEY_PLACE, TYPES_KEY_TYPE};
+    public static final String[] TYPES_ALL_KEYS = new String[] {KEY_ROWID, TYPES_KEY_TYPE};
     public static final String TYPES_TABLE = "typesTable";
     private static final String TYPES_CREATE_SQL =
             "create table " + TYPES_TABLE + " ("
                     + KEY_ROWID + " integer primary key autoincrement, "
-                    + TYPES_KEY_PLACE + " text not null, "
                     + TYPES_KEY_TYPE + " text not null"
                     + ");";
 
@@ -330,7 +328,6 @@ public class DBAdapter {
     // Adds new workType to DB and returns you row_id
     public long add(WorkTypeClass type) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(TYPES_KEY_PLACE, type.getPlace());
         initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
         type.rowID = db.insert(TYPES_TABLE, null, initialValues);
         return type.rowID;
@@ -340,7 +337,6 @@ public class DBAdapter {
     {
         String where = KEY_ROWID + "=" + type.rowID;
         ContentValues initialValues = new ContentValues();
-        initialValues.put(TYPES_KEY_PLACE, type.getPlace());
         initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
         return db.update(TYPES_TABLE, initialValues, where, null) != 0;
     }
@@ -420,7 +416,7 @@ public class DBAdapter {
                         }
                         case TYPES_TABLE:
                         {
-                            WorkTypeClass tmp = new WorkTypeClass(c.getString(1), c.getString(2));
+                            WorkTypeClass tmp = new WorkTypeClass(c.getString(1));
                             tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
@@ -503,8 +499,6 @@ public class DBAdapter {
                     break;
                 }
                 case TYPES_TABLE:
-                    //public static final String[] TYPES_ALL_KEYS = new String[] {KEY_ROWID, TYPES_KEY_PLACE, TYPES_KEY_TYPE};
-                    initialValues.put(TYPES_KEY_PLACE, "");
                     initialValues.put(TYPES_KEY_TYPE, t.getName());
                     break;
                 case MATERIAL_TYPES_TABLE: {
@@ -584,11 +578,11 @@ public class DBAdapter {
             _db.execSQL(TYPES_CREATE_SQL);
             _db.execSQL(MATERIAL_TYPES_CREATE_SQL);
 
-            WorkTypeClass t1 = new WorkTypeClass("", "Пол");
+            WorkTypeClass t1 = new WorkTypeClass("Пол");
             add(_db, TYPES_TABLE, t1);
-            t1 = new WorkTypeClass("", "Стены");
+            t1 = new WorkTypeClass("Стены");
             add(_db, TYPES_TABLE, t1);
-            t1 = new WorkTypeClass("", "Потолок");
+            t1 = new WorkTypeClass("Потолок");
             add(_db, TYPES_TABLE, t1);
 
             WorkClass t2 = new WorkClass(false, "Намазать пол говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);

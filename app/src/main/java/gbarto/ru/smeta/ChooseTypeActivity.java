@@ -23,12 +23,15 @@ public class ChooseTypeActivity extends AppCompatActivity {
     ArrayAdapter<WorkClass> adapt;
     private static final int NAMING = 228;
     private static final int GETTING_NEW_MATERIAL = 1488;
+    ProjectClass Project;
+    WorkTypeClass tmp2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_type);
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.choose_works_toolbar);
+        Project = (ProjectClass) getIntent().getSerializableExtra("Project");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
@@ -92,7 +95,6 @@ public class ChooseTypeActivity extends AppCompatActivity {
 
     private void default_values()
     {
-
         DBObject[] temp = adapter.getAllRows(adapter.TYPES_TABLE);
         //Arrays.sort(temp);
         for (DBObject x : temp)
@@ -122,6 +124,17 @@ public class ChooseTypeActivity extends AppCompatActivity {
             t1.setText(w1.name);
             ImageView img = (ImageView) item.findViewById(R.id.icon_right);
             img.setImageResource(R.drawable.ic_button_next);
+            boolean bad = false;
+            if (Project.contains(w1))
+            {
+                ArrayList<WorkClass> temp = Project.get(w1);
+                for (WorkClass work : temp)
+                    for (int i = 0; !bad && i < work.RealMaterials.size(); ++i)
+                        if (work.RealMaterials.get(i) == -1L)
+                            bad = true;
+            }
+            if (bad)
+                item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
             return item;
         }
     }
@@ -133,9 +146,9 @@ public class ChooseTypeActivity extends AppCompatActivity {
         {
             WorkTypeClass tmp = (WorkTypeClass) adapterView.getItemAtPosition(i);
             Intent x = new Intent(ChooseTypeActivity.this, ListOverview.class);
-            x.putExtra("room_type", tmp.getName());
-            x.putExtras(getIntent());
             x.putExtra("keep_type", tmp);
+            x.putExtra("Project", Project);
+            tmp2 = tmp;
             startActivityForResult(x, NAMING);
         }
     };
@@ -143,7 +156,9 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        getIntent().putExtras(data);
+        ArrayList<WorkClass> tmp = (ArrayList<WorkClass>)data.getSerializableExtra("WorkSet");
+        Project.put(tmp2, tmp);
+        adapt.notifyDataSetChanged();
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

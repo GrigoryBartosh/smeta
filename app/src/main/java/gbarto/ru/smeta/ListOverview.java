@@ -2,7 +2,6 @@ package gbarto.ru.smeta;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +29,8 @@ public class ListOverview extends AppCompatActivity
     final private int SOSU_PENISI_ZA_200_RUBLEY = 200;
     final private int SOSU_PENISI_ZA_2000_RUBLEY = 2000;
     int id;
+    ProjectClass Project;
+
     private String worktype;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,8 +41,8 @@ public class ListOverview extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TypeHere = (WorkTypeClass) getIntent().getSerializableExtra("keep_type");
-        worktype = getIntent().getStringExtra("room") + ":" + getIntent().getStringExtra("room_type");
-        setTitle(worktype);
+        Project = (ProjectClass) getIntent().getSerializableExtra("Project");
+        setTitle(Project.name + "-" + Project.place + ":" + TypeHere.name);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -101,9 +102,7 @@ public class ListOverview extends AppCompatActivity
     public void onBackPressed()
     {
         Intent temp = new Intent();
-        Bundle b = new Bundle();
-        b.putSerializable(worktype + ":WorkSet", WorkSet);
-        temp.putExtras(b);
+        temp.putExtra("WorkSet", WorkSet);
         setResult(RESULT_CANCELED, temp);
         finish();
     }
@@ -191,9 +190,9 @@ public class ListOverview extends AppCompatActivity
                     break;
                 }
             if (lmao)
-                item.setBackgroundColor(Color.RED);
+                item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
             else
-                item.setBackgroundColor(Color.GREEN);
+                item.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
             CheckBox cb1 = (CheckBox)item.findViewById(R.id.checkBox);
             cb1.setVisibility(View.INVISIBLE);
             return item;
