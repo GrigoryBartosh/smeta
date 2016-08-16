@@ -56,6 +56,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     ArrayList<MaterialClass> new_material;
     ArrayList<String> used_name;
     private String[] bad_strings;
+    private String bad_strings_to_toast = "";
 
     DBAdapter dbAdapter = new DBAdapter(this);
 
@@ -98,6 +99,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         measurements_material = getResources().getStringArray(R.array.measurements_material_short);
         bad_strings = getResources().getStringArray(R.array.bad_strings);
+        for (int i = 0; i < bad_strings.length; i++)
+            bad_strings_to_toast += " " + bad_strings[i];
 
         Intent intent = getIntent();
         work_type = intent.getExtras().getInt("work_type");
@@ -275,20 +278,23 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             flag = flag & (lname.indexOf(bad_strings[j]) == -1);
         if (!flag) {
             Toast.makeText( getApplicationContext(),
-                    getString(R.string.work_toast_bad_symbol),
+                    getString(R.string.work_toast_bad_symbol) + bad_strings_to_toast,
                     Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        flag = true;
-        for (int i = 0; i < used_name.size(); i++) {
-            flag = flag & !used_name.get(i).equals(lname);
-        }
-        if (!flag) {
-            Toast.makeText( getApplicationContext(),
-                    getString(R.string.work_toast_equal_name),
-                    Toast.LENGTH_SHORT).show();
-            return false;
+        if (work_type != 2)
+        {
+            flag = true;
+            for (int i = 0; i < used_name.size(); i++) {
+                flag = flag & !used_name.get(i).equals(lname);
+            }
+            if (!flag) {
+                Toast.makeText( getApplicationContext(),
+                        getString(R.string.work_toast_equal_name),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
         return true;
     }

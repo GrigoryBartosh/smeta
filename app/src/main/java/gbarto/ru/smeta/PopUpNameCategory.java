@@ -23,6 +23,7 @@ public class PopUpNameCategory extends Activity {
 
     private ArrayList<String> used_name;
     private String[] bad_strings;
+    private String bad_strings_to_toast = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +35,9 @@ public class PopUpNameCategory extends Activity {
         mEditText = (EditText) findViewById(R.id.price_work_category_popup_edit_text);
 
         bad_strings = getResources().getStringArray(R.array.bad_strings);
+        for (int i = 0; i < bad_strings.length; i++)
+            bad_strings_to_toast += " " + bad_strings[i];
+
         used_name = getIntent().getExtras().getStringArrayList("used_name");
         for (int i = 0; i < used_name.size(); i++)
             used_name.set(i, used_name.get(i).toLowerCase());
@@ -76,7 +80,7 @@ public class PopUpNameCategory extends Activity {
                         flag = flag & (lname.indexOf(bad_strings[j]) == -1);
                     if (!flag) {
                         Toast.makeText( getApplicationContext(),
-                                getString(R.string.popup_name_category_toast_bad_symbol),
+                                getString(R.string.popup_name_category_toast_bad_symbol) + bad_strings_to_toast,
                                 Toast.LENGTH_SHORT).show();
                         break;
                     }

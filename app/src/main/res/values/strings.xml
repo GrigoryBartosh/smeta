@@ -44,7 +44,7 @@
 
     <string name="title_popup_name_category">Введите название группы работ.</string>
     <string name="popup_name_category_toast_need_name">Пожалуйста, введите название типа работ.</string>
-    <string name="popup_name_category_toast_bad_symbol">Название категории работ не должно содержать символов: &amp; ^</string>
+    <string name="popup_name_category_toast_bad_symbol">Название категории работ не должно содержать символов:</string>
     <string name="popup_name_category_toast_equal_name">Такое название уже существует.</string>
 
     <string name="title_activity_price_work">PriceWorkActivity</string>
@@ -83,7 +83,7 @@
     <string name="work_alert_delete_summary">Вы уверены, что хотите удалить этот материал?</string>
     <string name="work_empty_list">Список материалов пуст. Нажмите ДОБАВИТЬ, чтобы добавить новый материал.</string>
     <string name="work_toast_need_name">Пожалуйста, введите название работы.</string>
-    <string name="work_toast_bad_symbol">Название работы не должно содержать символов: &amp; ^</string>
+    <string name="work_toast_bad_symbol">Название работы не должно содержать символов:</string>
     <string name="work_toast_equal_name">Такое название уже существует.</string>
 
     <string name="title_activity_search">Выберите необходимое</string>
