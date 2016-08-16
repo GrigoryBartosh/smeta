@@ -77,7 +77,7 @@ public class SearchActivity extends AppCompatActivity {
             setResult(RESULT_OK, intent);
         } else {
             if (ans != -1L) {
-                intent.putExtra("result", ans);
+                intent.putExtra("material_id", ans);
                 setResult(RESULT_OK, intent);
             } else {
                 setResult(RESULT_CANCELED, intent);

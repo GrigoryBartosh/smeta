@@ -48,6 +48,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayList<MaterialTypeClass> all_material_types;
     private HashMap<Long, MaterialTypeClass > material_types_info_from_id = new HashMap<Long, MaterialTypeClass >();
     String[] measurements_material;
+    ArrayList<MaterialClass> new_material;
 
     DBAdapter dbAdapter = new DBAdapter(this);
 
@@ -98,6 +99,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         } else {
             mTextListEmpty.setText(getString(R.string.work_empty_list));
         }
+
+
     }
 
     @Override
@@ -218,7 +221,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         {
             if (resultCode == RESULT_OK)
             {
-                Long rowID = data.getExtras().getLong("material_id");
+                Integer pos = data.getExtras().getInt("material_id");
+                Long rowID = new_material.get(pos).rowID;
                 work.RealMaterials.set(material_line, rowID);
 
                 setFromWork();
@@ -280,7 +284,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 new String[]{},
                 new int[]{});
         mListView.setAdapter(adapter);
-        //if (work_type == 2) mListView.setOnItemClickListener(mItemListener);
         adapter.notifyDataSetChanged();
 
         if (adapter.getCount() == 0)
@@ -306,10 +309,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 MaterialTypeClass p = material_types_info_from_id.get(rowID);
                 Toast.makeText(getApplicationContext(), p.name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
-                System.out.println(work.Materials.size());
-                System.out.println(tp);
                 work.removeMaterial(tp);
-                System.out.println(work.Materials.size());
 
                 setFromWork();
                 dialog.cancel();
@@ -390,20 +390,36 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                     view.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
             }
 
-            view.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener ocl = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     setToWork();
                     material_line = position;
 
-                    ArrayList<MaterialClass> new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(position).first));
-
                     Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
+
+                    new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(position).first));
+
+                    Boolean flag = false;
+                    for (int i = 0; i < new_material.size(); i++)
+                        if (work.RealMaterials.get(position) == new_material.get(i).rowID){
+                            MaterialClass t = new_material.get(0);
+                            new_material.set(0, new_material.get(i));
+                            new_material.set(i, t);
+                            flag = true;
+                            break;
+                        }
+
                     intent.putExtra("list", new_material);
                     intent.putExtra("check_list", false);
+                    intent.putExtra("first", flag);
                     startActivityForResult(intent, CHOOSE_MATERIAL);
                 }
-            });
+            };
+
+            view.setOnClickListener(ocl);
+            mTextName.setOnClickListener(ocl);
+            mTextMeasurement.setOnClickListener(ocl);
 
             return view;
         }
