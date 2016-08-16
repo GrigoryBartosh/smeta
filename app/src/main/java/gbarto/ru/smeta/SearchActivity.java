@@ -9,11 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +23,14 @@ import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
     private TextView mTextView;
-
     private ListView mListView;
 
     private ArrayList<DBObject> list;
+    private Boolean check_list = new Boolean(false);
+    private Boolean is_first = new Boolean(false);
+    private Boolean first_in_list = new Boolean(false);
+    private Integer ans = new Integer(-1);
+
     ArrayList<Integer> num = new ArrayList<Integer>();
     private HashSet<Integer> used;
     private String[] search_words;
@@ -50,23 +54,35 @@ public class SearchActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         list = (ArrayList<DBObject>)intent.getSerializableExtra("list");
+        check_list = intent.getExtras().getBoolean("check_list");
+        if (!check_list) is_first = intent.getExtras().getBoolean("first");
+
         used = new HashSet<Integer>();
 
         mListView = (ListView)findViewById(R.id.search_listView);
-        getList();
+        setList();
     }
 
     @Override
     public void onBackPressed() {
-        ArrayList<Integer> res_num = new ArrayList<Integer>(used);
-        ArrayList<DBObject> res = new ArrayList<DBObject>();
-        for (int i = 0; i < res_num.size(); i++){
-            res.add(list.get(res_num.get(i)));
-        }
-
         Intent intent = new Intent();
-        intent.putExtra("result", res);
-        setResult(RESULT_OK, intent);
+        if (check_list) {
+            ArrayList<Integer> res_num = new ArrayList<Integer>(used);
+            ArrayList<DBObject> res = new ArrayList<DBObject>();
+            for (int i = 0; i < res_num.size(); i++){
+                res.add(list.get(res_num.get(i)));
+            }
+
+            intent.putExtra("result", res);
+            setResult(RESULT_OK, intent);
+        } else {
+            if (ans != -1L) {
+                intent.putExtra("result", ans);
+                setResult(RESULT_OK, intent);
+            } else {
+                setResult(RESULT_CANCELED, intent);
+            }
+        }
 
         super.onBackPressed();
     }
@@ -84,7 +100,7 @@ public class SearchActivity extends AppCompatActivity {
                     for (int i = 0; i < search_words.length; i++)
                         search_words[i] = search_words[i].toLowerCase();
 
-                getList();
+                setList();
                 return true;
             }
 
@@ -99,15 +115,20 @@ public class SearchActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void getList()
+    private void setList()
     {
         ArrayList<HashMap<String,Object>> mCatList = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> hm;
 
+        first_in_list = false;
         num = new ArrayList<Integer>();
         for (Integer i = 0; i < list.size(); i++)
         {
             if (ok_string(list.get(i).name)){
+
+                if (!check_list && is_first && i == 0)
+                    first_in_list = true;
+
                 hm = new HashMap<>();
                 mCatList.add(hm);
                 num.add(i);
@@ -119,6 +140,7 @@ public class SearchActivity extends AppCompatActivity {
                 new String[]{},
                 new int[]{});
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(mItemListener);
 
         adapter.notifyDataSetChanged();
 
@@ -150,22 +172,38 @@ public class SearchActivity extends AppCompatActivity {
             if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_search, parent, false);
 
             CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
-            if (used.contains(j)) checkBox.setChecked(true);
-            checkBox.setOnClickListener(new CheckBox.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    if (used.contains(j)){
-                        used.remove(j);
-                    } else {
-                        used.add(j);
+            if (!check_list){
+                checkBox.setVisibility(View.INVISIBLE);
+            } else {
+                if (used.contains(j)) checkBox.setChecked(true);
+                checkBox.setOnClickListener(new CheckBox.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        if (used.contains(j)){
+                            used.remove(j);
+                        } else {
+                            used.add(j);
+                        }
                     }
-                }
-            });
+                });
+            }
 
             TextView text = (TextView) view.findViewById(R.id.text_name);
             text.setText(list.get(j).name);
 
+            if (!check_list && is_first && first_in_list && position == 0)
+                view.setBackgroundColor(getResources().getColor(R.color.search_choose));
+
             return view;
         }
     }
+
+    AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            ans = num.get(i);
+            onBackPressed();
+        }
+    };
+
 }

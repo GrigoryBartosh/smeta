@@ -388,9 +388,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             if (work_type == 2){
                 if (work.RealMaterials.get(position) == -1L)
-                    view.setBackgroundColor(getResources().getColor(R.color.material_not_choose));
+                    view.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
                 else
-                    view.setBackgroundColor(getResources().getColor(R.color.material_choose));
+                    view.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
             }
 
             return view;

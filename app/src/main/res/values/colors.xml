@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="material_choose">#64ff0000</color>
-    <color name="material_not_choose">#6400ff00</color>
+    <color name="work_material_choose">#64ff0000</color>
+    <color name="work_material_not_choose">#6400ff00</color>
+    <color name="search_choose">#640000ff</color>
 
 </resources>
