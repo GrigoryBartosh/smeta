@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -160,7 +159,7 @@ public class ListOverview extends AppCompatActivity
                             }
                         };
                         myDialogFragment.show(manager, "dialog");
-                        return false;
+                        return true;
                     }
                 });
         l.setAdapter(adapt);
@@ -191,8 +190,6 @@ public class ListOverview extends AppCompatActivity
                 item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
             else
                 item.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
-            CheckBox cb1 = (CheckBox)item.findViewById(R.id.checkBox);
-            cb1.setVisibility(View.INVISIBLE);
             return item;
         }
     }
