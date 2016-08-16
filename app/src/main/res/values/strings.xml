@@ -42,10 +42,10 @@
         Этот тип работ и все его работы будут удалены из всех проектов, где они импользуются.
     </string>
 
-    <string name="title_popup_name_category">Введите название группы работ</string>
-    <string name="popup_name_category_need_name">Пожалуйста, введите название категории</string>
-    <string name="popup_name_category_bad_symbol">Название категории работ не должно содержать символов: &amp; ^</string>
-    <string name="popup_name_category_equal_name">Такое имя уже существует</string>
+    <string name="title_popup_name_category">Введите название группы работ.</string>
+    <string name="popup_name_category_toast_need_name">Пожалуйста, введите название типа работ.</string>
+    <string name="popup_name_category_toast_bad_symbol">Название категории работ не должно содержать символов: &amp; ^</string>
+    <string name="popup_name_category_toast_equal_name">Такое название уже существует.</string>
 
     <string name="title_activity_price_work">PriceWorkActivity</string>
     <string name="price_work_about_text">
@@ -60,7 +60,7 @@
         Вы уверены, что хотите удалить эту работу? Эта работа будет удалена из всех проектов, где она используется.
     </string>
 
-    <string name="price_project_name_popup_need_name">Пожалуйста, введите название проекта</string>
+    <string name="price_project_name_popup_need_name">Пожалуйста, введите название проекта.</string>
 
     <string name="title_activity_work">Новыая работа</string>
     <string name="work_work_name">Название работы</string>
@@ -69,7 +69,6 @@
     <string name="work_text_size">Объем работы </string>
     <string name="work_necessary_materials">Необходимые материалы</string>
     <string name="work_new_work">Новая работа</string>
-    <string name="work_toast_enter_name">Пожалуйста, введите название работы</string>
     <string name="work_about_text">
         Чтобы удалить материал из списка
         необходимых материалов,
@@ -82,7 +81,10 @@
     </string>
     <string name="work_alert_delete_title">Удаление</string>
     <string name="work_alert_delete_summary">Вы уверены, что хотите удалить этот материал?</string>
-    <string name="work_empty_list">Список материалов пуст. Нажмите ДОБАВИТЬ, чтобы добавить новый материал</string>
+    <string name="work_empty_list">Список материалов пуст. Нажмите ДОБАВИТЬ, чтобы добавить новый материал.</string>
+    <string name="work_toast_need_name">Пожалуйста, введите название работы.</string>
+    <string name="work_toast_bad_symbol">Название работы не должно содержать символов: &amp; ^</string>
+    <string name="work_toast_equal_name">Такое название уже существует.</string>
 
     <string name="title_activity_search">Выберите необходимое</string>
     <string name="search_empty_list">Список пуст</string>

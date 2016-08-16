@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompatBase;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -266,19 +265,17 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (lname.length() == 0){
             Toast.makeText( getApplicationContext(),
-                    getString(R.string.popup_name_category_need_name),
+                    getString(R.string.work_toast_need_name),
                     Toast.LENGTH_SHORT).show();
             return false;
         }
 
         Boolean flag = true;
-        for (int i = 0; i < used_name.size(); i++) {
-            for (int j = 0; j < bad_strings.length; j++)
-                flag = flag & (lname.indexOf(bad_strings[j]) == -1);
-        }
+        for (int j = 0; j < bad_strings.length; j++)
+            flag = flag & (lname.indexOf(bad_strings[j]) == -1);
         if (!flag) {
             Toast.makeText( getApplicationContext(),
-                    getString(R.string.popup_name_category_bad_symbol),
+                    getString(R.string.work_toast_bad_symbol),
                     Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -289,7 +286,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         if (!flag) {
             Toast.makeText( getApplicationContext(),
-                    getString(R.string.popup_name_category_equal_name),
+                    getString(R.string.work_toast_equal_name),
                     Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -310,7 +307,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void setToWork()
     {
-        work.name = mEditName.getText().toString();
+        work.name = mEditName.getText().toString().replaceAll("[\\s]{2,}", " ").trim();
         work.measuring = spinner_adapter.getPosition(mSpinner.getSelectedItem().toString());
         String price = mEditSum.getText().toString();
         if (price.equals("") || price.equals("-") || price.equals("-.")) {

@@ -66,19 +66,17 @@ public class PopUpNameCategory extends Activity {
 
                     if (lname.length() == 0){
                         Toast.makeText( getApplicationContext(),
-                                        getString(R.string.popup_name_category_need_name),
+                                        getString(R.string.popup_name_category_toast_need_name),
                                         Toast.LENGTH_SHORT).show();
                         break;
                     }
 
                     Boolean flag = true;
-                    for (int i = 0; i < used_name.size(); i++) {
-                        for (int j = 0; j < bad_strings.length; j++)
-                            flag = flag & (lname.indexOf(bad_strings[j]) == -1);
-                    }
+                    for (int j = 0; j < bad_strings.length; j++)
+                        flag = flag & (lname.indexOf(bad_strings[j]) == -1);
                     if (!flag) {
                         Toast.makeText( getApplicationContext(),
-                                getString(R.string.popup_name_category_bad_symbol),
+                                getString(R.string.popup_name_category_toast_bad_symbol),
                                 Toast.LENGTH_SHORT).show();
                         break;
                     }
@@ -89,7 +87,7 @@ public class PopUpNameCategory extends Activity {
                     }
                     if (!flag) {
                         Toast.makeText( getApplicationContext(),
-                                getString(R.string.popup_name_category_equal_name),
+                                getString(R.string.popup_name_category_toast_equal_name),
                                 Toast.LENGTH_SHORT).show();
                         break;
                     }
