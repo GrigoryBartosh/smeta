@@ -104,7 +104,7 @@ public class FileManager
         WorkClass ans = new WorkClass();
         ans.state = Boolean.valueOf(temp[0]);
         ans.workType = Long.valueOf(temp[1]);
-        String[] temp2 = temp[2].substring(1, temp[2].length() - 1).split(",");
+        String[] temp2 = temp[2].split(",");
         for (int i = 0; i < temp2.length; ++i) {
             String[] lmao = temp2[i].split(";");
             ans.Materials.add(new Pair(Long.valueOf(lmao[0]), Float.valueOf(lmao[1])));
@@ -128,13 +128,13 @@ public class FileManager
             ProjectClass Project = new ProjectClass(path);
             BufferedReader reader = new BufferedReader(fileReader);
             String s = "";
+            WorkTypeClass temp = null;
             while (true)
             {
                 s = reader.readLine();
                 s = normalize(s);
                 if (s.equals("_END_OF_FILE_"))
                     return Project;
-                WorkTypeClass temp = null;
                 if (s.substring(0, 2).equals("//"))
                     continue;
                 String tmp[] = s.split("&", 2);
@@ -150,6 +150,8 @@ public class FileManager
                         temp.rowID = rowID;
                     }
                     else {
+                        if (!Project.contains(temp))
+                            Project.put(temp, new ArrayList<WorkClass>());
                         Project.get(temp).add(WorkFromString(tmp[1]));
                     }
                 }

@@ -33,6 +33,8 @@ public class ProjectClass implements Serializable
 
     public ArrayList<WorkClass> get(WorkTypeClass Key)
     {
+        if (!works.containsKey(Key))
+            return null;
         return works.get(Key);
     }
 
