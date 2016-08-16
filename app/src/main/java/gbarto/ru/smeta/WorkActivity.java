@@ -283,15 +283,18 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             return false;
         }
 
-        flag = true;
-        for (int i = 0; i < used_name.size(); i++) {
-            flag = flag & !used_name.get(i).equals(lname);
-        }
-        if (!flag) {
-            Toast.makeText( getApplicationContext(),
-                    getString(R.string.work_toast_equal_name),
-                    Toast.LENGTH_SHORT).show();
-            return false;
+        if (work_type != 2)
+        {
+            flag = true;
+            for (int i = 0; i < used_name.size(); i++) {
+                flag = flag & !used_name.get(i).equals(lname);
+            }
+            if (!flag) {
+                Toast.makeText( getApplicationContext(),
+                        getString(R.string.work_toast_equal_name),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
         return true;
     }
