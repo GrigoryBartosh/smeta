@@ -4,8 +4,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".ChooseTypeActivity">
     <item
-        android:title=""
+        android:title="@string/done"
         android:id="@+id/menu_work_done"
-        android:icon="@android:drawable/ic_menu_save"
         app:showAsAction="always"/>
 </menu>
