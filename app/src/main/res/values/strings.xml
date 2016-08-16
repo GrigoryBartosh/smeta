@@ -31,6 +31,17 @@
 
     <string name="title_popup_price_work_category">Введите название группы работ</string>
     <string name="price_work_category_popup_need_name">Пожалуйста, введите название категории</string>
+    <string name="price_work_about_text">
+        Чтобы удалить работу из списка
+        нажмите и удерживайте.\n
+        \n
+        Для добавления новой работы
+        в список, нажмите на ПЛЮС.
+    </string>
+    <string name="price_work_alert_delete_title">Удаление</string>
+    <string name="price_work_alert_delete_summary">Вы уверены, что хотите удалить эту работу?</string>
+
+
     <string name="price_project_name_popup_need_name">Пожалуйста, введите название проекта</string>
 
     <string name="title_activity_price_work">PriceWorkActivity</string>
@@ -44,14 +55,14 @@
     <string name="work_new_work">Новая работа</string>
     <string name="work_toast_enter_name">Пожалуйста, введите название работы</string>
     <string name="work_about_text">
-        Чтобы удалить <b>материал</b> из списка
-        <b>необходимых материалов</b>,
+        Чтобы удалить материал из списка
+        необходимых материалов,
         нажмите и удерживайте.\n
         \n
-        Для добавления нового <b>материала</b>,
-        в список <b>необходимых
-        материалов</b>, нажмите на кнопку
-        <b>добавить</b>.
+        Для добавления нового материала,
+        в список необходимых
+        материалов, нажмите на кнопку
+        ДОБАВИТЬ.
     </string>
     <string name="work_alert_delete_title">Удаление</string>
     <string name="work_alert_delete_summary">Вы уверены, что хотите удалить этот материал?</string>
@@ -91,6 +102,7 @@
         <item>Метр</item>
         <item>Квадратный метр</item>
         <item>Кубический метр</item>
+        <item>Погонный метр</item>
         <item>Килограмм</item>
         <item>Литр</item>
         <item>Штука</item>
@@ -100,6 +112,7 @@
         <item>м2</item>
         <item>м3</item>
         <item>м.пог.</item>
+        <item>кг</item>
         <item>л</item>
         <item>шт</item>
     </string-array>

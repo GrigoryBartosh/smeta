@@ -13,5 +13,12 @@
     tools:showIn="@layout/app_bar_main">
 
     <!-- экран main -->
+    <ListView
+        android:id="@+id/main_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:longClickable="true"
+        android:clickable="true">
+    </ListView>
 
 </RelativeLayout>

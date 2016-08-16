@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PriceWorkCategoryActivity extends AppCompatActivity {
+    private ArrayList<WorkTypeClass> type_work_list;
+
+    DBAdapter dbAdapter = new DBAdapter(PriceWorkCategoryActivity.this);
+
     private ListView mListView;
-    private ArrayList<HashMap<String,Object>> mCatList;
     private static final String TITLE = "title";
     private static final String ICON = "icon";
     static final private int ENTER_NAME = 0;
@@ -27,21 +30,36 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_price_work_category);
 
+        dbAdapter.open();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.price_work_category_toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.price_work_category_fab);
+        mListView = (ListView)findViewById(R.id.price_work_category_listView);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                onBackPressed();
             }
         });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.price_work_category_fab);
         fab.setOnClickListener(fab_ocl);
 
-        mListView = (ListView)findViewById(R.id.price_work_category_listView);
-        getList();
+        type_work_list = getAllWorkType();
+
+        setList();
+    }
+
+    @Override
+    protected void onDestroy() {
+        dbAdapter.close();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -52,7 +70,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
         wm.alpha = 1.0f;
         getWindow().setAttributes(wm);
 
-        getList();
+        setList();
     }
 
     private View.OnClickListener fab_ocl = new View.OnClickListener(){
@@ -79,14 +97,14 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
                 String name = data.getExtras().getString(PriceWorkCategoryPopUp.NAME);
                 //добавить в БД
                 Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
-                getList();
+                setList();
             }
         }
     }
 
-    private void getList()
+    private void setList()
     {
-        mCatList = new ArrayList<HashMap<String, Object>>();
+        ArrayList<HashMap<String,Object>> mCatList = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> hm;
 
         //считать из БД
@@ -116,4 +134,14 @@ public class PriceWorkCategoryActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    private ArrayList<WorkTypeClass> getAllWorkType()
+    {
+        DBObject[] arr = dbAdapter.getAllRows(DBAdapter.TYPES_TABLE);
+        ArrayList<WorkTypeClass> res = new ArrayList<WorkTypeClass>();
+        for (int i = 0; i < arr.length; i++){
+            res.add((WorkTypeClass) arr[i]);
+        }
+        return res;
+    }
 }
