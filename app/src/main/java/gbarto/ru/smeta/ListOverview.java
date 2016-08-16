@@ -110,7 +110,7 @@ public class ListOverview extends AppCompatActivity
                         x.putExtra("work", new WorkClass(tmp));
                         x.putExtra("work_type", 2);
                         id = i;
-                        startActivityForResult(x, 228);
+                        startActivityForResult(x, SOSU_PENISI_ZA_200_RUBLEY);
                     }
                 });
         l.setOnItemLongClickListener(
@@ -186,7 +186,7 @@ public class ListOverview extends AppCompatActivity
             getIntent().putExtra(worktype + ":WorkSet", WorkSet);
             adapt.notifyDataSetChanged();
         }
-        else if (resultCode == SOSU_PENISI_ZA_200_RUBLEY)
+        else if (requestCode == SOSU_PENISI_ZA_200_RUBLEY)
         {
             WorkSet.set(id, (WorkClass)data.getSerializableExtra("work"));
             adapt.notifyDataSetChanged();
