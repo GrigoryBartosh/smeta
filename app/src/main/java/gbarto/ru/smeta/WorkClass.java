@@ -21,6 +21,8 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.rowID = a.rowID;
         this.state = a.state;
         this.workType = a.workType;
+        this.measuring = a.measuring;
+        this.price = a.price;
         this.Materials = new ArrayList<>();
         for (Pair <Long, Float> x : a.Materials)
             this.Materials.add(x);
