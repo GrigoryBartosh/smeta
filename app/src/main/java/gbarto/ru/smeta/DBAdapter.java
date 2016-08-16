@@ -168,19 +168,6 @@ public class DBAdapter {
         }
     }
 
-    private JSONObject ToJSON(WorkTypeClass type)
-    {
-        JSONObject temp = new JSONObject();
-        try
-        {
-            temp.put("name", type.getName());
-            return temp;
-        }
-        catch (JSONException e) {
-            return null;
-        }
-    }
-
     private JSONObject FromString(String s)
     {
         try {
@@ -327,7 +314,7 @@ public class DBAdapter {
     // Adds new workType to DB and returns you row_id
     public long add(WorkTypeClass type) {
         ContentValues initialValues = new ContentValues();
-        initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
+        initialValues.put(TYPES_KEY_TYPE, type.name);
         type.rowID = db.insert(TYPES_TABLE, null, initialValues);
         return type.rowID;
     }
@@ -336,7 +323,7 @@ public class DBAdapter {
     {
         String where = KEY_ROWID + "=" + type.rowID;
         ContentValues initialValues = new ContentValues();
-        initialValues.put(TYPES_KEY_TYPE, ToJSON(type).toString());
+        initialValues.put(TYPES_KEY_TYPE, type.getName());
         return db.update(TYPES_TABLE, initialValues, where, null) != 0;
     }
 
