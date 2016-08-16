@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,8 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class ChooseTypeActivity extends AppCompatActivity {
 
@@ -25,6 +29,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
     private static final int GETTING_NEW_MATERIAL = 1488;
     ProjectClass Project;
     WorkTypeClass tmp2;
+    TreeSet<WorkTypeClass> incompleteTypes = new TreeSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,25 @@ public class ChooseTypeActivity extends AppCompatActivity {
         adapter.open();
         default_values();
         AddAdapter();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_choose_types, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (incompleteTypes.size() != 0)
+            Toast.makeText(getApplicationContext(), getString(R.string.makeSureAllTypesAreComplete), Toast.LENGTH_SHORT).show();
+        else {
+            FileManager temp = new FileManager(this);
+            temp.Save(Project);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -133,8 +157,13 @@ public class ChooseTypeActivity extends AppCompatActivity {
                         if (work.RealMaterials.get(i) == -1L)
                             bad = true;
             }
-            if (bad)
+            if (bad) {
                 item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
+                incompleteTypes.add(w1);
+            }
+            else
+                if (incompleteTypes.contains(w1))
+                    incompleteTypes.remove(w1);
             return item;
         }
     }

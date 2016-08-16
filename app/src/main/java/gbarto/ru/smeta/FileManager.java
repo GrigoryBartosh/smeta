@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 
@@ -18,13 +19,15 @@ public class FileManager
         this.x = t;
     }
 
-    public void Save(WorkClass workClass)
+    public void Save(ProjectClass Project)
     {
-        File root = new File(Environment.getExternalStorageDirectory(), "Works");
-        File path = new File(root, workClass.name + ".work");
+        File path = new File(Environment.getExternalStorageDirectory(), Project.name + ".prj");
         try {
-            FileWriter printer = new FileWriter(path);
-            printer.append("//This is automatically generated file, do not edit on your own.");
+            FileWriter fileWriter = new FileWriter(path);
+            BufferedWriter printer = new BufferedWriter(fileWriter);
+            printer.append("//This is automatically generated file, do not edit on your own.\n");
+            printer.append("place:" + Project.place);
+            printer.close();
         }
         catch (Exception e)
         {
