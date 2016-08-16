@@ -48,9 +48,7 @@ public class ListOverview extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent temp = new Intent();
-                Bundle b = new Bundle();
-                b.putSerializable(worktype + ":WorkSet", WorkSet);
-                temp.putExtras(b);
+                temp.putExtra("WorkSet", WorkSet);
                 setResult(RESULT_CANCELED, temp);
                 finish();
             }
@@ -116,8 +114,8 @@ public class ListOverview extends AppCompatActivity
 
     private void default_values()
     {
-        if (getIntent().getSerializableExtra(worktype + ":WorkSet") != null)
-            WorkSet = (ArrayList <WorkClass>)getIntent().getSerializableExtra(worktype + ":WorkSet");
+        if (Project.contains(TypeHere))
+            WorkSet = Project.get(TypeHere);
     }
 
     private void AddAdapter()
@@ -207,22 +205,17 @@ public class ListOverview extends AppCompatActivity
             ArrayList <WorkClass> temp = (ArrayList <WorkClass>) data.getSerializableExtra("new_works");
             for (WorkClass x : temp)
                 WorkSet.add(x);
-            if (getIntent().getSerializableExtra(worktype + ":WorkSet") != null)
-                getIntent().removeExtra(worktype + ":WorkSet");
-            getIntent().putExtra(worktype + ":WorkSet", WorkSet);
-            adapt.notifyDataSetChanged();
         }
         else if (requestCode == SOSU_PENISI_ZA_200_RUBLEY)
         {
             WorkSet.set(id, (WorkClass)data.getSerializableExtra("work"));
-            adapt.notifyDataSetChanged();
         }
         else if (requestCode == SOSU_PENISI_ZA_2000_RUBLEY)
         {
             ArrayList <WorkClass> tmp = (ArrayList <WorkClass>) data.getSerializableExtra("result");
             for (WorkClass x : tmp)
                 WorkSet.add(x);
-            adapt.notifyDataSetChanged();
         }
+        adapt.notifyDataSetChanged();
     }
 }
