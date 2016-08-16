@@ -28,9 +28,26 @@
     <string name="nav_menu_abut">О программе</string>
 
     <string name="title_activity_price_work_category">Мои типы работ</string>
+    <string name="price_work_category_about_text">
+        Чтобы удалить тип работ из списка
+        нажмите и удерживайте.\n
+        \n
+        Для добавления нового типа работ
+        в список, нажмите на ПЛЮС.
+    </string>
+    <string name="price_work_category_alert_delete_title">Удаление</string>
+    <string name="price_work_category_alert_delete_summary">
+        Вы уверены, что хотите удалить этот тип работ? Все работы данного типа также будут удалены.\n
+        \n
+        Этот тип работ и все его работы будут удалены из всех проектов, где они импользуются.
+    </string>
 
-    <string name="title_popup_price_work_category">Введите название группы работ</string>
-    <string name="price_work_category_popup_need_name">Пожалуйста, введите название категории</string>
+    <string name="title_popup_name_category">Введите название группы работ</string>
+    <string name="popup_name_category_need_name">Пожалуйста, введите название категории</string>
+    <string name="popup_name_category_bad_symbol">Название категории работ не должно содержать символов: &amp; ^</string>
+    <string name="popup_name_category_equal_name">Такое имя уже существует</string>
+
+    <string name="title_activity_price_work">PriceWorkActivity</string>
     <string name="price_work_about_text">
         Чтобы удалить работу из списка
         нажмите и удерживайте.\n
@@ -39,12 +56,11 @@
         в список, нажмите на ПЛЮС.
     </string>
     <string name="price_work_alert_delete_title">Удаление</string>
-    <string name="price_work_alert_delete_summary">Вы уверены, что хотите удалить эту работу?</string>
-
+    <string name="price_work_alert_delete_summary">
+        Вы уверены, что хотите удалить эту работу? Эта работа будет удалена из всех проектов, где она используется.
+    </string>
 
     <string name="price_project_name_popup_need_name">Пожалуйста, введите название проекта</string>
-
-    <string name="title_activity_price_work">PriceWorkActivity</string>
 
     <string name="title_activity_work">Новыая работа</string>
     <string name="work_work_name">Название работы</string>
@@ -115,5 +131,10 @@
         <item>кг</item>
         <item>л</item>
         <item>шт</item>
+    </string-array>
+
+    <string-array name="bad_strings">
+        <item>&amp;</item>
+        <item>^</item>
     </string-array>
 </resources>

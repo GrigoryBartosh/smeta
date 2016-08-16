@@ -12,9 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ListView mListView;
+    private FileManager fileManager = new FileManager(MainActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +40,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(fab_ocl);
     }
 
-    View.OnClickListener fab_ocl = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            createNewProject();
+    @Override
+    protected void onResume() {
+        ArrayList<String> list = fileManager.Load();
+        //ProjectClass p = fileManager.LoadFromFile(list.get(1));
 
-            Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
-            startActivity(intent);
-        }
-    };
+        Toast.makeText(getApplicationContext(), list.toString(), Toast.LENGTH_SHORT).show();
+
+        super.onResume();
+    }
 
     @Override
     public void onBackPressed() {
@@ -56,6 +60,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    View.OnClickListener fab_ocl = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
+            startActivity(intent);
+        }
+    };
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -64,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.nav_new_project:
-                createNewProject();
                 break;
 
             case R.id.nav_price_work:
@@ -85,9 +96,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void createNewProject() {
-
     }
 }

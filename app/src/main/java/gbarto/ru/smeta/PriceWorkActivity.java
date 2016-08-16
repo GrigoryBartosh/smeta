@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -21,12 +22,14 @@ import java.util.HashMap;
 public class PriceWorkActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener {
     WorkTypeClass work_type;
     ArrayList<WorkClass> work_list;
+    ArrayList<String> used_name;
 
     private ListView mListView;
     private static final String TITLE = "title";
 
     static final private int UPDATE_WORK = 0;
     static final private int CREATE_WORK = 1;
+    static final private int ENTER_NAME = 2;
 
     DBAdapter dbAdapter = new DBAdapter(this);
     int work_line;
@@ -52,7 +55,9 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
             }
         });
 
-        work_type = (WorkTypeClass) getIntent().getSerializableExtra("work_type");
+        Intent intent = getIntent();
+        work_type = (WorkTypeClass) intent.getSerializableExtra("work_type");
+        used_name = intent.getExtras().getStringArrayList("used_name");
         setTitle(work_type.name);
         work_list = getAllWork();
 
@@ -67,18 +72,35 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
     }
 
     @Override
+    protected void onResume() {
+        WindowManager.LayoutParams wm = getWindow().getAttributes();
+        wm.alpha = 1.0f;
+        getWindow().setAttributes(wm);
+
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("new_name", work_type.name);
+        setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
 
     private View.OnClickListener fab_ocl = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
+            ArrayList<String> used_name = new ArrayList<String>();
+            for (int j = 0; j < work_list.size(); j++)
+                used_name.add(work_list.get(j).name);
+
             Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
             intent.putExtra("work_type", 0);
             WorkClass new_work = new WorkClass();
             new_work.workType = work_type.rowID;
             intent.putExtra("work", new_work);
+            intent.putExtra("used_name", used_name);
             startActivityForResult(intent, CREATE_WORK);
         }
     };
@@ -113,6 +135,17 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
 
                 res = true;
                 break;
+            case R.id.menu_work_edit:
+                WindowManager.LayoutParams wm = getWindow().getAttributes();
+                wm.alpha = 0.2f;
+                getWindow().setAttributes(wm);
+
+                Intent intent = new Intent(PriceWorkActivity.this, PopUpNameCategory.class);
+                intent.putExtra("used_name", used_name);
+                startActivityForResult(intent, ENTER_NAME);
+
+                res = true;
+                break;
             default:
                 res = super.onOptionsItemSelected(item);
                 break;
@@ -129,11 +162,15 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
         myDialogFragment.setMessage(getString(R.string.price_work_alert_delete_summary));
         myDialogFragment.setPositiveButtonTitle(getString(R.string.yes));
         myDialogFragment.setNegativeButtonTitle(getString(R.string.no));
-        final int tp = position;
         myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
                 dbAdapter.deleteRow(DBAdapter.WORKS_TABLE, work_list.get(position).rowID);
+                //==================================================================================================================================================
+                //удалить из бд тип и все его работы
+                //А еще из всех проектов
+                //==================================================================================================================================================
+
 
                 Toast.makeText(getApplicationContext(), work_list.get(position).name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
@@ -177,9 +214,16 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             work_line = i;
+
+            ArrayList<String> used_name = new ArrayList<String>();
+            for (int j = 0; j < work_list.size(); j++)
+                if (i != j)
+                    used_name.add(work_list.get(j).name);
+
             Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
             intent.putExtra("work_type", 1);
             intent.putExtra("work", work_list.get(i));
+            intent.putExtra("used_name", used_name);
             startActivityForResult(intent, UPDATE_WORK);
         }
     };
@@ -207,6 +251,14 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
                 new_work.rowID = dbAdapter.add(new_work);
                 work_list.add(new_work);
                 setList();
+            }
+        }
+        if (requestCode == ENTER_NAME)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                work_type.name = data.getExtras().getString("name");
+                setTitle(work_type.name);
             }
         }
     }

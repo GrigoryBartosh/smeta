@@ -55,8 +55,13 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private HashMap<Long, MaterialTypeClass > material_types_info_from_id = new HashMap<Long, MaterialTypeClass >();
     String[] measurements_material;
     ArrayList<MaterialClass> new_material;
+    ArrayList<String> used_name;
+    private String[] bad_strings;
 
     DBAdapter dbAdapter = new DBAdapter(this);
+
+    //================================================================================================================
+    //распарсить строку (нет &)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +98,12 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView.setOnItemLongClickListener(WorkActivity.this);
 
         measurements_material = getResources().getStringArray(R.array.measurements_material_short);
+        bad_strings = getResources().getStringArray(R.array.bad_strings);
 
         Intent intent = getIntent();
         work_type = intent.getExtras().getInt("work_type");
         work = (WorkClass) intent.getExtras().getSerializable("work");
+        if (work_type != 2) used_name = intent.getExtras().getStringArrayList("used_name");
 
         all_material_types = getAllMaterialTypes();
         for (int i = 0; i < all_material_types.size(); i++)
@@ -131,11 +138,17 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onBackPressed() {
         String name = mEditName.getText().toString();
         if (work_type == 0) {
-            save(name.length() != 0);
-            super.onBackPressed();
+            if (name.length() == 0) {
+                save(false);
+                super.onBackPressed();
+            } else {
+                if (ok_name()) {
+                    save(false);
+                    super.onBackPressed();
+                }
+            }
         } else {
-            if (name.length() == 0) Toast.makeText(getApplicationContext(), getString(R.string.work_toast_enter_name), Toast.LENGTH_SHORT).show();
-            else {
+            if (ok_name()) {
                 save(true);
                 super.onBackPressed();
             }
@@ -158,9 +171,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         switch (id)
         {
             case R.id.menu_work_done:
-                String name = mEditName.getText().toString();
-                if (name.length() == 0) Toast.makeText(getApplicationContext(), getString(R.string.work_toast_enter_name), Toast.LENGTH_SHORT).show();
-                else {
+                if (ok_name()) {
                     save(true);
                     finish();
                 }
@@ -246,6 +257,43 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 setFromWork();
             }
         }
+    }
+
+    Boolean ok_name(){
+        String name = mEditName.getText().toString().replaceAll("[\\s]{2,}", " ");
+        name = name.trim();
+        String lname = name.toLowerCase();
+
+        if (lname.length() == 0){
+            Toast.makeText( getApplicationContext(),
+                    getString(R.string.popup_name_category_need_name),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        Boolean flag = true;
+        for (int i = 0; i < used_name.size(); i++) {
+            for (int j = 0; j < bad_strings.length; j++)
+                flag = flag & (lname.indexOf(bad_strings[j]) == -1);
+        }
+        if (!flag) {
+            Toast.makeText( getApplicationContext(),
+                    getString(R.string.popup_name_category_bad_symbol),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        flag = true;
+        for (int i = 0; i < used_name.size(); i++) {
+            flag = flag & !used_name.get(i).equals(lname);
+        }
+        if (!flag) {
+            Toast.makeText( getApplicationContext(),
+                    getString(R.string.popup_name_category_equal_name),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void save(Boolean complete)
