@@ -105,6 +105,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:longClickable="true"
+        android:Clickable="true"
         />
 
     <TextView

@@ -87,12 +87,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         work_type = intent.getExtras().getInt("work_type");
         work = (WorkClass) intent.getExtras().getSerializable("work");
 
-        if (work_type != 2) {
-            all_material_types = getAllMaterialTypes();
-            for (int i = 0; i < all_material_types.size(); i++)
-                material_types_info_from_id.put(  all_material_types.get(i).rowID,
-                        all_material_types.get(i));
-        }
+        all_material_types = getAllMaterialTypes();
+        for (int i = 0; i < all_material_types.size(); i++)
+            material_types_info_from_id.put(  all_material_types.get(i).rowID,
+                    all_material_types.get(i));
 
         if (work_type != 0) {
             setTitle(work.name);
@@ -390,6 +388,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             mTextName.setLongClickable(true);
             mTextMeasurement.setLongClickable(true);
+            mTextName.setClickable(true);
+            mTextMeasurement.setClickable(true);
 
             if (work_type == 2){
                 if (work.RealMaterials.get(position) == -1L)
