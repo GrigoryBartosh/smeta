@@ -26,6 +26,8 @@ public class ListOverview extends AppCompatActivity
     private WorkTypeClass TypeHere;
     ArrayAdapter<WorkClass> adapt;
     final private int GETTING_NEW_WORK = 1488;
+    final private int SOSU_PENISI_ZA_200_RUBLEY = 200;
+    int id;
     private String worktype;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -106,6 +108,9 @@ public class ListOverview extends AppCompatActivity
                         System.out.println(tmp.getName());
                         Intent x = new Intent(ListOverview.this, WorkActivity.class);
                         x.putExtra("work", new WorkClass(tmp));
+                        x.putExtra("work_type", 2);
+                        id = i;
+                        startActivityForResult(x, 228);
                     }
                 });
         l.setOnItemLongClickListener(
@@ -179,6 +184,11 @@ public class ListOverview extends AppCompatActivity
             if (getIntent().getSerializableExtra(worktype + ":WorkSet") != null)
                 getIntent().removeExtra(worktype + ":WorkSet");
             getIntent().putExtra(worktype + ":WorkSet", WorkSet);
+            adapt.notifyDataSetChanged();
+        }
+        else if (resultCode == SOSU_PENISI_ZA_200_RUBLEY)
+        {
+            WorkSet.set(id, (WorkClass)data.getSerializableExtra("work"));
             adapt.notifyDataSetChanged();
         }
     }

@@ -23,7 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 3;
+	public static final int DATABASE_VERSION = 2;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -592,20 +592,23 @@ public class DBAdapter {
             add(_db, TYPES_TABLE, t1);
 
             WorkClass t2 = new WorkClass(false, "Намазать пол говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);
-            t2.addMaterial(0L);
+            t2.addMaterial(1L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Намазать стены говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 2);
-            t2.addMaterial(0L);
+            t2.addMaterial(1L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Намазать потолок говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1,3);
-            t2.addMaterial(0L);
+            t2.addMaterial(1L);
             add(_db, WORKS_TABLE, t2);
-            t2 = new WorkClass(false, "Вымазать потолок говном", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 3);
-            t2.addMaterial(0L);
+            t2 = new WorkClass(false, "Вымазать потолок говном и мочей", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 3);
+            t2.addMaterial(1L);
+            t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
 
             //public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
             MaterialClass t3 = new MaterialClass("Коричневое говно", 0f, 3, 0, 1f);
+            add(_db, MATERIAL_TABLE, t3);
+            t3 = new MaterialClass("Рыжее говно", 0f, 3, 0, 1f);
             add(_db, MATERIAL_TABLE, t3);
             t3 = new MaterialClass("Жёлтая моча", 0f, 4, 0, 1f);
             add(_db, MATERIAL_TABLE, t3);
@@ -615,13 +618,12 @@ public class DBAdapter {
             ArrayList<Long> materials = new ArrayList<>();
             materials.add(1L);
             materials.add(2L);
-            materials.add(3L);
-            MaterialTypeClass t4 = new MaterialTypeClass("Вкусняшки", materials);
+            MaterialTypeClass t4 = new MaterialTypeClass("Вкусняшки", materials, 3);
             add(_db, MATERIAL_TYPES_TABLE, t4);
             materials = new ArrayList<>();
-            materials.add(2L);
             materials.add(3L);
-            t4 = new MaterialTypeClass("Моча", materials);
+            materials.add(4L);
+            t4 = new MaterialTypeClass("Моча", materials, 4);
             add(_db, MATERIAL_TYPES_TABLE, t4);
 		}
 

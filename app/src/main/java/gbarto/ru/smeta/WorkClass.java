@@ -10,6 +10,10 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
 
     public boolean state;
     public long workType;
+    public ArrayList<Pair <Long, Float> > Materials;
+    public ArrayList<Long> RealMaterials;
+    public float price;
+    public int measuring;
 
     public WorkClass(WorkClass a)
     {
@@ -17,13 +21,13 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.rowID = a.rowID;
         this.state = a.state;
         this.workType = a.workType;
+        this.Materials = new ArrayList<>();
+        for (Pair <Long, Float> x : a.Materials)
+            this.Materials.add(x);
+        this.RealMaterials = new ArrayList<>();
+        for (Long x : a.RealMaterials)
+            this.RealMaterials.add(x);
     }
-
-    public ArrayList<Pair <Long, Float> > Materials;
-    public ArrayList<Long> RealMaterials;
-
-    public float price;
-    public int measuring;
 
     public long getWorkType()
     {
