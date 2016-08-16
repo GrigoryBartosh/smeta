@@ -265,8 +265,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         work.name = mEditName.getText().toString();
         work.measuring = spinner_adapter.getPosition(mSpinner.getSelectedItem().toString());
         String price = mEditSum.getText().toString();
-        if (price.equals("") || price.equals("-") || price.equals("-."))
-        {
+        if (price.equals("") || price.equals("-") || price.equals("-.")) {
             work.price = 0;
         } else {
             work.price = Float.valueOf(price);
@@ -278,7 +277,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             if (size.equals("") || size.equals("-") || size.equals("-.")) {
                 work.size = 0;
             } else {
-                work.size = Float.valueOf(price);
+                work.size = Float.valueOf(size);
                 if (work.size < 0.0005) work.size = 0;
             }
         }
@@ -297,9 +296,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (work_type == 2){
             if (Math.abs(work.size) < 1e-8)
-                mEditSum.setText("");
+                mEditSize.setText("");
             else
-                mEditSum.setText(Float.toString(work.size));
+                mEditSize.setText(Float.toString(work.size));
         }
         setList();
     }

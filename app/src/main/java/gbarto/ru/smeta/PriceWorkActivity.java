@@ -1,10 +1,14 @@
 package gbarto.ru.smeta;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -14,7 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PriceWorkActivity extends AppCompatActivity {
+public class PriceWorkActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener {
     WorkTypeClass work_type;
     ArrayList<WorkClass> work_list;
 
@@ -51,6 +55,8 @@ public class PriceWorkActivity extends AppCompatActivity {
         work_type = (WorkTypeClass) getIntent().getSerializableExtra("work_type");
         setTitle(work_type.name);
         work_list = getAllWork();
+
+        mListView.setOnItemLongClickListener(PriceWorkActivity.this);
         setList();
     }
 
@@ -76,6 +82,76 @@ public class PriceWorkActivity extends AppCompatActivity {
             startActivityForResult(intent, CREATE_WORK);
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_price_work, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+        boolean res;
+
+        switch (id)
+        {
+            case R.id.menu_work_help:
+                FragmentManager manager = getSupportFragmentManager();
+                MyDialogFragment myDialogFragment = new MyDialogFragment();
+                myDialogFragment.setTitle(getString(R.string.help));
+                myDialogFragment.setMessage(getString(R.string.price_work_about_text));
+                myDialogFragment.setPositiveButtonTitle(getString(R.string.ok));
+                myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                myDialogFragment.setUseNegativeButton(false);
+                myDialogFragment.show(manager, "dialog");
+
+                res = true;
+                break;
+            default:
+                res = super.onOptionsItemSelected(item);
+                break;
+        }
+
+        return  res;
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.setTitle(getString(R.string.price_work_alert_delete_title));
+        myDialogFragment.setMessage(getString(R.string.price_work_alert_delete_summary));
+        myDialogFragment.setPositiveButtonTitle(getString(R.string.yes));
+        myDialogFragment.setNegativeButtonTitle(getString(R.string.no));
+        final int tp = position;
+        myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                dbAdapter.deleteRow(DBAdapter.WORKS_TABLE, work_list.get(position).rowID);
+
+                Toast.makeText(getApplicationContext(), work_list.get(position).name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
+
+                work_list.remove(position);
+
+                setList();
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.setNegativeClicked(new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.show(manager, "dialog");
+
+        return true;
+    }
 
     private void setList()
     {
