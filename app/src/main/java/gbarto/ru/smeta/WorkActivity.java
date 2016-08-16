@@ -94,7 +94,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        mListView = (ListView)findViewById(R.id.work_listView);
+        mListView = (ListView) findViewById(R.id.work_listView);
         mListView.setOnItemLongClickListener(WorkActivity.this);
 
         measurements_material = getResources().getStringArray(R.array.measurements_material_short);
@@ -109,7 +109,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         all_material_types = getAllMaterialTypes();
         for (int i = 0; i < all_material_types.size(); i++)
-            material_types_info_from_id.put(  all_material_types.get(i).rowID,
+            material_types_info_from_id.put(all_material_types.get(i).rowID,
                     all_material_types.get(i));
 
         if (work_type != 0) {
@@ -119,8 +119,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mTextListEmpty.setText(getString(R.string.work_empty_list));
         }
 
-        if (work_type != 2)
-        {
+        if (work_type == 2) {
+            mEditName.setEnabled(false);
+            mSpinner.setEnabled(false);
+        } else {
             mTextSize.setVisibility(View.INVISIBLE);
             mEditSize.setVisibility(View.INVISIBLE);
             RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
@@ -262,6 +264,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     Boolean ok_name(){
+        if (work_type == 2) return true;
+
         String name = mEditName.getText().toString().replaceAll("[\\s]{2,}", " ");
         name = name.trim();
         String lname = name.toLowerCase();
@@ -283,19 +287,17 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             return false;
         }
 
-        if (work_type != 2)
-        {
-            flag = true;
-            for (int i = 0; i < used_name.size(); i++) {
-                flag = flag & !used_name.get(i).equals(lname);
-            }
-            if (!flag) {
-                Toast.makeText( getApplicationContext(),
-                        getString(R.string.work_toast_equal_name),
-                        Toast.LENGTH_SHORT).show();
-                return false;
-            }
+        flag = true;
+        for (int i = 0; i < used_name.size(); i++) {
+            flag = flag & !used_name.get(i).equals(lname);
         }
+        if (!flag) {
+            Toast.makeText( getApplicationContext(),
+                    getString(R.string.work_toast_equal_name),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
     }
 
