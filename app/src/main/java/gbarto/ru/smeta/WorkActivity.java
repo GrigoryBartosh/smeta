@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -33,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener {
-    private Boolean new_work;
+    private Integer work_type;
     private WorkClass work;
 
     private EditText mEditName;
@@ -44,10 +41,12 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     ArrayAdapter<CharSequence> spinner_adapter;
 
     private ListView mListView;
-    static final private int CHOOSE_MATERIAL = 0;
+    static final private int CHOOSE_MATERIAL_TYPE = 0;
+    static final private int CHOOSE_MATERIAL = 1;
+    int material_line;
 
-    private ArrayList<MaterialClass> all_material;
-    private HashMap<Long, Pair<String, Integer> > material_info_from_id = new HashMap<Long, Pair<String, Integer> >();
+    private ArrayList<MaterialTypeClass> all_material_types;
+    private HashMap<Long, MaterialTypeClass > material_types_info_from_id = new HashMap<Long, MaterialTypeClass >();
     String[] measurements_material;
 
     DBAdapter dbAdapter = new DBAdapter(this);
@@ -82,17 +81,21 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView = (ListView)findViewById(R.id.work_listView);
         mListView.setOnItemLongClickListener(WorkActivity.this);
 
-        all_material = getAllMaterial();
-        for (int i = 0; i < all_material.size(); i++)
-            material_info_from_id.put(  all_material.get(i).rowID,
-                                        new Pair(all_material.get(i).name, all_material.get(i).measuring));
-
         measurements_material = getResources().getStringArray(R.array.measurements_material_short);
 
         Intent intent = getIntent();
-        new_work = intent.getExtras().getBoolean("new_work");
+        work_type = intent.getExtras().getInt("work_type");
         work = (WorkClass) intent.getExtras().getSerializable("work");
-        if (!new_work) {
+
+        if (work_type != 2) {
+            all_material_types = getAllMaterialTypes();
+            for (int i = 0; i < all_material_types.size(); i++)
+                material_types_info_from_id.put(  all_material_types.get(i).rowID,
+                        all_material_types.get(i));
+        }
+
+        if (work_type != 0) {
+            setTitle(work.name);
             setFromWork();
         } else {
             mTextListEmpty.setText(getString(R.string.work_empty_list));
@@ -108,7 +111,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onBackPressed() {
         String name = mEditName.getText().toString();
-        if (new_work) {
+        if (work_type == 0) {
             save(name.length() != 0);
             super.onBackPressed();
         } else {
@@ -173,23 +176,23 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         public void onClick(View view) {
             setToWork();
 
-            HashSet<Long> used_material = new HashSet<Long>();
+            HashSet<Long> used_material_types = new HashSet<Long>();
             if (work.Materials != null)
                 for (int i = 0; i < work.Materials.size(); i++)
-                    used_material.add(work.Materials.get(i).first);
+                    used_material_types.add(work.Materials.get(i).first);
 
-            ArrayList<MaterialClass> new_material = new ArrayList<MaterialClass>();
+            ArrayList<MaterialTypeClass> new_material_types = new ArrayList<MaterialTypeClass>();
 
-            for (int i = 0; i < all_material.size(); i++)
+            for (int i = 0; i < all_material_types.size(); i++)
             {
-                final Long num = all_material.get(i).rowID;
-                if (!used_material.contains(num))
-                    new_material.add(all_material.get(i));
+                final Long num = all_material_types.get(i).rowID;
+                if (!used_material_types.contains(num))
+                    new_material_types.add(all_material_types.get(i));
             }
 
             Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
-            intent.putExtra("list", new_material);
-            startActivityForResult(intent, CHOOSE_MATERIAL);
+            intent.putExtra("list", new_material_types);
+            startActivityForResult(intent, CHOOSE_MATERIAL_TYPE);
         }
     };
 
@@ -198,7 +201,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHOOSE_MATERIAL)
+        if (requestCode == CHOOSE_MATERIAL_TYPE)
         {
             if (resultCode == RESULT_OK)
             {
@@ -208,6 +211,16 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 for (int i = 0; i < new_list.size(); i++) {
                     work.addMaterial((int)new_list.get(i).rowID);
                 }
+
+                setFromWork();
+            }
+        }
+        if (requestCode == CHOOSE_MATERIAL)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                Long rowID = data.getExtras().getLong("material_id");
+                work.RealMaterials.set(material_line, rowID);
 
                 setFromWork();
             }
@@ -268,6 +281,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 new String[]{},
                 new int[]{});
         mListView.setAdapter(adapter);
+        if (work_type == 2) mListView.setOnItemClickListener(mItemListener);
         adapter.notifyDataSetChanged();
 
         if (adapter.getCount() == 0)
@@ -290,10 +304,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Long rowID = work.Materials.get(tp).first;
-                Pair<String, Integer> p = material_info_from_id.get(rowID);
-                Toast.makeText(getApplicationContext(), p.first + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
+                MaterialTypeClass p = material_types_info_from_id.get(rowID);
+                Toast.makeText(getApplicationContext(), p.name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
-                work.Materials.remove(tp);
+                work.removeMaterial(tp);
 
                 setFromWork();
                 dialog.cancel();
@@ -308,6 +322,20 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         return true;
     }
+
+    AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            setToWork();
+            material_line = i;
+
+            ArrayList<MaterialClass> new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(i).first));
+
+            Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
+            intent.putExtra("list", new_material);
+            startActivityForResult(intent, CHOOSE_MATERIAL);
+        }
+    };
 
     private class Adapter extends SimpleAdapter{
         public Adapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
@@ -324,10 +352,13 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             TextView mTextMeasurement = (TextView) view.findViewById(R.id.text_measurement);
 
             Long rowID = work.Materials.get(position).first;
-            Pair<String, Integer> p = material_info_from_id.get(rowID);
-            mTextName.setText(p.first);
-            mTextMeasurement.setText(measurements_material[p.second]);
-            mEditSum.setText(Float.toString(work.Materials.get(position).second));
+            MaterialTypeClass p = material_types_info_from_id.get(rowID);
+            mTextName.setText(p.name);
+            mTextMeasurement.setText(measurements_material[p.measurement]);
+            if (Math.abs(work.Materials.get(position).second) < 1e-8)
+                mEditSum.setText("");
+            else
+                mEditSum.setText(Float.toString(work.Materials.get(position).second));
 
             final View v = view;
             mEditSum.addTextChangedListener(new TextWatcher() {
@@ -355,6 +386,13 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mTextName.setLongClickable(true);
             mTextMeasurement.setLongClickable(true);
 
+            if (work_type == 2){
+                if (work.RealMaterials.get(position) == -1L)
+                    view.setBackgroundColor(getResources().getColor(R.color.material_not_choose));
+                else
+                    view.setBackgroundColor(getResources().getColor(R.color.material_choose));
+            }
+
             return view;
         }
 
@@ -364,13 +402,21 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    private ArrayList<MaterialClass> getAllMaterial() {
-        DBObject[] arr = dbAdapter.getAllRows(DBAdapter.MATERIAL_TABLE);
+    private ArrayList<MaterialTypeClass> getAllMaterialTypes() {
+        DBObject[] arr = dbAdapter.getAllRows(DBAdapter.MATERIAL_TYPES_TABLE);
+        ArrayList<MaterialTypeClass> res = new ArrayList<MaterialTypeClass>();
+        for (int i = 0; i < arr.length; i++){
+            res.add((MaterialTypeClass) arr[i]);
+        }
+        return res;
+    }
+
+    private ArrayList<MaterialClass> getAllMaterial(MaterialTypeClass material_type) {
+        DBObject[] arr = dbAdapter.getAllMaterials(material_type);
         ArrayList<MaterialClass> res = new ArrayList<MaterialClass>();
         for (int i = 0; i < arr.length; i++){
             res.add((MaterialClass) arr[i]);
         }
         return res;
     }
-
 }

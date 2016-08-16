@@ -21,8 +21,8 @@ public class PriceWorkActivity extends AppCompatActivity {
     private ListView mListView;
     private static final String TITLE = "title";
 
-    static final private int UPDATE_WORK = 1;
-    static final private int CREATE_WORK = 2;
+    static final private int UPDATE_WORK = 0;
+    static final private int CREATE_WORK = 1;
 
     DBAdapter dbAdapter = new DBAdapter(this);
     int work_line;
@@ -69,7 +69,7 @@ public class PriceWorkActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
-            intent.putExtra("new_work", true);
+            intent.putExtra("work_type", 0);
             WorkClass new_work = new WorkClass();
             new_work.workType = work_type.rowID;
             intent.putExtra("work", new_work);
@@ -102,7 +102,7 @@ public class PriceWorkActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             work_line = i;
             Intent intent = new Intent(PriceWorkActivity.this, WorkActivity.class);
-            intent.putExtra("new_work", false);
+            intent.putExtra("work_type", 1);
             intent.putExtra("work", work_list.get(i));
             startActivityForResult(intent, UPDATE_WORK);
         }

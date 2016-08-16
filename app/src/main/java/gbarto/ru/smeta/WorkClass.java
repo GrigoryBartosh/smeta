@@ -87,6 +87,12 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         RealMaterials.remove(i);
     }
 
+    public void removeMaterial(long index)
+    {
+        Materials.remove(index);
+        RealMaterials.remove(index);
+    }
+
     public WorkClass(boolean state, String name)
     {
         this.state = state;
