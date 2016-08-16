@@ -280,7 +280,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 new String[]{},
                 new int[]{});
         mListView.setAdapter(adapter);
-        if (work_type == 2) mListView.setOnItemClickListener(mItemListener);
+        //if (work_type == 2) mListView.setOnItemClickListener(mItemListener);
         adapter.notifyDataSetChanged();
 
         if (adapter.getCount() == 0)
@@ -325,20 +325,12 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-    AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener() {
+    /*AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            setToWork();
-            material_line = i;
 
-            ArrayList<MaterialClass> new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(i).first));
-
-            Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
-            intent.putExtra("list", new_material);
-            intent.putExtra("check_list", false);
-            startActivityForResult(intent, CHOOSE_MATERIAL);
         }
-    };
+    };*/
 
     private class Adapter extends SimpleAdapter{
         public Adapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
@@ -397,6 +389,21 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 else
                     view.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
             }
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setToWork();
+                    material_line = position;
+
+                    ArrayList<MaterialClass> new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(position).first));
+
+                    Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
+                    intent.putExtra("list", new_material);
+                    intent.putExtra("check_list", false);
+                    startActivityForResult(intent, CHOOSE_MATERIAL);
+                }
+            });
 
             return view;
         }
