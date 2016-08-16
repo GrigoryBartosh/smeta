@@ -192,6 +192,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
             intent.putExtra("list", new_material_types);
+            intent.putExtra("check_list", true);
             startActivityForResult(intent, CHOOSE_MATERIAL_TYPE);
         }
     };
@@ -205,7 +206,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         {
             if (resultCode == RESULT_OK)
             {
-                ArrayList<MaterialClass> new_list = (ArrayList<MaterialClass>)data.getSerializableExtra("result");
+                ArrayList<MaterialTypeClass> new_list = (ArrayList<MaterialTypeClass>)data.getSerializableExtra("result");
                 if (new_list == null) return;
 
                 for (int i = 0; i < new_list.size(); i++) {
@@ -307,7 +308,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 MaterialTypeClass p = material_types_info_from_id.get(rowID);
                 Toast.makeText(getApplicationContext(), p.name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
+                System.out.println(work.Materials.size());
+                System.out.println(tp);
                 work.removeMaterial(tp);
+                System.out.println(work.Materials.size());
 
                 setFromWork();
                 dialog.cancel();
@@ -333,6 +337,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
             intent.putExtra("list", new_material);
+            intent.putExtra("check_list", false);
             startActivityForResult(intent, CHOOSE_MATERIAL);
         }
     };

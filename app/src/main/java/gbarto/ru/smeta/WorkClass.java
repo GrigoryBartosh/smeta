@@ -81,7 +81,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         RealMaterials.add(-1L);
     }
 
-    public void removeMaterial(long index)
+    public void removeMaterial(int index)
     {
         Materials.remove(index);
         RealMaterials.remove(index);
