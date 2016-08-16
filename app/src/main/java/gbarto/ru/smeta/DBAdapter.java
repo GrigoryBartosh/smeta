@@ -23,7 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 4;
+	public static final int DATABASE_VERSION = 2;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -431,6 +431,7 @@ public class DBAdapter {
                             MaterialTypeClass tmp = JSONtoMaterialTypeClass(FromString(structure));
                             tmp.setName(c.getString(1));
                             tmp.setMeasurement(c.getInt(2));
+                            temp.add(tmp);
                             break;
                         }
                     }
