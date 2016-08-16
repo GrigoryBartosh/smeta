@@ -461,10 +461,10 @@ public class DBAdapter {
     public DBObject getRow(String tablename, long row)
     {
         String where = KEY_ROWID + "=" + Long.toString(row);
-        DBObject[] temp = getSelectionRows(KEY_ROWID, where);
+        DBObject[] temp = getSelectionRows(tablename, where);
         if (temp == null || temp.length == 0)
             return null;
-        return getSelectionRows(KEY_ROWID, where)[0];
+        return temp[0];
     }
 
 	/////////////////////////////////////////////////////////////////////
