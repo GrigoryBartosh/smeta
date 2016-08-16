@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ListOverview extends AppCompatActivity
 {
@@ -27,6 +28,7 @@ public class ListOverview extends AppCompatActivity
     ArrayAdapter<WorkClass> adapt;
     final private int GETTING_NEW_WORK = 1488;
     final private int SOSU_PENISI_ZA_200_RUBLEY = 200;
+    final private int SOSU_PENISI_ZA_2000_RUBLEY = 2000;
     int id;
     private String worktype;
     @Override
@@ -62,10 +64,35 @@ public class ListOverview extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                Intent x = new Intent(ListOverview.this, ListOverViewNewWork.class);
-                x.putExtra("have_works", WorkSet);
-                x.putExtra("keep_type", TypeHere);
-                startActivityForResult(x, GETTING_NEW_WORK);
+                Intent intent = new Intent(ListOverview.this, SearchActivity.class);
+                intent.putExtra("check_list", true);
+                DBObject[] temp = adapter.getWorksByType(TypeHere.rowID);
+                ArrayList<WorkClass> tmp3 = new ArrayList <>();
+                for (WorkClass x : WorkSet)
+                    tmp3.add(x);
+                WorkClass[] tmp2 = new WorkClass[tmp3.size()];
+                tmp2 = tmp3.toArray(tmp2);
+                tmp3.clear();
+                Arrays.sort(tmp2);
+                for (DBObject x : temp) {
+                    WorkClass y = (WorkClass) x;
+                    int l = 0, r = tmp2.length;
+                    while (l < r - 1)
+                    {
+                        int mid = (l + r) >> 1;
+                        if (tmp2[mid].compareTo(y) > 0)
+                            r = mid;
+                        else
+                            l = mid;
+                    }
+                    if (tmp2.length == 0)
+                        tmp3.add(y);
+                    else
+                    if (!tmp2[l].equals(x))
+                        tmp3.add(y);
+                }
+                intent.putExtra("list", tmp3);
+                startActivityForResult(intent, SOSU_PENISI_ZA_2000_RUBLEY);
             }
         });
     }
@@ -189,6 +216,13 @@ public class ListOverview extends AppCompatActivity
         else if (requestCode == SOSU_PENISI_ZA_200_RUBLEY)
         {
             WorkSet.set(id, (WorkClass)data.getSerializableExtra("work"));
+            adapt.notifyDataSetChanged();
+        }
+        else if (requestCode == SOSU_PENISI_ZA_2000_RUBLEY)
+        {
+            ArrayList <WorkClass> tmp = (ArrayList <WorkClass>) data.getSerializableExtra("result");
+            for (WorkClass x : tmp)
+                WorkSet.add(x);
             adapt.notifyDataSetChanged();
         }
     }
