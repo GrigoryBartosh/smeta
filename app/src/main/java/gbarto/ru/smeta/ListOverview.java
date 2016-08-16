@@ -153,7 +153,7 @@ public class ListOverview extends AppCompatActivity
 
             boolean lmao = false;
             for (int i = 0; !lmao && i < w1.Materials.size(); ++i)
-                if (w1.RealMaterials.get(i).first == -1)
+                if (w1.RealMaterials.get(i) == -1L)
                 {
                     lmao = true;
                     break;

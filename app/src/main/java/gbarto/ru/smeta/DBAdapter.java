@@ -23,7 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 4;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -160,14 +160,9 @@ public class DBAdapter {
             temp.put("materials", tmp);
             temp.put("requirements", tmp2);
             JSONArray tmp3 = new JSONArray();
-            JSONArray tmp4 = new JSONArray();
-            for (Pair <Long, Float> x : work.getRealMaterials())
-            {
-                tmp3.put(x.first);
-                tmp4.put(x.second);
-            }
+            for (Long x : work.RealMaterials)
+                tmp3.put(x);
             temp.put("realMaterials", tmp3);
-            temp.put("realRequirements", tmp4);
             return temp;
         }
         catch (JSONException e) {
@@ -205,12 +200,11 @@ public class DBAdapter {
             JSONArray tmp = x.getJSONArray("materials");
             JSONArray tmp2 = x.getJSONArray("requirements");
             ArrayList <Pair <Long, Float> > temp = new ArrayList<>();
-            ArrayList <Pair <Long, Float> > temp2 = new ArrayList<>();
+            ArrayList <Long> temp2 = new ArrayList<>();
             JSONArray tmp3 = x.getJSONArray("realMaterials");
-            JSONArray tmp4 = x.getJSONArray("realRequirements");
             for (int i = 0; i < tmp.length(); ++i){
                 temp.add(new Pair(tmp.getLong(i), (float)tmp2.getDouble(i)));
-                temp2.add(new Pair(tmp3.getLong(i), (float)tmp4.getDouble(i)));
+                temp2.add(tmp3.getLong(i));
             }
             WorkClass x1 = new WorkClass(false, "", temp, temp2, 0, 0, 0);
             return x1;
@@ -452,6 +446,16 @@ public class DBAdapter {
         return getSelectionRows(WORKS_TABLE, where);
     }
 
+    public DBObject[] getAllMaterials(MaterialTypeClass materialTypeClass)
+    {
+        ArrayList<MaterialClass> temp = new ArrayList<>();
+        for (int i = 0; i < materialTypeClass.Materials.size(); ++i)
+            temp.add((MaterialClass)getRow(MATERIAL_TABLE, materialTypeClass.Materials.get(i)));
+        DBObject[] tmp2 = new DBObject[temp.size()];
+        tmp2 = temp.toArray(tmp2);
+        return tmp2;
+    }
+
     public DBObject getRow(String tablename, long row)
     {
         String where = KEY_ROWID + "=" + Long.toString(row);
@@ -485,9 +489,9 @@ public class DBAdapter {
                     //public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
                     initialValues.put(MATERIAL_KEY_MATERIAL, ToJSON((MaterialClass)t).toString());
                     break;
-                case WORKS_TABLE:
+                case WORKS_TABLE: {
                     //public static final String[] WORKS_ALL_KEYS = new String[] {KEY_ROWID, WORKS_KEY_STATE, WORKS_KEY_NAME, WORKS_KEY_MATERIALS, WORKS_KEY_PRICE, WORKS_KEY_MEASURING, WORKS_KEY_WORKTYPE};
-                    WorkClass s = (WorkClass)t;
+                    WorkClass s = (WorkClass) t;
                     initialValues.put(WORKS_KEY_STATE, s.isState());
                     initialValues.put(WORKS_KEY_NAME, s.getName());
                     initialValues.put(WORKS_KEY_MATERIALS, ToJSON(s).toString());
@@ -495,14 +499,38 @@ public class DBAdapter {
                     initialValues.put(WORKS_KEY_MEASURING, s.getMeasuring());
                     initialValues.put(WORKS_KEY_WORKTYPE, s.getWorkType());
                     break;
+                }
                 case TYPES_TABLE:
                     //public static final String[] TYPES_ALL_KEYS = new String[] {KEY_ROWID, TYPES_KEY_PLACE, TYPES_KEY_TYPE};
                     initialValues.put(TYPES_KEY_PLACE, "");
                     initialValues.put(TYPES_KEY_TYPE, t.getName());
                     break;
+                case MATERIAL_TYPES_TABLE: {
+                    MaterialTypeClass s = (MaterialTypeClass)t;
+                    initialValues.put(MATERIAL_TYPES_KEY_MATERIALS, ToJSON(s).toString());
+                    initialValues.put(MATERIAL_TYPES_KEY_NAME, s.getName());
+                    initialValues.put(MATERIAL_TYPES_KEY_MEASUREMENT, s.getMeasurement());
+                    break;
+                }
             }
             _db.insert(tablename, null, initialValues);
 
+        }
+
+        private JSONObject ToJSON(MaterialTypeClass materialTypeClass)
+        {
+            JSONObject temp = new JSONObject();
+            try
+            {
+                JSONArray tmp2 = new JSONArray();
+                for (Long x : materialTypeClass.Materials)
+                    tmp2.put(x);
+                temp.put("Materials", tmp2);
+                return temp;
+            }
+            catch (JSONException e) {
+                return null;
+            }
         }
 
         private JSONObject ToJSON(WorkClass work)
@@ -513,18 +541,15 @@ public class DBAdapter {
                 JSONArray tmp = new JSONArray();
                 JSONArray tmp2 = new JSONArray();
                 JSONArray tmp3 = new JSONArray();
-                JSONArray tmp4 = new JSONArray();
                 for (Pair <Long, Float> x : work.getMaterials())
                 {
                     tmp.put(x.first);
                     tmp2.put(x.second);
                     tmp3.put(-1);
-                    tmp4.put(-1);
                 }
                 temp.put("materials", tmp);
                 temp.put("requirements", tmp2);
                 temp.put("realMaterials", tmp3);
-                temp.put("realRequirements", tmp4);
                 return temp;
             }
             catch (JSONException e) {
@@ -578,10 +603,24 @@ public class DBAdapter {
             add(_db, WORKS_TABLE, t2);
 
             //public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
-            MaterialClass t3 = new MaterialClass("Говно", 0f, 3, 0, 1f);
+            MaterialClass t3 = new MaterialClass("Коричневое говно", 0f, 3, 0, 1f);
             add(_db, MATERIAL_TABLE, t3);
-            t3 = new MaterialClass("Моча", 0f, 4, 0, 1f);
+            t3 = new MaterialClass("Жёлтая моча", 0f, 4, 0, 1f);
             add(_db, MATERIAL_TABLE, t3);
+            t3 = new MaterialClass("Прозрачная моча", 0f, 4, 0, 1f);
+            add(_db, MATERIAL_TABLE, t3);
+
+            ArrayList<Long> materials = new ArrayList<>();
+            materials.add(1L);
+            materials.add(2L);
+            materials.add(3L);
+            MaterialTypeClass t4 = new MaterialTypeClass("Вкусняшки", materials);
+            add(_db, MATERIAL_TYPES_TABLE, t4);
+            materials.clear();
+            materials.add(2L);
+            materials.add(3L);
+            t4 = new MaterialTypeClass("Моча", materials);
+            add(_db, MATERIAL_TYPES_TABLE, t4);
 		}
 
 		@Override

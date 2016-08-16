@@ -20,17 +20,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     }
 
     public ArrayList<Pair <Long, Float> > Materials;
-    public ArrayList<Pair <Long, Float> > RealMaterials;
-
-    public ArrayList<Pair<Long, Float>> getRealMaterials()
-    {
-        return RealMaterials;
-    }
-
-    public void setRealMaterials(ArrayList<Pair<Long, Float>> realMaterials)
-    {
-        RealMaterials = realMaterials;
-    }
+    public ArrayList<Long> RealMaterials;
 
     public float price;
     public int measuring;
@@ -88,7 +78,13 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public void addMaterial(long newMaterial)
     {
         Materials.add(new Pair(newMaterial, 0.0f));
-        RealMaterials.add(new Pair(-1L, -1.0f));
+        RealMaterials.add(-1L);
+    }
+
+    public void remove(int i)
+    {
+        Materials.remove(i);
+        RealMaterials.remove(i);
     }
 
     public WorkClass(boolean state, String name)
@@ -119,7 +115,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         RealMaterials = new ArrayList<>();
         for (Pair <Long, Float> x : materials) {
             Materials.add(new Pair(x.first, x.second));
-            RealMaterials.add(new Pair(-1, -1));
+            RealMaterials.add(-1L);
         }
         Materials = new ArrayList<>(materials);
         this.price = price;
@@ -128,7 +124,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.workType = workType;
     }
 
-    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, ArrayList<Pair <Long, Float>> realMaterials,  float price, int measuring, long workType)
+    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, ArrayList<Long> realMaterials,  float price, int measuring, long workType)
     {
         this.state = state;
         Materials = new ArrayList<>();
@@ -136,8 +132,8 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         for (Pair <Long, Float> x : materials) {
             Materials.add(new Pair(x.first, x.second));
         }
-        for (Pair <Long, Float> x : realMaterials) {
-            RealMaterials.add(new Pair(x.first, x.second));
+        for (Long x : realMaterials) {
+            RealMaterials.add(x);
         }
         Materials = new ArrayList<>(materials);
         this.price = price;

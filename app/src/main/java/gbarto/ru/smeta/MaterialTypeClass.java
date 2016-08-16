@@ -34,11 +34,23 @@ public class MaterialTypeClass extends DBObject
 
     public void setMaterials(ArrayList<Long> materials)
     {
-        Materials = materials;
+        Materials = new ArrayList<>();
+        for (Long x : materials)
+            Materials.add(x);
     }
 
     public MaterialTypeClass(ArrayList<Long> materials)
     {
-        Materials = materials;
+        Materials = new ArrayList<>();
+        for (Long x : materials)
+            Materials.add(x);
+    }
+
+    public MaterialTypeClass(String name, ArrayList<Long> materials)
+    {
+        this.name = name;
+        Materials = new ArrayList<>();
+        for (Long x : materials)
+            Materials.add(x);
     }
 }
