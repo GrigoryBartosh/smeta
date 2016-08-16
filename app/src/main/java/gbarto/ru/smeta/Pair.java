@@ -17,6 +17,12 @@ public class Pair<T, X> implements Serializable
     }
 
     @Override
+    public String toString()
+    {
+        return first.toString() + ";" + second.toString();
+    }
+
+    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;

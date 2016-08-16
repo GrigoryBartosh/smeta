@@ -189,7 +189,6 @@ public class DBAdapter {
         catch (JSONException e) {
             return null;
         }
-
     }
 
     private WorkClass JSONtoWorkListView (JSONObject x)

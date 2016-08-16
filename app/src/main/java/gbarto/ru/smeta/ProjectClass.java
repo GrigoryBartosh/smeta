@@ -11,13 +11,19 @@ import java.util.TreeMap;
 //This is never stored in Database, so it shouldn't extend DBObject
 public class ProjectClass implements Serializable
 {
-    private TreeMap<WorkTypeClass, ArrayList<WorkClass>> works;
+    public TreeMap<WorkTypeClass, ArrayList<WorkClass>> works;
     String place;
     String name;
 
     public ProjectClass()
     {
         works = new TreeMap<>();
+    }
+
+    public ProjectClass(String name)
+    {
+        works = new TreeMap<>();
+        this.name = new String(name);
     }
 
     public boolean contains(WorkTypeClass Key)

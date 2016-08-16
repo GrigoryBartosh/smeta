@@ -154,6 +154,19 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     }
 
 
+    @Override
+    public String toString()
+    {
+        return  state +
+                "&" + workType +
+                "&" + Materials.toString() +
+                "&" + RealMaterials.toString() +
+                "&" + price +
+                "&" + measuring +
+                "&" + size;
+    }
+
+
     public int compareTo(WorkClass a)
     {
         return name.compareTo(a.getName());
