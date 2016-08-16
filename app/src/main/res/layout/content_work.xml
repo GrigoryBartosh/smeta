@@ -76,9 +76,30 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/work_relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/work_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/work_text_size"
+            android:textSize="16sp"
+            android:paddingRight="15dp"/>
+
+        <EditText
+            android:id="@+id/work_editText_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:hint="0"
+            android:inputType="numberSigned|numberDecimal"
+            android:maxLength="7"
+            android:layout_alignBaseline="@+id/work_text_size"
+            android:layout_alignBottom="@+id/work_text_size"
+            android:layout_toRightOf="@+id/work_text_size"
+            android:layout_toEndOf="@+id/work_text_size" />
 
         <TextView
             android:id="@+id/work_text_list"
@@ -86,7 +107,8 @@
             android:layout_height="wrap_content"
             android:text="@string/work_necessary_materials"
             android:textSize="16sp"
-            android:paddingTop="25dp" />
+            android:paddingTop="25dp"
+            android:layout_below="@+id/work_text_size"/>
 
         <Button
             android:id="@+id/work_button_new"
@@ -97,21 +119,21 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
+        <ListView
+            android:id="@+id/work_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:longClickable="true"
+            android:clickable="true"
+            android:layout_below="@+id/work_text_list"/>
+
+        <TextView
+            android:id="@+id/work_text_list_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_below="@+id/work_listView"/>
     </RelativeLayout>
-
-    <ListView
-        android:id="@+id/work_listView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:longClickable="true"
-        android:clickable="true"
-        />
-
-    <TextView
-        android:id="@+id/work_text_list_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="" />
 
 </LinearLayout>

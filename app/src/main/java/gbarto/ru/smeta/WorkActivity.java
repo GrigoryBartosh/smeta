@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NotificationCompatBase;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +40,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText mEditSum;
     private Button mButtonNew;
     private TextView mTextListEmpty;
+    private TextView mTextList;
+    private TextView mTextSize;
+    private EditText mEditSize;
+    private RelativeLayout mRelativeLayout;
     ArrayAdapter<CharSequence> spinner_adapter;
 
     private ListView mListView;
@@ -61,7 +67,11 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mSpinner = (Spinner) findViewById(R.id.work_spinner);
         mEditSum = (EditText) findViewById(R.id.work_editText_sum);
         mButtonNew = (Button) findViewById(R.id.work_button_new);
+        mTextList = (TextView) findViewById(R.id.work_text_list);
+        mTextSize = (TextView) findViewById(R.id.work_text_size);
+        mEditSize = (EditText) findViewById(R.id.work_editText_size);
         mTextListEmpty = (TextView) findViewById(R.id.work_text_list_empty);
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.work_relativeLayout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
 
         dbAdapter.open();
@@ -100,7 +110,15 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mTextListEmpty.setText(getString(R.string.work_empty_list));
         }
 
-
+        if (work_type != 2)
+        {
+            mTextSize.setVisibility(View.INVISIBLE);
+            mEditSize.setVisibility(View.INVISIBLE);
+            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
+            mTextList.setLayoutParams(relativeParams);
+        }
     }
 
     @Override
@@ -252,7 +270,17 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             work.price = 0;
         } else {
             work.price = Float.valueOf(price);
-            if (work.price < 0.5) work.price = 0;
+            if (work.price < 0.0005) work.price = 0;
+        }
+
+        if (work_type == 2) {
+            String size = mEditSize.getText().toString();
+            if (size.equals("") || size.equals("-") || size.equals("-.")) {
+                work.size = 0;
+            } else {
+                work.size = Float.valueOf(price);
+                if (work.size < 0.0005) work.size = 0;
+            }
         }
     }
 
@@ -266,6 +294,13 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mEditSum.setText("");
         else
             mEditSum.setText(Float.toString(work.price));
+
+        if (work_type == 2){
+            if (Math.abs(work.size) < 1e-8)
+                mEditSum.setText("");
+            else
+                mEditSum.setText(Float.toString(work.size));
+        }
         setList();
     }
 
@@ -325,13 +360,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-    /*AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-        }
-    };*/
-
     private class Adapter extends SimpleAdapter{
         public Adapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
             super(context, data, resource, from, to);
@@ -390,36 +418,38 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                     view.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
             }
 
-            View.OnClickListener ocl = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setToWork();
-                    material_line = position;
+            if (work_type == 2) {
+                View.OnClickListener ocl = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setToWork();
+                        material_line = position;
 
-                    Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
+                        Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
 
-                    new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(position).first));
+                        new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(position).first));
 
-                    Boolean flag = false;
-                    for (int i = 0; i < new_material.size(); i++)
-                        if (work.RealMaterials.get(position) == new_material.get(i).rowID){
-                            MaterialClass t = new_material.get(0);
-                            new_material.set(0, new_material.get(i));
-                            new_material.set(i, t);
-                            flag = true;
-                            break;
-                        }
+                        Boolean flag = false;
+                        for (int i = 0; i < new_material.size(); i++)
+                            if (work.RealMaterials.get(position) == new_material.get(i).rowID) {
+                                MaterialClass t = new_material.get(0);
+                                new_material.set(0, new_material.get(i));
+                                new_material.set(i, t);
+                                flag = true;
+                                break;
+                            }
 
-                    intent.putExtra("list", new_material);
-                    intent.putExtra("check_list", false);
-                    intent.putExtra("first", flag);
-                    startActivityForResult(intent, CHOOSE_MATERIAL);
-                }
-            };
+                        intent.putExtra("list", new_material);
+                        intent.putExtra("check_list", false);
+                        intent.putExtra("first", flag);
+                        startActivityForResult(intent, CHOOSE_MATERIAL);
+                    }
+                };
 
-            view.setOnClickListener(ocl);
-            mTextName.setOnClickListener(ocl);
-            mTextMeasurement.setOnClickListener(ocl);
+                view.setOnClickListener(ocl);
+                mTextName.setOnClickListener(ocl);
+                mTextMeasurement.setOnClickListener(ocl);
+            }
 
             return view;
         }

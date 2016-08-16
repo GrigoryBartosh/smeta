@@ -39,6 +39,7 @@
     <string name="work_work_name">Название работы</string>
     <string name="work_snipper">Цена за </string>
     <string name="work_price">Равна </string>
+    <string name="work_text_size">Объем работы </string>
     <string name="work_necessary_materials">Необходимые материалы</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_toast_enter_name">Пожалуйста, введите название работы</string>
@@ -97,7 +98,7 @@
         <item>м</item>
         <item>м2</item>
         <item>м3</item>
-        <item>кг</item>
+        <item>м.пог.</item>
         <item>л</item>
         <item>шт</item>
     </string-array>
