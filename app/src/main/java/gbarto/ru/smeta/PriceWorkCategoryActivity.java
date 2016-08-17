@@ -164,6 +164,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
             {
                 String name = data.getExtras().getString("new_name");
                 type_work_list.get(type_work_line).name = name;
+                dbAdapter.update(type_work_list.get(type_work_line));
 
                 setList();
             }
