@@ -171,6 +171,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
 
     public int compareTo(WorkClass a)
     {
-        return name.compareTo(a.getName());
+        if (rowID == a.rowID) return 0;
+        return (rowID < a.rowID) ? -1 : 1;
     }
 }
