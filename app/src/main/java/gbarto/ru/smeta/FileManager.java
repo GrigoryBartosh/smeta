@@ -1,9 +1,13 @@
 package gbarto.ru.smeta;
 
 import android.content.Context;
-import android.graphics.pdf.PdfRenderer;
-import android.os.ParcelFileDescriptor;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.widget.Toast;
+
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,10 +15,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOError;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -23,18 +26,19 @@ import java.util.Map;
  */
 public class FileManager
 {
-    Context x;
+    Context context;
+    final String APPNAME = "Smeta";
     final private String extension = ".prj";
     public FileManager(Context t)
     {
-        this.x = t;
+        this.context = t;
     }
 
 
     public void Save(ProjectClass Project)
     {
         try {
-            File path = new File(x.getFilesDir(), Project.name + extension);
+            File path = new File(context.getFilesDir(), Project.name + extension);
             path.createNewFile();
             FileWriter fileWriter = new FileWriter(path);
             BufferedWriter printer = new BufferedWriter(fileWriter);
@@ -53,14 +57,14 @@ public class FileManager
         }
         catch (Exception e)
         {
-            Toast.makeText(x.getApplicationContext(), "Could not save file, try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context.getApplicationContext(), "Could not save file, try again.", Toast.LENGTH_SHORT).show();
         }
     }
 
     public ArrayList <String> Load()
     {
         try {
-            File[] AllNames = x.getFilesDir().listFiles();
+            File[] AllNames = context.getFilesDir().listFiles();
             ArrayList <String> tmp = new ArrayList<>();
             for (int i = 0; i < AllNames.length; ++i) {
                 String s = AllNames[i].getName();
@@ -98,7 +102,7 @@ public class FileManager
     {
         try
         {
-            File file = new File(x.getFilesDir(), path + extension);
+            File file = new File(context.getFilesDir(), path + extension);
             return file.delete();
         }
         catch (Exception e)
@@ -152,7 +156,7 @@ public class FileManager
     {
         try
         {
-            File file = new File(x.getFilesDir(), path + extension);
+            File file = new File(context.getFilesDir(), path + extension);
             FileReader fileReader = new FileReader(file);
             ProjectClass Project = new ProjectClass(path);
             BufferedReader reader = new BufferedReader(fileReader);
@@ -193,9 +197,32 @@ public class FileManager
         }
     }
 
-    public void openPDF(String path) throws IOException
+    public void openPDF(String path) throws Exception
     {
-        //File file = new File(x.getFilesDir(), path + extension);
+        try {
+            com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+            File place = new File(Environment.getExternalStorageDirectory() + File.separator + APPNAME);
+            if (!place.exists())
+                place.mkdir();
+            File file = new File(place + "/" + path + ".pdf");
+            file.createNewFile();
+            PdfWriter.getInstance(document, new FileOutputStream(file));
+            document.open();
+            document.add(new Paragraph("FUCK YOUUUUUUUUUUUU"));
+            document.close();
+            Intent x = new Intent(Intent.ACTION_VIEW);
+            x.setDataAndType(Uri.fromFile(file), "application/pdf");
+            x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = Intent.createChooser(x, "Open file");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(context.getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
+        //File file = new File(context.getFilesDir(), path + extension);
         //FileReader fileReader = new FileReader(file);
         //PdfRenderer pdfRenderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE));
     }
