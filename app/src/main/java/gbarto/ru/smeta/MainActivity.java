@@ -1,8 +1,11 @@
 package gbarto.ru.smeta;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,16 +17,20 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity   extends AppCompatActivity
+                            implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemLongClickListener {
     private ListView mListView;
+    private TextView mTextEmpty;
+
     private FileManager fileManager = new FileManager(MainActivity.this);
-    ArrayList<String> list_name;
-    ArrayList<ProjectClass> list_project;
+    private ArrayList<String> list_name;
+    private ArrayList<ProjectClass> list_project;
 
     private static final String TITLE = "title";
     private static final String SUMMARY= "summary";
@@ -38,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // чтобы реагировало на нажатия
         mListView = (ListView) findViewById(R.id.main_listView);
+        mTextEmpty = (TextView) findViewById(R.id.main_textView_empty);
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -46,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         fab.setOnClickListener(fab_ocl);
+        mListView.setOnItemLongClickListener(MainActivity.this);
     }
 
     @Override
@@ -65,11 +74,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+        boolean res;
+
+        switch (id)
+        {
+            case R.id.menu_work_help:
+                FragmentManager manager = getSupportFragmentManager();
+                MyDialogFragment myDialogFragment = new MyDialogFragment();
+                myDialogFragment.setTitle(getString(R.string.help));
+                myDialogFragment.setMessage(getString(R.string.main_about_text));
+                myDialogFragment.setPositiveButtonTitle(getString(R.string.ok));
+                myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                myDialogFragment.setUseNegativeButton(false);
+                myDialogFragment.show(manager, "dialog");
+
+                res = true;
+                break;
+            default:
+                res = super.onOptionsItemSelected(item);
+                break;
+        }
+
+        return  res;
+    }
+
     View.OnClickListener fab_ocl = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
-            startActivity(intent);
+            NewProject();
         }
     };
 
@@ -79,12 +125,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Intent intent;
         switch (id) {
             case R.id.nav_new_project:
+                NewProject();
                 break;
 
             case R.id.nav_price_work:
-                Intent intent = new Intent(MainActivity.this, PriceWorkCategoryActivity.class);
+                intent = new Intent(MainActivity.this, PriceWorkCategoryActivity.class);
                 startActivity(intent);
                 break;
 
@@ -92,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_menu_settings:
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.nav_menu_abut:
@@ -129,6 +179,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new int[]{R.id.text, R.id.summary});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mItemListener);
+
+        if (adapter.getCount() == 0) mTextEmpty.setText(getString(R.string.main_empty_list));
+        else                         mTextEmpty.setText("");
     }
 
     AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener(){
@@ -139,4 +192,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         }
     };
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.setTitle(getString(R.string.main_alert_delete_title));
+        myDialogFragment.setMessage(getString(R.string.main_alert_delete_summary));
+        myDialogFragment.setPositiveButtonTitle(getString(R.string.yes));
+        myDialogFragment.setNegativeButtonTitle(getString(R.string.no));
+        myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                //fileManager.delete(list_name.get(position));
+
+                Toast.makeText(getApplicationContext(), list_project.get(position).name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
+
+                getList();
+                setList();
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.setNegativeClicked(new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.show(manager, "dialog");
+
+        return true;
+    }
+
+    private void NewProject(){
+        Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
+        startActivity(intent);
+    }
 }

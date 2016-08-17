@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
     int type_work_line;
 
     private ListView mListView;
+    private TextView mTextEmpty;
+
     private static final String TITLE = "title";
     private static final String ICON = "icon";
     static final private int ENTER_NAME = 0;
@@ -42,6 +45,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
         Toolbar toolbar = (Toolbar) findViewById(R.id.price_work_category_toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.price_work_category_fab);
         mListView = (ListView)findViewById(R.id.price_work_category_listView);
+        mTextEmpty = (TextView) findViewById(R.id.price_work_category_textView_empty);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -184,6 +188,9 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
                                                     new int[]{R.id.text, R.id.img});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mItemListener);
+
+        if (adapter.getCount() == 0) mTextEmpty.setText(getString(R.string.price_work_category_empty_list));
+        else                         mTextEmpty.setText("");
     }
 
     AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener() {
