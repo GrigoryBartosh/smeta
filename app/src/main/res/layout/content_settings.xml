@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,14 +10,189 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="gbarto.ru.smeta.SettingsActivity"
-    tools:showIn="@layout/activity_settings">
+    tools:showIn="@layout/activity_settings"
+    android:gravity="top"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/settings_imageView"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:background="@drawable/layout_settings_image_view"
+            android:src="@drawable/ic_add_photo"
+            android:elevation="2dp"
+            android:padding="30dp"
+            android:scaleType="centerInside"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+            <EditText
+                android:id="@+id/settings_editText_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/settings_hint_first_name"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/settings_editText_surname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/settings_hint_surname"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_phone"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/settings_editText_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_hint_phone"
+            android:inputType="phone"
+            android:ems="10"
+            android:layout_weight="3"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_email"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/settings_editText_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_hint_email"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:layout_weight="3"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/settings_company_info"
+        android:paddingTop="25dp"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#55646464" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_company_name"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/settings_editText_company_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_hint_company_name"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_weight="3"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_phone"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/settings_editText_company_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_hint_phone"
+            android:inputType="phone"
+            android:ems="10"
+            android:layout_weight="3"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_email"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/settings_editText_company_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_hint_email"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:layout_weight="3"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_address"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:id="@+id/settings_editText_company_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_hint_address"
+            android:ems="10"
+            android:layout_weight="3"/>
+    </LinearLayout>
 
 
-    <ImageView
-        android:id="@+id/setings_imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-</RelativeLayout>
+</LinearLayout>
