@@ -53,6 +53,7 @@ public class EditNameActivity extends AppCompatActivity {
                     if (Project == null)
                         Project = new ProjectClass();
                     Project.name = new String(mText.getText().toString());
+                    Project.place = getString(R.string.room_bedroom);
                     x.putExtra("Project", Project);
 
                     x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

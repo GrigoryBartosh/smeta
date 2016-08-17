@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class ChooseTypeActivity extends AppCompatActivity {
@@ -122,7 +124,18 @@ public class ChooseTypeActivity extends AppCompatActivity {
 
     private void default_values()
     {
-        DBObject[] temp = adapter.getAllRows(adapter.TYPES_TABLE);
+        DBObject[] temp = adapter.getAllRows(DBAdapter.TYPES_TABLE);
+        Set<WorkTypeClass> all = new TreeSet<>();
+        for (int i = 0; i < temp.length; ++i)
+            all.add((WorkTypeClass)temp[i]);
+        ArrayList <WorkTypeClass> deleting = new ArrayList<>();
+        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
+            WorkTypeClass x1 = new WorkTypeClass(x.getKey());
+            if (!all.contains(x1))
+                deleting.add(x1);
+        }
+        for (WorkTypeClass x : deleting)
+                Project.works.remove(x);
         //Arrays.sort(temp);
         for (DBObject x : temp)
             WorkSet.add((WorkTypeClass) x);
