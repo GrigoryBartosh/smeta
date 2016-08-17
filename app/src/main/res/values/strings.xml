@@ -114,6 +114,16 @@
     <string name="settings_email">Email:</string>
     <string name="settings_address">Адрес:</string>
     <string name="settings_company_info">Информация о компании</string>
+    <string name="settings_alert_choose">Что нужно сделать?</string>
+    <string-array name="settings_no_photo">
+        <item>Сделать снимок</item>
+        <item>Загрузить из галереи</item>
+    </string-array>
+    <string-array name="settings_photo">
+        <item>Удалить</item>
+        <item>Сделать снимок</item>
+        <item>Загрузить из галереи</item>
+    </string-array>
 
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>
