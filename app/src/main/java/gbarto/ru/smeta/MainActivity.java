@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -127,5 +128,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new String[]{TITLE, SUMMARY},
                 new int[]{R.id.text, R.id.summary});
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(mItemListener);
     }
+
+    AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
+            intent.putExtra("Project", list_project.get(i));
+            startActivity(intent);
+        }
+    };
 }
