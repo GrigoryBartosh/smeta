@@ -117,8 +117,19 @@ public class ListOverview extends AppCompatActivity
 
     private void default_values()
     {
-        if (Project.contains(TypeHere))
-            WorkSet = Project.get(TypeHere);
+        if (Project.contains(TypeHere)) {
+            ArrayList<WorkClass> tmp = Project.get(TypeHere);
+            for (WorkClass w1 : tmp) {
+                WorkClass w2 = (WorkClass) adapter.getRow(DBAdapter.WORKS_TABLE, w1.rowID);
+                if (w2 != null)
+                {
+                    w1.name = new String(w2.name);
+                    w1.measuring = w2.measuring;
+                    WorkSet.add(w1);
+                }
+            }
+        }
+
     }
 
     private void AddAdapter()

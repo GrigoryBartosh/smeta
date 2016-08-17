@@ -105,14 +105,16 @@ public class EditNameActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                if (charSequence.charAt(i) == '\n') {
+                if (charSequence.length() < keeper.length())
+                    keeper = charSequence.toString();
+                else if (charSequence.charAt(i) == '\n') {
                     mText.setText(keeper);
-                    mText.setSelection(keeper.length() - 1);
+                    mText.setSelection(keeper.length());
                     mButton.performClick();
                 }
                 else if (charSequence.length() > 100) {
                     mText.setText(keeper);
-                    mText.setSelection(keeper.length() - 1);
+                    mText.setSelection(keeper.length());
                 }
                 else
                     keeper = charSequence.toString();
