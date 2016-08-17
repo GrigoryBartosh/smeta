@@ -163,7 +163,9 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
                 "&" + RealMaterials.toString() +
                 "&" + price +
                 "&" + measuring +
-                "&" + size;
+                "&" + size +
+                "&" + name +
+                "&" + rowID;
     }
 
 
