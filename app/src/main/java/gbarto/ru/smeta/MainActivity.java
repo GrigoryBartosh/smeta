@@ -12,13 +12,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ListView mListView;
     private FileManager fileManager = new FileManager(MainActivity.this);
+    ArrayList<String> list_name;
+    ArrayList<ProjectClass> list_project;
+
+    private static final String TITLE = "title";
+    private static final String SUMMARY= "summary";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +49,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onResume() {
-        ArrayList<String> list = fileManager.Load();
-        //ProjectClass p = fileManager.LoadFromFile(list.get(1));
-
-        Toast.makeText(getApplicationContext(), list.toString(), Toast.LENGTH_SHORT).show();
-
+        getList();
+        setList();
         super.onResume();
     }
 
@@ -96,5 +100,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getList() {
+        ArrayList<String> list_name = fileManager.Load();
+
+        list_project = new ArrayList<ProjectClass>();
+        for (int i = 0; i < list_name.size(); i++) {
+            list_project.add(fileManager.LoadFromFile(list_name.get(i)));
+        }
+    }
+
+    void setList() {
+        ArrayList<HashMap<String,Object>> mCatList = new ArrayList<HashMap<String, Object>>();
+        HashMap<String, Object> hm;
+
+        for (int i = 0; i < list_project.size(); i++){
+            hm = new HashMap<>();
+            hm.put(TITLE, list_project.get(i).name);
+            hm.put(SUMMARY, list_project.get(i).place);
+            mCatList.add(hm);
+        }
+
+        SimpleAdapter adapter = new SimpleAdapter(  MainActivity.this,
+                mCatList, R.layout.list_item_main,
+                new String[]{TITLE, SUMMARY},
+                new int[]{R.id.text, R.id.summary});
+        mListView.setAdapter(adapter);
     }
 }
