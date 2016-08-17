@@ -24,6 +24,12 @@ public class EditRoomActivity extends AppCompatActivity {
         ImageButton bathroomButton = (ImageButton)this.findViewById(R.id.bathroom_button);
         ImageButton diningRoomButton = (ImageButton)this.findViewById(R.id.dining_room_button);
         ImageButton bedroomButton = (ImageButton)this.findViewById(R.id.bedroom_button);
+        if (Project.place != null)
+        {
+            if (Project.place.equals("Кухня"));
+                //kitchenButton.setBackgroundColor(getResources().getColor(R.color.));
+
+        }
         kitchenButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
