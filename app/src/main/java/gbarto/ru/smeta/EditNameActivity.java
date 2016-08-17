@@ -17,6 +17,7 @@ public class EditNameActivity extends AppCompatActivity {
     private EditText mText;
     private int BackRes;
     DBAdapter adapter;
+    ProjectClass Project = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +40,18 @@ public class EditNameActivity extends AppCompatActivity {
 
         mButton = (Button)findViewById(R.id.edit_name_next_button);
         mText = (EditText) findViewById(R.id.ProjectName);
+        if (getIntent().getSerializableExtra("Project") != null) {
+            Project = (ProjectClass) getIntent().getSerializableExtra("Project");
+            mText.setText(Project.name);
+        }
+
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mText.getText().length() >= 0) {
                     Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
-                    ProjectClass Project = new ProjectClass();
+                    if (Project == null)
+                        Project = new ProjectClass();
                     Project.name = new String(mText.getText().toString());
                     x.putExtra("Project", Project);
 

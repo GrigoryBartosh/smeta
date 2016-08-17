@@ -24,6 +24,7 @@ public class ProjectClass implements Serializable
     {
         works = new TreeMap<>();
         this.name = new String(name);
+        place = null;
     }
 
     public boolean contains(WorkTypeClass Key)
