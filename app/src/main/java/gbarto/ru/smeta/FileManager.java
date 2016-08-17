@@ -6,7 +6,12 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import org.json.JSONException;
@@ -29,6 +34,7 @@ public class FileManager
     Context context;
     final String APPNAME = "Smeta";
     final private String extension = ".prj";
+    public static final String FONT = "resources/fonts/FreeSans.ttf";
     public FileManager(Context t)
     {
         this.context = t;
@@ -123,15 +129,6 @@ public class FileManager
 
     private WorkClass WorkFromString(String s)
     {
-        /*
-        state +
-                "&" + workType +
-                "&" + Materials.toString() +
-                "&" + RealMaterials.toString() +
-                "&" + price +
-                "&" + measuring +
-                "&" + size;
-         */
         String[] temp = s.split("&");
         WorkClass ans = new WorkClass();
         ans.state = Boolean.valueOf(temp[0]);
@@ -197,7 +194,7 @@ public class FileManager
         }
     }
 
-    public void openPDF(String path) throws Exception
+    public void openPDF(String path)
     {
         try {
             com.itextpdf.text.Document document = new com.itextpdf.text.Document();
@@ -208,7 +205,28 @@ public class FileManager
             file.createNewFile();
             PdfWriter.getInstance(document, new FileOutputStream(file));
             document.open();
-            document.add(new Paragraph("FUCK YOUUUUUUUUUUUU"));
+            PdfPTable table = new PdfPTable(6);
+
+            String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
+            int[] widths = new int[Headers.length];
+            for (int i = 0; i < Headers.length; ++i)
+                widths[i] = Headers[i].length();
+            table.setWidths(widths);
+            for (int i = 0; i < Headers.length; ++i)
+            {
+                BaseFont arial = BaseFont.createFont("assets/fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                Font arial12 = new Font(arial, 12);
+                PdfPCell c1 = new PdfPCell(new Phrase(Headers[i], arial12));
+                c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(c1);
+            }
+            for (int i = 0; i < Headers.length; ++i) {
+                table.addCell("1." + i);
+                table.addCell("2." + i);
+            }
+
+            document.add(table);
+
             document.close();
             Intent x = new Intent(Intent.ACTION_VIEW);
             x.setDataAndType(Uri.fromFile(file), "application/pdf");
