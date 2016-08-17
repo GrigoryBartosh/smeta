@@ -9,22 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="gbarto.ru.smeta.MainActivity"
-    tools:showIn="@layout/app_bar_main">
-
-    <!-- экран main -->
-    <ListView
-        android:id="@+id/main_listView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:longClickable="true"
-        android:clickable="true"
-        android:background="@android:color/white">
-    </ListView>
-
-    <TextView
-        android:id="@+id/main_textView_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    tools:context="gbarto.ru.smeta.SettingsActivity"
+    tools:showIn="@layout/activity_settings">
 
 </RelativeLayout>

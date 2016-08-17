@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,9 +26,11 @@ import java.util.HashMap;
 public class MainActivity   extends AppCompatActivity
                             implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemLongClickListener {
     private ListView mListView;
+    private TextView mTextEmpty;
+
     private FileManager fileManager = new FileManager(MainActivity.this);
-    ArrayList<String> list_name;
-    ArrayList<ProjectClass> list_project;
+    private ArrayList<String> list_name;
+    private ArrayList<ProjectClass> list_project;
 
     private static final String TITLE = "title";
     private static final String SUMMARY= "summary";
@@ -42,6 +45,7 @@ public class MainActivity   extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // чтобы реагировало на нажатия
         mListView = (ListView) findViewById(R.id.main_listView);
+        mTextEmpty = (TextView) findViewById(R.id.main_textView_empty);
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -121,13 +125,14 @@ public class MainActivity   extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Intent intent;
         switch (id) {
             case R.id.nav_new_project:
                 NewProject();
                 break;
 
             case R.id.nav_price_work:
-                Intent intent = new Intent(MainActivity.this, PriceWorkCategoryActivity.class);
+                intent = new Intent(MainActivity.this, PriceWorkCategoryActivity.class);
                 startActivity(intent);
                 break;
 
@@ -135,6 +140,8 @@ public class MainActivity   extends AppCompatActivity
                 break;
 
             case R.id.nav_menu_settings:
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.nav_menu_abut:
@@ -172,6 +179,9 @@ public class MainActivity   extends AppCompatActivity
                 new int[]{R.id.text, R.id.summary});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mItemListener);
+
+        if (adapter.getCount() == 0) mTextEmpty.setText(getString(R.string.main_empty_list));
+        else                         mTextEmpty.setText("");
     }
 
     AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener(){

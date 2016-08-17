@@ -25,6 +25,7 @@
         \n
         Для добавления нового типа проекта, нажмите на ПЛЮС.
     </string>
+    <string name="main_empty_list">У вас нет проектов. Нажмите ПЛЮС, чтобы Создать проект.</string>
 
     <string name="nav_title">Смета</string>
     <string name="nav_summary">Это ваша смета</string>
@@ -49,6 +50,7 @@
         \n
         Этот тип работ и все его работы будут удалены из всех проектов, где они импользуются.
     </string>
+    <string name="price_work_category_empty_list">Список типов работ пуст. Нажмите ПЛЮС, чтобы добавить новый тип работ.</string>
 
     <string name="title_popup_name_category">Введите название группы работ.</string>
     <string name="popup_name_category_toast_need_name">Пожалуйста, введите название типа работ.</string>
@@ -96,6 +98,8 @@
 
     <string name="title_activity_search">Выберите необходимое</string>
     <string name="search_empty_list">Список пуст</string>
+
+    <string name="title_activity_settings">Настройки</string>
 
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>
