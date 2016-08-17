@@ -100,6 +100,20 @@
     <string name="search_empty_list">Список пуст</string>
 
     <string name="title_activity_settings">Настройки</string>
+    <string name="settings_about_text">
+        Здесь Вы можете указываете информацию о себе и компании. Эта информация будет отображена в смете.
+    </string>
+    <string name="settings_hint_first_name">Имя</string>
+    <string name="settings_hint_surname">Фамилия</string>
+    <string name="settings_hint_company_name">Название компании</string>
+    <string name="settings_hint_phone">Номер телеффона</string>
+    <string name="settings_hint_email">Адрес электронной почты</string>
+    <string name="settings_hint_address">Адрес</string>
+    <string name="settings_company_name">Название:</string>
+    <string name="settings_phone">Телефон:</string>
+    <string name="settings_email">Email:</string>
+    <string name="settings_address">Адрес:</string>
+    <string name="settings_company_info">Информация о компании</string>
 
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>

@@ -28,7 +28,7 @@ public class MainActivity   extends AppCompatActivity
     private ListView mListView;
     private TextView mTextEmpty;
 
-    private FileManager fileManager = new FileManager(MainActivity.this);
+    private FileManager fileManager;
     private ArrayList<String> list_name;
     private ArrayList<ProjectClass> list_project;
 
@@ -46,6 +46,8 @@ public class MainActivity   extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // чтобы реагировало на нажатия
         mListView = (ListView) findViewById(R.id.main_listView);
         mTextEmpty = (TextView) findViewById(R.id.main_textView_empty);
+
+        fileManager = new FileManager(MainActivity.this);
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
