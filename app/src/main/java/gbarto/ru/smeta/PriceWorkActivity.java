@@ -166,11 +166,6 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
             public void onClick(DialogInterface dialog, int id) {
 
                 dbAdapter.deleteRow(DBAdapter.WORKS_TABLE, work_list.get(position).rowID);
-                //==================================================================================================================================================
-                //удалить из бд тип и все его работы
-                //А еще из всех проектов
-                //==================================================================================================================================================
-
 
                 Toast.makeText(getApplicationContext(), work_list.get(position).name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 

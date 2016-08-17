@@ -214,10 +214,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
         myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                //==================================================================================================================================================
-                //удалить из бд тип и все его работы
-                //А еще из всех проектов
-                //==================================================================================================================================================
+                dbAdapter.deleteWorkType(type_work_list.get(position).rowID);
 
                 Toast.makeText(getApplicationContext(), type_work_list.get(position).name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
