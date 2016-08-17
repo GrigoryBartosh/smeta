@@ -26,6 +26,7 @@ public class FileManager
         this.x = t;
     }
 
+
     public void Save(ProjectClass Project)
     {
         try {
@@ -83,7 +84,30 @@ public class FileManager
     {
         StringBuilder tmp = new StringBuilder("");
         for (int i = 0; i < x.length(); ++i) {
-            if (x.charAt(i) != ' ' && x.charAt(i) != '[' && x.charAt(i) != ']' && x.charAt(i) != '\n' && x.charAt(i) != '\r')
+            if (x.charAt(i) != '[' && x.charAt(i) != ']' && x.charAt(i) != '\n' && x.charAt(i) != '\r')
+                tmp.append(x.charAt(i));
+        }
+        return tmp.toString();
+    }
+
+    public Boolean Delete(String path)
+    {
+        try
+        {
+            File file = new File(x.getFilesDir(), path + extension);
+            return file.delete();
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    String nospaces (String x)
+    {
+        StringBuilder tmp = new StringBuilder("");
+        for (int i = 0; i < x.length(); ++i) {
+            if (x.charAt(i) != ' ')
                 tmp.append(x.charAt(i));
         }
         return tmp.toString();
@@ -104,18 +128,19 @@ public class FileManager
         WorkClass ans = new WorkClass();
         ans.state = Boolean.valueOf(temp[0]);
         ans.workType = Long.valueOf(temp[1]);
-        String[] temp2 = temp[2].split(",");
+        String[] temp2 = nospaces(temp[2]).split(",");
         for (int i = 0; i < temp2.length; ++i) {
             String[] lmao = temp2[i].split(";");
             ans.Materials.add(new Pair(Long.valueOf(lmao[0]), Float.valueOf(lmao[1])));
         }
-        temp2 = temp[3].split(",");
+        temp2 = nospaces(temp[3]).split(",");
         for (int i = 0; i < temp2.length; ++i)
             ans.RealMaterials.add(Long.valueOf(temp2[i]));
         ans.price = Float.valueOf(temp[4]);
         ans.measuring = Integer.valueOf(temp[5]);
         ans.size = Float.valueOf(temp[6]);
-
+        ans.name = new String(temp[7]);
+        ans.rowID = Long.valueOf(temp[8]);
         return ans;
     }
 

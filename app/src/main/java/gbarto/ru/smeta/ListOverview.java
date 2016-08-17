@@ -85,9 +85,13 @@ public class ListOverview extends AppCompatActivity
                     }
                     if (tmp2.length == 0)
                         tmp3.add(y);
-                    else
-                    if (!tmp2[l].equals(x))
-                        tmp3.add(y);
+                    else {
+                        boolean bool = tmp2[l].rowID != x.rowID;
+                        bool |= !tmp2[l].name.equals(x.name);
+                        bool |= tmp2[l].measuring != ((WorkClass) x).measuring;
+                        if (bool)
+                            tmp3.add(y);
+                    }
                 }
                 intent.putExtra("list", tmp3);
                 startActivityForResult(intent, SOSU_PENISI_ZA_2000_RUBLEY);

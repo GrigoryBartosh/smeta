@@ -18,6 +18,27 @@ public class EditNameActivity extends AppCompatActivity {
     private int BackRes;
     DBAdapter adapter;
     ProjectClass Project = null;
+    String keeper;
+
+    //returns message
+    private String check(String s)
+    {
+        if (s == null)
+            return "INTERNAL ERROR";
+        if (s.length() < 1)
+            return getString(R.string.price_project_name_popup_need_name);
+        String[] bad = getResources().getStringArray(R.array.bad_strings);
+        String have = "";
+        for (String t: bad)
+            if (s.contains(t)) {
+                if (have.length() != 0)
+                    have += ", ";
+                have += t;
+            }
+        if (have.equals(""))
+            return "OK";
+        return getString(R.string.popup_name_category_toast_bad_symbol) + " " + have;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +65,20 @@ public class EditNameActivity extends AppCompatActivity {
             Project = (ProjectClass) getIntent().getSerializableExtra("Project");
             mText.setText(Project.name);
         }
+        keeper = mText.getText().toString();
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mText.getText().length() >= 0) {
+                final String message = check(mText.getText().toString());
+                if (message == "OK") {
                     Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
                     if (Project == null)
                         Project = new ProjectClass();
                     Project.name = new String(mText.getText().toString());
-                    Project.place = getString(R.string.room_bedroom);
+                    Project.name = Project.name.trim();
+                    Project.name = Project.name.replaceAll("[\\s]{2,}", "\\s");
+                    Project.name = Project.name.replaceAll("[\n, \r]", " ");
                     x.putExtra("Project", Project);
 
                     x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -61,7 +86,7 @@ public class EditNameActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), getString(R.string.price_project_name_popup_need_name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -72,19 +97,27 @@ public class EditNameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void afterTextChanged(Editable editable)
+            {
 
-//                if (charSequence.charAt(charSequence.length() - 1) == '\n') {
-//                    System.out.println("ACTIVATED");
-//                    mButton.performClick();
-                //}
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                if (charSequence.charAt(i) == '\n') {
+                    mText.setText(keeper);
+                    mText.setSelection(keeper.length() - 1);
+                    mButton.performClick();
+                }
+                else if (charSequence.length() > 100) {
+                    mText.setText(keeper);
+                    mText.setSelection(keeper.length() - 1);
+                }
+                else
+                    keeper = charSequence.toString();
 
-            }
-        });
+             }});
     }
 
     @Override
