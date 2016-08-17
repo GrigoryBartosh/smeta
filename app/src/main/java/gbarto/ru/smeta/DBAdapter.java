@@ -334,18 +334,8 @@ public class DBAdapter {
 	}
 
     public boolean deleteWorkType(long rowId) {
-        boolean res = true;
-        String where = KEY_ROWID + "=" + rowId;
-        res = res & db.delete(TYPES_TABLE, where, null) != 0;
-
-        DBObject[] arr = getAllRows(WORKS_TABLE);
-        for (int i = 0; i < arr.length; i++){
-            WorkClass work = (WorkClass) arr[i];
-            if (work.getWorkType() == rowId)
-                res = res & deleteRow(WORKS_TABLE, work.rowID);
-        }
-
-        return res;
+        String where = WORKS_KEY_WORKTYPE + "=" + Long.toString(rowId);
+        return deleteRow(TYPES_TABLE, rowId) & (db.delete(WORKS_TABLE, where, null) != 0);
     }
 
 	public void clear(String tablename) {
