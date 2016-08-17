@@ -17,6 +17,14 @@
     <string name="app_name">Смета</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="main_alert_delete_title">Удаление</string>
+    <string name="main_alert_delete_summary">Вы уверены, что хотите удалить этот проект? Вся его информация будет удалена.</string>
+    <string name="main_about_text">
+        Чтобы удалить проект из списка
+        нажмите и удерживайте.\n
+        \n
+        Для добавления нового типа проекта, нажмите на ПЛЮС.
+    </string>
 
     <string name="nav_title">Смета</string>
     <string name="nav_summary">Это ваша смета</string>
