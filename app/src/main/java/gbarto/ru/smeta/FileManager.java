@@ -1,6 +1,8 @@
 package gbarto.ru.smeta;
 
 import android.content.Context;
+import android.graphics.pdf.PdfRenderer;
+import android.os.ParcelFileDescriptor;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -11,6 +13,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOError;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -60,7 +64,7 @@ public class FileManager
             ArrayList <String> tmp = new ArrayList<>();
             for (int i = 0; i < AllNames.length; ++i) {
                 String s = AllNames[i].getName();
-                if (s.substring(s.length() - 4).equals(extension))
+                if (s.endsWith(extension))
                     tmp.add(s.substring(0, s.length() - 4));
             }
             return tmp;
@@ -187,5 +191,12 @@ public class FileManager
         {
             return null;
         }
+    }
+
+    public void openPDF(String path) throws IOException
+    {
+        //File file = new File(x.getFilesDir(), path + extension);
+        //FileReader fileReader = new FileReader(file);
+        //PdfRenderer pdfRenderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE));
     }
 }
