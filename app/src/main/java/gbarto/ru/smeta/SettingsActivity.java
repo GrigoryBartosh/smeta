@@ -2,13 +2,20 @@ package gbarto.ru.smeta;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.icu.text.UnicodeSetSpanner;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -227,6 +235,33 @@ public class SettingsActivity extends AppCompatActivity {
             if (data != null) {
                 try {
                     bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+
+                    String realPath;
+
+                    if (Build.VERSION.SDK_INT < 11)                                                 // SDK < API11
+                        realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
+                    else if (Build.VERSION.SDK_INT < 19)                                            // SDK >= 11 && SDK < 19
+                        realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
+                    else                                                                            // SDK > 19 (Android 4.4)
+                        realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
+
+                    ExifInterface exif = new ExifInterface(realPath);
+                    int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                    Matrix matrix = new Matrix();
+                    switch (orientation) {
+                        case  0: matrix.postRotate(0  ); break;
+                        case  1: matrix.postRotate(0  ); break;
+                        case  2: matrix.postRotate(90 ); break;
+                        case  3: matrix.postRotate(180); break;
+                        case  4: matrix.postRotate(180); break;
+                        case  5: matrix.postRotate(90 ); break;
+                        case  6: matrix.postRotate(90 ); break;
+                        case  7: matrix.postRotate(270); break;
+                        case  8: matrix.postRotate(270); break;
+                        default: matrix.postRotate(0  ); break;
+                    }
+                    bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -94,8 +94,10 @@ public class SettingsManager {
     }
 
     private void loadPhoto() {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         File path = new File(context.getFilesDir(), PHOTO);
-        photo = BitmapFactory.decodeFile(path.getPath());
+        photo = BitmapFactory.decodeFile(path.getPath(), options);
     }
 
     private void saveSettings() {
@@ -134,7 +136,6 @@ public class SettingsManager {
             photo.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
             // PNG is a lossless format, the compression factor (100) is ignored
             out.close();
-            Toast.makeText(context, "!!!!!!!!!", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
