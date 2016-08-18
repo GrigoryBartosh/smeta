@@ -163,7 +163,7 @@
     <string name="pdf_work_summary">Всего за работы:</string>
     <string name="pdf_materials_summary">Всего за материалы:</string>
     <string name="pdf_total_invoice">Итого по смете:</string>
-    <string name="pdf_page_number">Страница %%s из %%s</string>
+    <string name="pdf_page_number">Страница</string>
 
     <string-array name="measurements_work_short">
         <item>м</item>
