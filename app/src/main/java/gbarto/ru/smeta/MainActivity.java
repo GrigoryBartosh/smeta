@@ -189,9 +189,10 @@ public class MainActivity   extends AppCompatActivity
     AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
-            intent.putExtra("Project", list_project.get(i));
-            startActivity(intent);
+//            Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
+//            intent.putExtra("Project", list_project.get(i));
+//            startActivity(intent);
+            fileManager.openPDF(list_project.get(i));
         }
     };
 

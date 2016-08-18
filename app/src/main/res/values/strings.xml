@@ -157,7 +157,18 @@
     <string-array name="measurements_work">
         <item>Метр</item>
         <item>Квадратный метр</item>
-        <item>Единица</item>
+        <item>Штука</item>
+    </string-array>
+    <string name="pdf_total_cost">Итого:</string>
+    <string name="pdf_work_summary">Всего за работы:</string>
+    <string name="pdf_materials_summary">Всего за материалы:</string>
+    <string name="pdf_total_invoice">Итого по смете:</string>
+    <string name="pdf_page_number">Страница %%s из %%s</string>
+
+    <string-array name="measurements_work_short">
+        <item>м</item>
+        <item>кв.м</item>
+        <item>шт</item>
     </string-array>
 
     <string-array name="measurements_material">
