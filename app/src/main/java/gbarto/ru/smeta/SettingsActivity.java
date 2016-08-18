@@ -250,16 +250,16 @@ public class SettingsActivity extends AppCompatActivity {
 
                     Matrix matrix = new Matrix();
                     switch (orientation) {
-                        case  0: matrix.postRotate(0); break;
-                        case  1: matrix.postRotate(0); break;
-                        case  2: matrix.postRotate(90); break;
+                        case  0: matrix.postRotate(0  ); break;
+                        case  1: matrix.postRotate(0  ); break;
+                        case  2: matrix.postRotate(90 ); break;
                         case  3: matrix.postRotate(180); break;
                         case  4: matrix.postRotate(180); break;
-                        case  5: matrix.postRotate(90); break;
-                        case  6: matrix.postRotate(90); break;
+                        case  5: matrix.postRotate(90 ); break;
+                        case  6: matrix.postRotate(90 ); break;
                         case  7: matrix.postRotate(270); break;
                         case  8: matrix.postRotate(270); break;
-                        default: matrix.postRotate(0); break;
+                        default: matrix.postRotate(0  ); break;
                     }
                     bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
                 } catch (IOException e) {
