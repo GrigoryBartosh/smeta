@@ -53,6 +53,10 @@ public class SettingsManager {
     public String getCompanyAddress(){ return company_address; }
     public Boolean havePhoto() { return have_photo; }
     public Bitmap getPhoto() { return photo; }
+    public String getPhotoPath() {
+        File path = new File(context.getFilesDir(), PHOTO);
+        return path.getAbsolutePath();
+    }
 
     public void setFirstName(String s){ first_name = s; }
     public void setSurname(String s){ surname = s; }
