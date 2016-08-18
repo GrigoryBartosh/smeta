@@ -12,4 +12,6 @@
     <color name="pdf_table_worktype_end">#d1a25a</color>
     <color name="pdf_table_summary">#8d80d4</color>
 
+    <color name="background">#eeeeee</color>
+
 </resources>

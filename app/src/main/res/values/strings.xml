@@ -34,6 +34,10 @@
         Для добавления нового проекта, нажмите на ПЛЮС.
     </string>
     <string name="main_empty_list">У вас нет проектов. Нажмите ПЛЮС, чтобы Создать проект.</string>
+    <string name="main_popup_menu_view">Просмотреть</string>
+    <string name="main_popup_menu_edit">Править</string>
+    <string name="main_popup_menu_shear">Поделиться</string>
+    <string name="main_popup_menu_delete">Удалить</string>
 
     <string name="nav_title">Смета</string>
     <string name="nav_summary">Это ваша смета</string>
@@ -136,6 +140,7 @@
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>
 
+    <string name="total">Итого:</string>
     <string name="done">Готово</string>
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>

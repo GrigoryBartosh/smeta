@@ -1,11 +1,14 @@
 package gbarto.ru.smeta;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.PopupMenu;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +17,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -22,9 +27,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity   extends AppCompatActivity
                             implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemLongClickListener {
+    private FloatingActionButton fab;
     private ListView mListView;
     private TextView mTextEmpty;
 
@@ -32,16 +40,13 @@ public class MainActivity   extends AppCompatActivity
     private ArrayList<String> list_name;
     private ArrayList<ProjectClass> list_project;
 
-    private static final String TITLE = "title";
-    private static final String SUMMARY= "summary";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
+        fab = (FloatingActionButton) findViewById(R.id.main_fab);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // чтобы реагировало на нажатия
         mListView = (ListView) findViewById(R.id.main_listView);
@@ -57,6 +62,16 @@ public class MainActivity   extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         fab.setOnClickListener(fab_ocl);
         mListView.setOnItemLongClickListener(MainActivity.this);
+
+        mListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                View c = mListView.getChildAt(0);
+                float scrolly = -c.getTop() + mListView.getFirstVisiblePosition() * (c.getHeight());
+                fab.setTranslationY(scrolly * 2);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -91,19 +106,7 @@ public class MainActivity   extends AppCompatActivity
         switch (id)
         {
             case R.id.menu_work_help:
-                FragmentManager manager = getSupportFragmentManager();
-                MyDialogFragment myDialogFragment = new MyDialogFragment();
-                myDialogFragment.setTitle(getString(R.string.help));
-                myDialogFragment.setMessage(getString(R.string.main_about_text));
-                myDialogFragment.setPositiveButtonTitle(getString(R.string.ok));
-                myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-                myDialogFragment.setUseNegativeButton(false);
-                myDialogFragment.show(manager, "dialog");
-
+                About();
                 res = true;
                 break;
             default:
@@ -127,26 +130,25 @@ public class MainActivity   extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Intent intent;
         switch (id) {
             case R.id.nav_new_project:
                 NewProject();
                 break;
 
             case R.id.nav_price_work:
-                intent = new Intent(MainActivity.this, PriceWorkCategoryActivity.class);
-                startActivity(intent);
+                PriceWork();
                 break;
 
             case R.id.nav_price_material:
+                Material();
                 break;
 
             case R.id.nav_menu_settings:
-                intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                Settings();
                 break;
 
             case R.id.nav_menu_abut:
+                AboutProgram();
                 break;
         }
 
@@ -170,15 +172,13 @@ public class MainActivity   extends AppCompatActivity
 
         for (int i = 0; i < list_project.size(); i++){
             hm = new HashMap<>();
-            hm.put(TITLE, list_project.get(i).name);
-            hm.put(SUMMARY, list_project.get(i).place);
             mCatList.add(hm);
         }
 
-        SimpleAdapter adapter = new SimpleAdapter(  MainActivity.this,
+        Adapter adapter = new Adapter(  MainActivity.this,
                 mCatList, R.layout.list_item_main,
-                new String[]{TITLE, SUMMARY},
-                new int[]{R.id.text, R.id.summary});
+                new String[]{},
+                new int[]{});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mItemListener);
 
@@ -189,15 +189,142 @@ public class MainActivity   extends AppCompatActivity
     AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//            Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
-//            intent.putExtra("Project", list_project.get(i));
-//            startActivity(intent);
-            fileManager.openPDF(list_project.get(i));
+            ProjectView(i);
         }
     };
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        ProjectDelete(position);
+        return true;
+    }
+
+    private class Adapter extends SimpleAdapter{
+        public Adapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
+            super(context, data, resource, from, to);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view = null;
+            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
+
+            TextView mTextName = (TextView) view.findViewById(R.id.text);
+            TextView mTextSummary = (TextView) view.findViewById(R.id.summary);
+            TextView mTextPrice = (TextView) view.findViewById(R.id.price);
+            ImageView mImageView = (ImageView) view.findViewById(R.id.imageView_menu);
+            ImageView mImageViewClear = (ImageView) view.findViewById(R.id.imageView_clear);
+
+            mTextName.setText(list_project.get(position).name);
+            mTextSummary.setText(list_project.get(position).place);
+            mTextPrice.setText("0");
+
+            View.OnClickListener ocl = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(MainActivity.this, view);
+                    popup.getMenuInflater().inflate(R.menu.popup_menu_main, popup.getMenu());
+                    popup.show();
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int id = item.getItemId();
+                            boolean res = false;
+
+                            switch (id)
+                            {
+                                case R.id.main_popup_menu_view:
+                                    ProjectView(position);
+                                    res = true;
+                                    break;
+                                case R.id.main_popup_menu_edit:
+                                    ProjectEdit(position);
+                                    res = true;
+                                    break;
+                                case R.id.main_popup_menu_share:
+                                    ProjectShare(position);
+                                    res = true;
+                                    break;
+                                case R.id.main_popup_menu_delete:
+                                    ProjectDelete(position);
+                                    res = true;
+                                    break;
+                            }
+
+                            return  res;
+                        }
+                    });
+                }
+            };
+
+            mImageView.setOnClickListener(ocl);
+            mImageViewClear.setOnClickListener(ocl);
+            mTextPrice.setOnClickListener(ocl);
+
+            return view;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return true;
+        }
+    }
+
+    private void NewProject(){
+        Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
+        startActivity(intent);
+    }
+
+    private void About(){
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.setTitle(getString(R.string.help));
+        myDialogFragment.setMessage(getString(R.string.main_about_text));
+        myDialogFragment.setPositiveButtonTitle(getString(R.string.ok));
+        myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.setUseNegativeButton(false);
+        myDialogFragment.show(manager, "dialog");
+    }
+
+    private void PriceWork(){
+        Intent intent = new Intent(MainActivity.this, PriceWorkCategoryActivity.class);
+        startActivity(intent);
+    }
+
+    private void Material(){
+        Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
+        startActivity(intent);
+    }
+
+    private void Settings(){
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void AboutProgram(){
+
+    }
+
+    private void ProjectView(final int position){
+        fileManager.openPDF(list_project.get(position));
+    }
+
+    private void ProjectEdit(final int position){
+        Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
+        intent.putExtra("Project", list_project.get(position));
+        startActivity(intent);
+    }
+
+    private void ProjectShare(final int position){
+
+    }
+
+    private void ProjectDelete(final int position){
         FragmentManager manager = getSupportFragmentManager();
         MyDialogFragment myDialogFragment = new MyDialogFragment();
         myDialogFragment.setTitle(getString(R.string.main_alert_delete_title));
@@ -222,12 +349,5 @@ public class MainActivity   extends AppCompatActivity
             }
         });
         myDialogFragment.show(manager, "dialog");
-
-        return true;
-    }
-
-    private void NewProject(){
-        Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
-        startActivity(intent);
     }
 }
