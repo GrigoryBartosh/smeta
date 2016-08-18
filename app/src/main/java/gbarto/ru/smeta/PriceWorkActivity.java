@@ -141,6 +141,7 @@ public class PriceWorkActivity extends AppCompatActivity implements AdapterView.
                 getWindow().setAttributes(wm);
 
                 Intent intent = new Intent(PriceWorkActivity.this, PopUpNameCategory.class);
+                intent.putExtra("name", work_type.name);
                 intent.putExtra("used_name", used_name);
                 startActivityForResult(intent, ENTER_NAME);
 

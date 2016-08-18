@@ -17,8 +17,12 @@ public class MyDialogFragment extends DialogFragment {
     String Title;
     String PositiveButtonTitle;
     String NegativeButtonTitle;
-    DialogInterface.OnClickListener PositiveClicked, NegativeClicked;
+    DialogInterface.OnClickListener PositiveClicked, NegativeClicked, ListClicked;
+    String[] List;
+    Boolean UseMessage = true;
+    Boolean UsePositiveButton = true;
     Boolean UseNegativeButton = true;
+    Boolean UseList = false;
 
     public MyDialogFragment()
     {
@@ -65,6 +69,16 @@ public class MyDialogFragment extends DialogFragment {
         NegativeButtonTitle = negativeButtonTitle;
     }
 
+    public String[] getList()
+    {
+        return List;
+    }
+
+    public void setList(String[] list)
+    {
+        List = list;
+    }
+
     public DialogInterface.OnClickListener getPositiveClicked()
     {
         return PositiveClicked;
@@ -85,6 +99,36 @@ public class MyDialogFragment extends DialogFragment {
         NegativeClicked = negativeClicked;
     }
 
+    public DialogInterface.OnClickListener getListClicked()
+    {
+        return ListClicked;
+    }
+
+    public void setListClicked(DialogInterface.OnClickListener listClicked)
+    {
+        ListClicked = listClicked;
+    }
+
+    public Boolean getUseMessage()
+    {
+        return UseMessage;
+    }
+
+    public void setUseMessage(Boolean useMessage)
+    {
+        UseMessage = useMessage;
+    }
+
+    public Boolean getUsePositiveButton()
+    {
+        return UsePositiveButton;
+    }
+
+    public void setUsePositiveButton(Boolean usePositiveButton)
+    {
+        UsePositiveButton = usePositiveButton;
+    }
+
     public Boolean getUseNegativeButton()
     {
         return UseNegativeButton;
@@ -95,13 +139,27 @@ public class MyDialogFragment extends DialogFragment {
         UseNegativeButton = useNegativeButton;
     }
 
+    public Boolean getUseList()
+    {
+        return UseList;
+    }
+
+    public void setUseList(Boolean useList)
+    {
+        UseList = useList;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(Message)
-                .setTitle(Title)
-                .setPositiveButton(PositiveButtonTitle, PositiveClicked);
+        builder.setTitle(Title);
+        if (UseMessage)
+            builder.setMessage(Message);
+        if (UseList)
+            builder.setItems(List, ListClicked);
+        if (UsePositiveButton)
+            builder.setPositiveButton(PositiveButtonTitle, PositiveClicked);
         if (UseNegativeButton)
             builder.setNegativeButton(NegativeButtonTitle, NegativeClicked);
         return builder.create();

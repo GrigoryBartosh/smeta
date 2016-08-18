@@ -38,9 +38,12 @@ public class PopUpNameCategory extends Activity {
         for (int i = 0; i < bad_strings.length; i++)
             bad_strings_to_toast += " " + bad_strings[i];
 
-        used_name = getIntent().getExtras().getStringArrayList("used_name");
+        Intent intent = getIntent();
+        used_name = intent.getExtras().getStringArrayList("used_name");
+        mEditText.setText(intent.getExtras().getString("name"));
         for (int i = 0; i < used_name.size(); i++)
             used_name.set(i, used_name.get(i).toLowerCase());
+
 
         mButtonDone.setOnClickListener(btn_ocl);
         mButtonCancel.setOnClickListener(btn_ocl);

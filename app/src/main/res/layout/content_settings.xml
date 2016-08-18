@@ -190,6 +190,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/settings_hint_address"
+            android:inputType="textAutoComplete"
             android:ems="10"
             android:layout_weight="3"/>
     </LinearLayout>

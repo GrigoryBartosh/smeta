@@ -136,6 +136,7 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
 
             Intent intent = new Intent(PriceWorkCategoryActivity.this, PopUpNameCategory.class);
             intent.putExtra("used_name", used_name);
+            intent.putExtra("name", "");
             startActivityForResult(intent, ENTER_NAME);
         }
     };
