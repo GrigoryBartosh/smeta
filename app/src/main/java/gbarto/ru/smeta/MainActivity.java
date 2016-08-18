@@ -156,7 +156,7 @@ public class MainActivity   extends AppCompatActivity
     }
 
     private void getList() {
-        ArrayList<String> list_name = fileManager.Load();
+        list_name = fileManager.Load();
 
         list_project = new ArrayList<ProjectClass>();
         for (int i = 0; i < list_name.size(); i++) {
@@ -206,7 +206,7 @@ public class MainActivity   extends AppCompatActivity
         myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                //fileManager.delete(list_name.get(position));
+                fileManager.Delete(list_name.get(position));
 
                 Toast.makeText(getApplicationContext(), list_project.get(position).name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
