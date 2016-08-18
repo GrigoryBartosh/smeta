@@ -7,17 +7,19 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import org.json.JSONException;
@@ -43,6 +45,8 @@ public class FileManager
     final int MAXSIZE = 60;
     Font[] arial = new Font[MAXSIZE];
     Font[] arial_bold = new Font[MAXSIZE];
+    Font[] arial_underlined = new Font[MAXSIZE];
+    private int pagenumber = 1;
     public FileManager(Context t)
     {
         this.context = t;
@@ -52,6 +56,7 @@ public class FileManager
             for (int i = 1; i < MAXSIZE; ++i) {
                 arial[i] = new Font(base_arial, i);
                 arial_bold[i] = new Font(base_arial_bold, i);
+                arial_underlined[i] = new Font(base_arial, i,Font.UNDERLINE);
             }
         }
         catch (Exception e)
@@ -297,6 +302,113 @@ public class FileManager
         return cell;
     }
 
+    private class MyPageEventHandler extends PdfPageEventHelper
+    {
+        @Override
+        public void onStartPage(PdfWriter writer, Document document)
+        {
+            PdfContentByte cb = writer.getDirectContent();
+            Phrase footer = new Phrase(context.getString(R.string.pdf_page_number) + " " + Integer.toString(pagenumber++), arial[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER,
+                    footer,
+                    (document.right() - document.left()) / 2 + document.leftMargin(),
+                    document.bottom() - 15, 0);
+        }
+    }
+
+
+    void MakeHeader (PdfWriter writer, Document document, SettingsManager settingsManager, float padding)
+    {
+        PdfContentByte cb = writer.getDirectContent();
+
+        String companyName = settingsManager.getCompanyName();
+        String companyPhone = settingsManager.getCompanyPhone();
+        String companyEmail = settingsManager.getCompany_Email();
+        String companyAddress = settingsManager.getCompanyAddress();
+        final int size = 7;
+        float keep = padding;
+        float padfromtop = 0;
+        if (!companyName.equals(""))
+        {
+            Phrase footer = new Phrase(companyName, arial_underlined[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
+            padfromtop += 18;
+            keep = Math.max(keep, padding + companyName.length() * size);
+        }
+        if (!companyPhone.equals(""))
+        {
+            Phrase footer = new Phrase(companyPhone, arial_underlined[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
+            padfromtop += 18;
+            keep = Math.max(keep, padding + companyPhone.length() * size);
+        }
+        if (!companyEmail.equals(""))
+        {
+            Phrase footer = new Phrase(companyEmail, arial_underlined[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
+            padfromtop += 18;
+            keep = Math.max(keep, padding + companyEmail.length() * size);
+        }
+        if (!companyAddress.equals(""))
+        {
+            Phrase footer = new Phrase(companyAddress, arial_underlined[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
+            keep = Math.max(keep, padding + companyAddress.length() * size);
+        }
+
+        padding = keep;
+        padfromtop = 0;
+        String name = settingsManager.getFirstName();
+        String surname = settingsManager.getSurname();
+        String naming = name;
+        if (naming.equals(""))
+            naming = surname;
+        else {
+            if (!surname.equals(""))
+                naming += " " + surname;
+        }
+        if (!naming.equals(""))
+        {
+            Phrase footer = new Phrase(naming, arial_underlined[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
+            padfromtop += 18;
+        }
+        String mail = settingsManager.getEmail();
+        String phone = settingsManager.getPhone();
+        if (!phone.equals(""))
+        {
+            Phrase footer = new Phrase(phone, arial_underlined[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
+            padfromtop += 18;
+        }
+        if (!mail.equals(""))
+        {
+            Phrase footer = new Phrase(mail, arial_underlined[12]);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
+        }
+    }
+
+    public double getPrice(ProjectClass Project)
+    {
+        double ans = 0;
+        DBAdapter adapter = new DBAdapter(context);
+        adapter.open();
+        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet())
+            for (int count_works = 0; count_works < x.getValue().size(); ++count_works)
+            {
+                WorkClass work = x.getValue().get(count_works);
+                ans += work.size * work.price;
+                for (int i = 0; i < work.Materials.size(); ++i) {
+                    MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                    if (material.per_object < (1e-8))
+                        ans += work.size * work.Materials.get(i).second * material.price;
+                    else
+                        ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price;
+                }
+            }
+        return ans;
+    }
+
     public void openPDF(ProjectClass Project)
     {
         try {
@@ -306,18 +418,41 @@ public class FileManager
             File place = new File(Environment.getExternalStorageDirectory() + File.separator + APPNAME);
             if (!place.exists())
                 place.mkdir();
-            File file = new File(place + "/" + Project.name + ".pddf");
+            File file = new File(place + "/" + Project.name + ".pdf");
             file.createNewFile();
-            File file2 = new File(place + "/" + Project.name + ".pdf");
-            file2.createNewFile();
-            PdfWriter.getInstance(document, new FileOutputStream(file));
-            document.setMargins(0, 0, 20, 30);
+            System.out.println(PageSize.A4.getHeight());
+            System.out.println(PageSize.A4.getWidth());
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
+            writer.setPageEvent(new MyPageEventHandler());
             document.open();
+
+            SettingsManager settingsManager = new SettingsManager(context);
             PdfPTable table = new PdfPTable(6);
+            document.add(new Paragraph("\n"));
+            table.setSpacingBefore(80);
+
+            float pad = 30;
+            if (settingsManager.havePhoto()) {
+                Image image = Image.getInstance(settingsManager.getPhotoPath());
+                if (image.getWidth() > image.getHeight()) {
+                    image.scalePercent(100f / image.getWidth() * 120f);
+                    image.setAbsolutePosition(document.left() - 10, document.top() - 50);
+                }
+                else {
+                    image.scalePercent(100f / image.getHeight() * 100f);
+                    image.setAbsolutePosition(document.left() - 10, document.top() - 80);
+                }
+                PdfContentByte canvas = writer.getDirectContentUnder();
+                canvas.addImage(image);
+                pad = document.left() - 10 + image.getScaledWidth() * 0.9f;
+            }
+            MakeHeader(writer, document, settingsManager, pad);
+
 
             String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
-            int[] widths = {30, 320, 60, 50, 70, 80};
+            int[] widths = {40, 320, 50, 50, 70, 80};
             table.setWidths(widths);
+            table.setPaddingTop(70f);
             table.setTotalWidth(PageSize.A4.getWidth() * 0.95f);
             table.setLockedWidth(true);
             for (int i = 0; i < Headers.length; ++i)
@@ -326,7 +461,6 @@ public class FileManager
             double work_cost = 0;
             double material_cost = 0;
 
-            for (int iterations = 0; iterations < 5; ++iterations)
             for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
                 table.addCell(ColoredBegin(Empty()));
                 //table.addCell(CenteredText(Integer.toString(++countworks)));
@@ -339,7 +473,7 @@ public class FileManager
                 double work_type_total = 0;
                 for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
                     WorkClass work = worklist.get(count_works - 1);
-                    table.addCell(CenteredText(Integer.toString(count_works)));
+                    table.addCell(LeftedText(Integer.toString(count_works)));
                     table.addCell(LeftedText(work.name));
                     table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring]));
                     table.addCell(CenteredText(Float.toString(work.size)));
@@ -350,7 +484,7 @@ public class FileManager
                     for (int i = 0; i < work.Materials.size(); ++i) {
                         MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
                         MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
-                        table.addCell(CenteredText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
+                        table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
                         table.addCell(LeftPadded(LeftedText(material.name)));
                         table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
                         if (material.per_object < (1e-8)) {
@@ -418,28 +552,17 @@ public class FileManager
             document.add(table);
             adapter.close();
             document.close();
-            PdfReader reader = new PdfReader(file.getAbsolutePath());
-            int n = reader.getNumberOfPages();
-            PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(file2));
-            PdfContentByte pagecontent;
-            for (int i = 0; i < n; ) {
-                pagecontent = stamper.getOverContent(++i);
-                ColumnText.showTextAligned(pagecontent, Element.ALIGN_RIGHT,
-                        new Phrase(String.format(context.getString(R.string.pdf_page_number, null), i, n), arial[12]), PageSize.A4.getWidth() * 0.97f, 15, 0);
-            }
-            stamper.close();
-            reader.close();
-            file.delete();
 
 
 
             Intent x = new Intent(Intent.ACTION_VIEW);
-            x.setDataAndType(Uri.fromFile(file2), "application/pdf");
+            x.setDataAndType(Uri.fromFile(file), "application/pdf");
             x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Intent intent = Intent.createChooser(x, "Open file");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
+            settingsManager.close();
         }
         catch (Exception e)
         {
