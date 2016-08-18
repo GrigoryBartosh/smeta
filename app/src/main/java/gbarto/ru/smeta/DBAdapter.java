@@ -23,7 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 2;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -591,24 +591,24 @@ public class DBAdapter {
             add(_db, WORKS_TABLE, t2);
 
             //public MaterialClass(String name, float price, int measuring, int iconID, float per_object)
-            MaterialClass t3 = new MaterialClass("Коричневое говно", 0f, 3, 0, 1f);
+            MaterialClass t3 = new MaterialClass("Коричневое говно", 1f, 4, 0, 0f);
             add(_db, MATERIAL_TABLE, t3);
-            t3 = new MaterialClass("Рыжее говно", 0f, 3, 0, 1f);
+            t3 = new MaterialClass("Рыжее говно", 15f, 4, 0, 0f);
             add(_db, MATERIAL_TABLE, t3);
-            t3 = new MaterialClass("Жёлтая моча", 0f, 4, 0, 1f);
+            t3 = new MaterialClass("Жёлтая моча", 10f, 5, 0, 0f);
             add(_db, MATERIAL_TABLE, t3);
-            t3 = new MaterialClass("Прозрачная моча", 0f, 4, 0, 1f);
+            t3 = new MaterialClass("Прозрачная моча", 1f, 5, 0, 0f);
             add(_db, MATERIAL_TABLE, t3);
 
             ArrayList<Long> materials = new ArrayList<>();
             materials.add(1L);
             materials.add(2L);
-            MaterialTypeClass t4 = new MaterialTypeClass("Вкусняшки", materials, 3);
+            MaterialTypeClass t4 = new MaterialTypeClass("Вкусняшки", materials, 4);
             add(_db, MATERIAL_TYPES_TABLE, t4);
             materials = new ArrayList<>();
             materials.add(3L);
             materials.add(4L);
-            t4 = new MaterialTypeClass("Моча", materials, 4);
+            t4 = new MaterialTypeClass("Моча", materials, 5);
             add(_db, MATERIAL_TYPES_TABLE, t4);
 		}
 
