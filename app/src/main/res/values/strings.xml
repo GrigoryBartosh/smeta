@@ -1,4 +1,12 @@
 <resources>
+    <string-array name="invoice_table">
+        <item>№ </item>
+        <item>Наименование</item>
+        <item>Ед. изм.</item>
+        <item>Кол-во</item>
+        <item>Расценка, руб.</item>
+        <item>Итог, руб.</item>
+    </string-array>
     <string name="title_activity_edit_name">Введите имя</string>
     <string name="title_activity_edit_room">Редактор комнаты</string>
     <string name="Sample_Text">Sample Text</string>
