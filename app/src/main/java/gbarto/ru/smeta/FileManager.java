@@ -22,7 +22,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -40,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -612,6 +612,253 @@ public class FileManager
         }
     }
 
+    private HSSFWorkbook wb;
+    private HashMap<HSSFCellStyle, HSSFCellStyle> lefted_styles = new HashMap<>(), righted_styles = new HashMap<>(), centered_styles = new HashMap<>();
+
+    private HSSFCellStyle Lefted(HSSFCellStyle style)
+    {
+        if (lefted_styles.containsKey(style))
+            return lefted_styles.get(style);
+        HSSFCellStyle style2 = wb.createCellStyle();
+        style2.setFillForegroundColor(style.getFillForegroundColor());
+        style2.setFillPattern(style.getFillPattern());
+        style2.setAlignment(CellStyle.ALIGN_LEFT);
+        lefted_styles.put(style, style2);
+        return style2;
+    }
+
+    private HSSFCellStyle Righted(HSSFCellStyle style)
+    {
+        if (righted_styles.containsKey(style))
+            return righted_styles.get(style);
+        HSSFCellStyle style2 = wb.createCellStyle();
+        style2.setFillForegroundColor(style.getFillForegroundColor());
+        style2.setFillPattern(style.getFillPattern());
+        style2.setAlignment(CellStyle.ALIGN_RIGHT);
+        righted_styles.put(style, style2);
+        return style2;
+    }
+
+    private HSSFCellStyle Centered(HSSFCellStyle style)
+    {
+        if (centered_styles.containsKey(style))
+            return centered_styles.get(style);
+        HSSFCellStyle style2 = wb.createCellStyle();
+        style2.setFillForegroundColor(style.getFillForegroundColor());
+        style2.setFillPattern(style.getFillPattern());
+        style2.setAlignment(CellStyle.ALIGN_CENTER);
+        centered_styles.put(style, style2);
+        return style2;
+    }
+
+    int[] xl_widths = {0,0,0,0,0,0};
+
+    private Cell newCell(Row row, int i, int cellValue, CellStyle style)
+    {
+        Cell c = row.createCell(i);
+        c.setCellValue(cellValue);
+        c.setCellStyle(style);
+        xl_widths[i] = Math.max(xl_widths[i], Integer.toString(cellValue).length());
+        return c;
+    }
+
+    private Cell newCell(Row row, int i, String cellValue, CellStyle style)
+    {
+        Cell c = row.createCell(i);
+        c.setCellValue(cellValue);
+        c.setCellStyle(style);
+        xl_widths[i] = Math.max(xl_widths[i], cellValue.length());
+        return c;
+    }
+
+    private Cell newCell(Row row, int i, double cellValue, CellStyle style)
+    {
+        Cell c = row.createCell(i);
+        c.setCellValue(cellValue);
+        c.setCellStyle(style);
+        xl_widths[i] = Math.max(xl_widths[i], Double.toString(cellValue).length());
+        return c;
+    }
+
+    private Cell newCell(Row row, int i, CellStyle style)
+    {
+        Cell c = row.createCell(i);
+        c.setCellStyle(style);
+        return c;
+    }
+
+    private Cell newFormula(Row row, int i, String formula, CellStyle style)
+    {
+        Cell c = row.createCell(i);
+        c.setCellFormula(formula);
+        c.setCellStyle(style);
+        c.setCellType(Cell.CELL_TYPE_FORMULA);
+        xl_widths[i] = Math.max(xl_widths[i], 10);
+        return c;
+    }
+
+    public File createXLS(ProjectClass Project)
+    {
+        try
+        {
+            lefted_styles.clear();
+            centered_styles.clear();
+            righted_styles.clear();
+            if (!Environment.getExternalStorageDirectory().canWrite())
+            {
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            DBAdapter adapter = new DBAdapter(context);
+            adapter.open();
+            File place = new File(Environment.getExternalStorageDirectory() + File.separator + APPNAME);
+            if (!place.exists())
+                place.mkdir();
+            File file = new File(place + "/" + Project.name + ".xls");
+            if (file.exists())
+                file.delete();
+            file.createNewFile();
+            SettingsManager settingsManager = new SettingsManager(context);
+            wb = new HSSFWorkbook();
+            HSSFPalette palette = wb.getCustomPalette();
+            short color_worktype_begin = 57;
+            short color_worktype_end = 58;
+            short color_summary = 59;
+            int color = context.getResources().getColor(R.color.pdf_table_worktype_begin);
+            palette.setColorAtIndex(color_worktype_begin, (byte)((color>>16)&255), (byte)((color>>8)&255), (byte)(color&255));
+            color = context.getResources().getColor(R.color.pdf_table_worktype_end);
+            palette.setColorAtIndex(color_worktype_end, (byte)((color>>16)&255), (byte)((color>>8)&255), (byte)(color&255));
+            color = context.getResources().getColor(R.color.pdf_table_summary);
+            palette.setColorAtIndex(color_summary, (byte)((color>>16)&255), (byte)((color>>8)&255), (byte)(color&255));
+            Cell c = null;
+            HSSFCellStyle csWorkBegin, csWorkEnd, csTotal, simple;
+            simple = wb.createCellStyle();
+            csWorkEnd = wb.createCellStyle();
+            csWorkEnd.setFillForegroundColor(color_worktype_end);
+            csWorkEnd.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+            csWorkBegin = wb.createCellStyle();
+            csWorkBegin.setFillForegroundColor(color_worktype_begin);
+            csWorkBegin.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+            csTotal = wb.createCellStyle();
+            csTotal.setFillForegroundColor(color_summary);
+            csTotal.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+            String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
+            Sheet sheet = null;
+            sheet = wb.createSheet(APPNAME);
+            int rowcount = 0;
+            Row row = sheet.createRow(rowcount++);
+            for (int i = 0; i < Headers.length; ++i)
+                newCell(row, i, Headers[i], simple);
+
+            String material_sum = "";
+            String work_sum = "";
+
+            for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
+                row = sheet.createRow(rowcount++);
+                int worktype_row = rowcount;
+                newCell(row, 0, csWorkBegin);
+                newCell(row, 1, x.getKey().name, Centered(csWorkBegin));
+                newCell(row, 2, csWorkBegin);
+                newCell(row, 3, csWorkBegin);
+                newCell(row, 4, csWorkBegin);
+                newCell(row, 5, csWorkBegin);
+                ArrayList<WorkClass> worklist = x.getValue();
+                for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
+                    WorkClass work = worklist.get(count_works - 1);
+                    row = sheet.createRow(rowcount++);
+                    String rememberwork = "D" + rowcount;
+                    newCell(row, 0, count_works, Lefted(simple));
+                    newCell(row, 1, work.name, Lefted(simple));
+                    newCell(row, 2, context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring], Centered(simple));
+                    newCell(row, 3, work.size, Centered(simple));
+                    newCell(row, 4, work.price, Centered(simple));
+                    newFormula(row, 5, "D" + rowcount + "*" + "E" + rowcount, Righted(simple));
+                    if (work_sum.equals(""))
+                        work_sum = "F" + rowcount;
+                    else
+                        work_sum += ";F" + rowcount;
+                    for (int i = 0; i < work.Materials.size(); ++i) {
+                        MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
+                        MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                        row = sheet.createRow(rowcount++);
+                        newCell(row, 0, count_works + "." + (i + 1), simple);
+                        newCell(row, 1, material.name, simple);
+                        newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement], Centered(simple));
+                        if (material.per_object < (1e-8)) {
+                            newFormula(row, 3, rememberwork + "*" + work.Materials.get(i).second, Centered(simple));
+                            newCell(row, 4, material.price, Centered(simple));
+                            newFormula(row, 5, "D" + rowcount + "*" + "E" + rowcount, Righted(simple));
+                            if (material_sum.equals(""))
+                                material_sum = "F" + rowcount;
+                            else
+                                material_sum += ";F" + rowcount;
+                        } else {
+                            int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
+                            newCell(row, 3, amount, Centered(simple));
+                            newCell(row, 4, material.price, Centered(simple));
+                            newFormula(row, 5, "D" + rowcount + "*" + "E" + rowcount, Righted(simple));
+                        }
+                    }
+                    row = sheet.createRow(rowcount++);
+                    newCell(row, 1, context.getString(R.string.pdf_total_cost), simple);
+                    newFormula(row, 5, "SUM(F" + rememberwork.substring(1) + ":F" + (rowcount - 1) + ")", simple);
+                }
+                row = sheet.createRow(rowcount++);
+                newCell(row, 0, "", csWorkEnd);
+                newCell(row, 1, context.getString(R.string.pdf_total_cost), csWorkEnd);
+                newCell(row, 2, "", csWorkEnd);
+                newCell(row, 3, "", csWorkEnd);
+                newCell(row, 4, "", csWorkEnd);
+                newFormula(row, 5, "SUMIF(B" + worktype_row + ":B" + (rowcount - 1) + ", \"" + context.getString(R.string.pdf_total_cost) + "\",F" + worktype_row + ":F" + (rowcount - 1) + ")", csWorkEnd);
+            }
+            int totalrows = rowcount;
+            sheet.createRow(rowcount++);
+            row = sheet.createRow(rowcount++);
+            newCell(row, 0, "", csTotal);
+            newCell(row, 1, context.getString(R.string.pdf_materials_summary), csTotal);
+            newCell(row, 2, "", csTotal);
+            newCell(row, 3, "", csTotal);
+            newCell(row, 4, "", csTotal);
+            newFormula(row, 5, "SUMIF(A2:A" + totalrows + ", \"*.*\",F2:F" + totalrows + ")", csTotal);
+            row = sheet.createRow(rowcount++);
+            newCell(row, 0, "", csTotal);
+            newCell(row, 1, context.getString(R.string.pdf_work_summary), csTotal);
+            newCell(row, 2, "", csTotal);
+            newCell(row, 3, "", csTotal);
+            newCell(row, 4, "", csTotal);
+            newFormula(row, 5, "F" + (rowcount + 2) + "-" + "F" + (rowcount - 1), csTotal);
+            sheet.createRow(rowcount++);
+            row = sheet.createRow(rowcount++);
+            newCell(row, 0, "", csTotal);
+            newCell(row, 1, context.getString(R.string.pdf_total_invoice), csTotal);
+            newCell(row, 2, "", csTotal);
+            newCell(row, 3, "", csTotal);
+            newCell(row, 4, "", csTotal);
+            newFormula(row, 5, "SUM(F2:F" + totalrows + ") / 3", csTotal);
+            for (int i = 0; i < 6; ++i)
+                sheet.setColumnWidth(i, xl_widths[i] * 256);
+            FileOutputStream os = new FileOutputStream(file);
+            wb.write(os);
+            os.close();
+            adapter.close();
+            Intent x = new Intent(Intent.ACTION_VIEW);
+            x.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+            x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = Intent.createChooser(x, "Open file");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            settingsManager.close();
+            return file;
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(context.getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+    }
+
     public void openXLS(ProjectClass Project)
     {
         try {
@@ -639,197 +886,6 @@ public class FileManager
         }
     }
 
-    public File createXLS(ProjectClass Project)
-    {
-        try
-        {
-            if (!Environment.getExternalStorageDirectory().canWrite())
-            {
-                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
-                return null;
-            }
-            DBAdapter adapter = new DBAdapter(context);
-            adapter.open();
-            File place = new File(Environment.getExternalStorageDirectory() + File.separator + APPNAME);
-            if (!place.exists())
-                place.mkdir();
-            File file = new File(place + "/" + Project.name + ".xls");
-            if (file.exists())
-                file.delete();
-            file.createNewFile();
-            SettingsManager settingsManager = new SettingsManager(context);
-            HSSFWorkbook wb = new HSSFWorkbook();
-            HSSFPalette palette = wb.getCustomPalette();
-            palette.setColorAtIndex((short)57, (byte)0xFF,(byte)0x00, (byte)0x00);
-            CellStyle cs = wb.createCellStyle();
-            cs.setFillForegroundColor((short)57);
-            short color_worktype_begin = 57;
-            short color_worktype_end = 58;
-            short color_summary = 59;
-            int color = context.getResources().getColor(R.color.pdf_table_worktype_begin);
-            palette.setColorAtIndex(color_worktype_begin, (byte)((color>>16)&255), (byte)((color>>8)&255), (byte)(color&255));
-            color = context.getResources().getColor(R.color.pdf_table_worktype_end);
-            palette.setColorAtIndex(color_worktype_end, (byte)((color>>16)&255), (byte)((color>>8)&255), (byte)(color&255));
-            color = context.getResources().getColor(R.color.pdf_table_summary);
-            palette.setColorAtIndex(color_summary, (byte)((color>>16)&255), (byte)((color>>8)&255), (byte)(color&255));
-            Cell c = null;
-            CellStyle csWorkBegin, csWorkEnd, csTotal;
-            csWorkEnd = wb.createCellStyle();
-            csWorkEnd.setFillForegroundColor(color_worktype_end);
-            csWorkEnd.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-            csWorkBegin = wb.createCellStyle();
-            csWorkBegin.setFillForegroundColor(color_worktype_begin);
-            csWorkBegin.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-            csTotal = wb.createCellStyle();
-            csTotal.setFillForegroundColor(color_summary);
-            csTotal.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-            String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
-            Sheet sheet = null;
-            sheet = wb.createSheet(APPNAME);
-            int rowcount = 0;
-            Row row = sheet.createRow(rowcount++);
-            for (int i = 0; i < Headers.length; ++i)
-            {
-                c = row.createCell(i);
-                c.setCellValue(Headers[i]);
-                c.setCellStyle(cs);
-                sheet.setColumnWidth(i, 400 + Headers[i].length() * 700);
-            }
 
-            String material_sum = "";
-            String work_sum = "";
 
-            for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
-                row = sheet.createRow(rowcount++);
-                int worktype_row = rowcount;
-                row.createCell(0).setCellStyle(csWorkBegin);
-                c = row.createCell(1);
-                c.setCellValue(x.getKey().name);
-                c.setCellStyle(csWorkBegin);
-                row.createCell(2).setCellStyle(csWorkBegin);
-                row.createCell(3).setCellStyle(csWorkBegin);
-                row.createCell(4).setCellStyle(csWorkBegin);
-                row.createCell(5).setCellStyle(csWorkBegin);
-                ArrayList<WorkClass> worklist = x.getValue();
-                double work_type_total = 0;
-                for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
-                    WorkClass work = worklist.get(count_works - 1);
-                    row = sheet.createRow(rowcount++);
-                    String rememberwork = "D" + rowcount;
-                    row.createCell(0).setCellValue(count_works);
-                    row.createCell(1).setCellValue(work.name);
-                    row.createCell(2).setCellValue(context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring]);
-                    row.createCell(3).setCellValue(work.size);
-                    row.createCell(4).setCellValue(work.price);
-                    c = row.createCell(5);
-                    c.setCellFormula("D" + rowcount + "*" + "E" + rowcount);
-                    c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                    if (work_sum.equals(""))
-                        work_sum = "F" + rowcount;
-                    else
-                        work_sum += ";F" + rowcount;
-                    for (int i = 0; i < work.Materials.size(); ++i) {
-                        MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
-                        MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
-                        row = sheet.createRow(rowcount++);
-                        row.createCell(0).setCellValue(count_works + "." + (i + 1));
-                        row.createCell(1).setCellValue(material.name);
-                        row.createCell(2).setCellValue(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]);
-                        if (material.per_object < (1e-8)) {
-                            c = row.createCell(3);
-                            c.setCellFormula(rememberwork + "*" + work.Materials.get(i).second);
-                            c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                            row.createCell(4).setCellValue(material.price);
-                            c = row.createCell(5);
-                            c.setCellFormula("D" + rowcount + "*" + "E" + rowcount);
-                            c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                            if (material_sum.equals(""))
-                                material_sum = "F" + rowcount;
-                            else
-                                material_sum += ";F" + rowcount;
-                        } else {
-                            int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
-                            row.createCell(3).setCellValue(amount);
-                            row.createCell(4).setCellValue(material.price);
-                            c.setCellFormula("D" + rowcount + "*" + "E" + rowcount);
-                        }
-                    }
-                    row = sheet.createRow(rowcount++);
-                    row.createCell(1).setCellValue(context.getString(R.string.pdf_total_cost));
-                    c = row.createCell(5);
-                    c.setCellFormula("SUM(F" + rememberwork.substring(1) + ":F" + (rowcount - 1) + ")");
-                    c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                }
-                row = sheet.createRow(rowcount++);
-                row.createCell(0).setCellStyle(csWorkEnd);
-                c = row.createCell(1);
-                c.setCellValue(context.getString(R.string.pdf_total_cost));
-                c.setCellStyle(csWorkEnd);
-                row.createCell(2).setCellStyle(csWorkEnd);
-                row.createCell(3).setCellStyle(csWorkEnd);
-                row.createCell(4).setCellStyle(csWorkEnd);
-                c = row.createCell(5);
-                c.setCellFormula("SUMIF(B" + worktype_row + ":B" + (rowcount - 1) + ", \"" + context.getString(R.string.pdf_total_cost) + "\",F" + worktype_row + ":F" + (rowcount - 1) + ")");
-                c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-                c.setCellStyle(csWorkEnd);
-            }
-            int totalrows = rowcount;
-            sheet.createRow(rowcount++);
-            row = sheet.createRow(rowcount++);
-            row.createCell(0).setCellStyle(csTotal);
-            c = row.createCell(1);
-            c.setCellValue(context.getString(R.string.pdf_materials_summary));
-            c.setCellStyle(csTotal);
-            row.createCell(2).setCellStyle(csTotal);
-            row.createCell(3).setCellStyle(csTotal);
-            row.createCell(4).setCellStyle(csTotal);
-            c = row.createCell(5);
-            c.setCellStyle(csTotal);
-            c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            c.setCellFormula("SUMIF(A2:A" + totalrows + ", \"*.*\",F2:F" + totalrows + ")");
-            row = sheet.createRow(rowcount++);
-            row.createCell(0).setCellStyle(csTotal);
-            c = row.createCell(1);
-            c.setCellValue(context.getString(R.string.pdf_work_summary));
-            c.setCellStyle(csTotal);
-            row.createCell(2).setCellStyle(csTotal);
-            row.createCell(3).setCellStyle(csTotal);
-            row.createCell(4).setCellStyle(csTotal);
-            c = row.createCell(5);
-            c.setCellStyle(csTotal);
-            c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            c.setCellFormula("F" + (rowcount + 1) + "-" + "F" + (rowcount - 1));
-            row = sheet.createRow(rowcount++);
-            row.createCell(0).setCellStyle(csTotal);
-            c = row.createCell(1);
-            c.setCellValue(context.getString(R.string.pdf_total_invoice));
-            c.setCellStyle(csTotal);
-            row.createCell(2).setCellStyle(csTotal);
-            row.createCell(3).setCellStyle(csTotal);
-            row.createCell(4).setCellStyle(csTotal);
-            c = row.createCell(5);
-            c.setCellStyle(csTotal);
-            c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-            c.setCellFormula("SUM(F2:F" + totalrows + ") / 3");
-            FileOutputStream os = new FileOutputStream(file);
-            wb.write(os);
-            os.close();
-            adapter.close();
-            Intent x = new Intent(Intent.ACTION_VIEW);
-            x.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
-            x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Intent intent = Intent.createChooser(x, "Open file");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            settingsManager.close();
-            return file;
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(context.getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
-            return null;
-        }
-
-    }
 }
