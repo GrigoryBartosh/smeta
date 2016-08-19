@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class EditNameActivity extends AppCompatActivity {
 
     private Button mButton;
@@ -35,6 +37,14 @@ public class EditNameActivity extends AppCompatActivity {
                     have += ", ";
                 have += t;
             }
+        FileManager fileManager = new FileManager(EditNameActivity.this);
+        ArrayList<String> temp = fileManager.Load();
+        s = s.trim();
+        s = s.replaceAll("[\\s]{2,}", "\\s");
+        s = s.replaceAll("[\n, \r]", " ");
+        for (String x : temp)
+            if (x.equals(s))
+                return "CRAP";
         if (have.equals(""))
             return "OK";
         return getString(R.string.popup_name_category_toast_bad_symbol) + " " + have;
@@ -71,7 +81,7 @@ public class EditNameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final String message = check(mText.getText().toString());
-                if (message == "OK") {
+                if (message.equals("OK")) {
                     Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
                     if (Project == null)
                         Project = new ProjectClass();
