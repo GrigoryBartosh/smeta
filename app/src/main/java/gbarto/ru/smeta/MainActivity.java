@@ -66,6 +66,7 @@ public class MainActivity   extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
         fab.setOnClickListener(fab_ocl);
         mListView.setOnItemLongClickListener(MainActivity.this);
 
