@@ -13,7 +13,7 @@
         android:id="@+id/main_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="@color/gray"
         android:longClickable="true"
         android:clickable="true"
         android:divider="@null">

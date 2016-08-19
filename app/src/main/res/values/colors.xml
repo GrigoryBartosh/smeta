@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="blue">#00a4ef</color>
+    <color name="red">#f25022</color>
+    <color name="green">#7fba00</color>
+    <color name="yellow">#ffb900</color>
+    <color name="gray">#eeeeee</color>
+    <color name="white">#ffffff</color>
 
-    <color name="work_material_choose">#6400ff00</color>
-    <color name="work_material_not_choose">#64ff0000</color>
+    <color name="colorPrimary">#00a4ef</color>
+    <color name="colorPrimaryDark">#3f51b5</color>
+    <color name="colorAccent">#f25022</color>
+
     <color name="place_chosen">#2be65f2a</color>
-    <color name="search_choose">#640000ff</color>
     <color name="pdf_table_worktype_begin">#b4843b</color>
     <color name="pdf_table_worktype_end">#d1a25a</color>
     <color name="pdf_table_summary">#8d80d4</color>
 
-    <color name="background">#eeeeee</color>
-
+    <color name="work_material_choose">#6400ff00</color>
+    <color name="work_material_not_choose">#64ff0000</color>
+    <color name="search_choose">#640000ff</color>
 </resources>

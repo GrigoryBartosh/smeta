@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="gbarto.ru.smeta.SettingsActivity">
+    tools:context="gbarto.ru.smeta.SettingsActivity"
+    android:background="@color/gray">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
