@@ -311,7 +311,7 @@ public class MainActivity   extends AppCompatActivity
     }
 
     private void ProjectView(final int position){
-        fileManager.openPDF(list_project.get(position));
+        fileManager.openXLS(list_project.get(position));
     }
 
     private void ProjectEdit(final int position){
