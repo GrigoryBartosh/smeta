@@ -73,6 +73,8 @@ public class MainActivity   extends AppCompatActivity
         mListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (mListView.getCount() == 0) return false;
+
                 View c = mListView.getChildAt(0);
                 float scrolly = -c.getTop() + mListView.getFirstVisiblePosition() * (c.getHeight());
                 fab.setTranslationY(scrolly * 2);
