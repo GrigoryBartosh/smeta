@@ -592,8 +592,7 @@ public class FileManager
         {
             if (!Environment.getExternalStorageDirectory().canWrite())
             {
-                //TODO: proper string here
-                Toast.makeText(context, "APP HAS NO PERMISSIONS TO WRITE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
                 return;
             }
             DBAdapter adapter = new DBAdapter(context);
