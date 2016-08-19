@@ -137,7 +137,15 @@ public class SettingsManager {
         try {
             File path = new File(context.getFilesDir(), PHOTO);
             out = new FileOutputStream(path);
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+
+            double w = photo.getWidth();
+            double h = photo.getHeight();
+            if (Math.max(w, h) > 600) {
+                double k = 320.0 / Math.max(w, h);
+                photo = Bitmap.createScaledBitmap(photo, (int) (k * w), (int) (k * h), false);
+            }
+
+            photo.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
             // PNG is a lossless format, the compression factor (100) is ignored
             out.close();
         } catch (Exception e) {

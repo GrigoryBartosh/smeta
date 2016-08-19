@@ -223,7 +223,7 @@ public class MainActivity   extends AppCompatActivity
 
             mTextName.setText(list_project.get(position).name);
             mTextSummary.setText(list_project.get(position).place);
-            mTextPrice.setText("0");
+            mTextPrice.setText(Double.toString(fileManager.getPrice(list_project.get(position))));
 
             View.OnClickListener ocl = new View.OnClickListener() {
                 @Override
@@ -376,7 +376,7 @@ public class MainActivity   extends AppCompatActivity
                         if (file == null) break;
                         intent.setAction(Intent.ACTION_SEND);
                         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                        intent.setType("application/xls");
+                        intent.setType("application/vnd.ms-excel");
                         startActivity(intent);
                         break;
                 }
