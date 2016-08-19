@@ -48,7 +48,7 @@ import java.util.Map;
 public class FileManager
 {
     Context context;
-    final String APPNAME = "Smeta";
+    final String APPNAME = "Smart_Smeta";
     final private String extension = ".prj";
     final int MAXSIZE = 60;
     Font[] arial = new Font[MAXSIZE];

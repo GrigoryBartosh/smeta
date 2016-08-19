@@ -47,8 +47,6 @@
         <item>XLS таблица</item>
     </string-array>
 
-    <string name="nav_title">Смета</string>
-    <string name="nav_summary">Это ваша смета</string>
     <string name="nav_new_project">Новый проект</string>
     <string name="nav_price_work">Мои расценки</string>
     <string name="nav_price_material">Мои цены на товар</string>
@@ -69,7 +67,7 @@
     <string name="price_work_category_alert_delete_summary">
         Вы уверены, что хотите удалить этот тип работ? Все работы данного типа также будут удалены.\n
         \n
-        Этот тип работ и все его работы будут удалены из всех проектов, где они импользуются.
+        Этот тип работ и все его работы будут удалены из всех проектов, где они используются.
     </string>
     <string name="price_work_category_empty_list">Список типов работ пуст. Нажмите ПЛЮС, чтобы добавить новый тип работ.</string>
 
@@ -122,12 +120,12 @@
 
     <string name="title_activity_settings">Настройки</string>
     <string name="settings_about_text">
-        Здесь Вы можете указываете информацию о себе и компании. Эта информация будет отображена в смете.
+        Здесь Вы можете указать информацию о себе и компании. Эта информация будет отображена в смете.
     </string>
     <string name="settings_hint_first_name">Имя</string>
     <string name="settings_hint_surname">Фамилия</string>
     <string name="settings_hint_company_name">Название компании</string>
-    <string name="settings_hint_phone">Номер телеффона</string>
+    <string name="settings_hint_phone">Номер телефона</string>
     <string name="settings_hint_email">Адрес электронной почты</string>
     <string name="settings_hint_address">Адрес</string>
     <string name="settings_company_name">Название:</string>
