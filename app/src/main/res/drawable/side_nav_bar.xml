@@ -3,8 +3,8 @@
     <!-- фон для шторки layout/nav_header_main-->
     <gradient
         android:angle="135"
-        android:centerColor="#4CAF50"
-        android:endColor="#2E7D32"
-        android:startColor="#81C784"
+        android:startColor="#efe9b0"
+        android:centerColor="#efe4b0"
+        android:endColor="#f0c6b1"
         android:type="linear" />
 </shape>

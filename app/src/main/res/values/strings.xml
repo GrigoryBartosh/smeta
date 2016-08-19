@@ -22,7 +22,7 @@
     <string name="new_type">Новый тип</string>
     <string name="title_activity_list_overview_new_material">ListOverviewNewMaterial</string>
 
-    <string name="app_name">Смета</string>
+    <string name="app_name">Смарт Смета</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="main_alert_delete_title">Удаление</string>
