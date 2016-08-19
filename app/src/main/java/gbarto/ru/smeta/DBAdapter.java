@@ -578,16 +578,15 @@ public class DBAdapter {
             add(_db, TYPES_TABLE, t1);
 
             WorkClass t2 = new WorkClass(false, "Покрасить пол", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);
-            t2.addMaterial(1L);
+            t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Покрасить стены", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 2);
-            t2.addMaterial(1L);
+            t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Покрасить потолок", new ArrayList<Pair <Long, Float>>(), 1.15f, 1,3);
-            t2.addMaterial(1L);
+            t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
             t2 = new WorkClass(false, "Покрыть фундамент известково-песчаной смесью", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);
-            t2.addMaterial(1L);
             t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
 

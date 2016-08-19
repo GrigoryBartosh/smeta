@@ -18,6 +18,7 @@ public class EditNameActivity extends AppCompatActivity {
     private Button mButton;
     private EditText mText;
     private int BackRes;
+    String projectname = "";
     DBAdapter adapter;
     ProjectClass Project = null;
     String keeper;
@@ -43,8 +44,8 @@ public class EditNameActivity extends AppCompatActivity {
         s = s.replaceAll("[\\s]{2,}", "\\s");
         s = s.replaceAll("[\n, \r]", " ");
         for (String x : temp)
-            if (x.equals(s))
-                return "CRAP";
+                if (x.equals(s) && !x.equals(projectname))
+                    return getString(R.string.such_project_already_exists);
         if (have.equals(""))
             return "OK";
         return getString(R.string.popup_name_category_toast_bad_symbol) + " " + have;
@@ -73,6 +74,7 @@ public class EditNameActivity extends AppCompatActivity {
         mText = (EditText) findViewById(R.id.ProjectName);
         if (getIntent().getSerializableExtra("Project") != null) {
             Project = (ProjectClass) getIntent().getSerializableExtra("Project");
+            projectname = Project.name;
             mText.setText(Project.name);
         }
         keeper = mText.getText().toString();
@@ -85,7 +87,7 @@ public class EditNameActivity extends AppCompatActivity {
                     Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
                     if (Project == null)
                         Project = new ProjectClass();
-                    Project.name = new String(mText.getText().toString());
+                    Project.name = mText.getText().toString();
                     Project.name = Project.name.trim();
                     Project.name = Project.name.replaceAll("[\\s]{2,}", "\\s");
                     Project.name = Project.name.replaceAll("[\n, \r]", " ");

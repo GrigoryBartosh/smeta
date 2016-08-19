@@ -435,7 +435,7 @@ public class FileManager
                         ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price;
                 }
             }
-        return ans;
+        return round(ans);
     }
 
     public File createPDF(ProjectClass Project)
