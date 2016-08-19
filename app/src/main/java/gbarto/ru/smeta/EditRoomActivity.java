@@ -48,7 +48,8 @@ public class EditRoomActivity extends AppCompatActivity {
                 go.putExtras(getIntent());
                 Project.place = getString(R.string.room_kitchen);
                 go.putExtra("Project", Project);
-                startActivity(go);
+                setResult(RESULT_OK, go);
+                finish();
             }
         });
         bathroomButton.setOnClickListener(new View.OnClickListener()
@@ -60,7 +61,8 @@ public class EditRoomActivity extends AppCompatActivity {
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 Project.place = getString(R.string.room_bathroom);
                 go.putExtra("Project", Project);
-                startActivity(go);
+                setResult(RESULT_OK, go);
+                finish();
             }
         });
         diningRoomButton.setOnClickListener(new View.OnClickListener()
@@ -72,7 +74,8 @@ public class EditRoomActivity extends AppCompatActivity {
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 Project.place = getString(R.string.room_dining_room);
                 go.putExtra("Project", Project);
-                startActivity(go);
+                setResult(RESULT_OK, go);
+                finish();
             }
         });
         bedroomButton.setOnClickListener(new View.OnClickListener()
@@ -84,7 +87,8 @@ public class EditRoomActivity extends AppCompatActivity {
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 Project.place = getString(R.string.room_bedroom);
                 go.putExtra("Project", Project);
-                startActivity(go);
+                setResult(RESULT_OK, go);
+                finish();
             }
         });
         otherroomButton.setOnClickListener(new View.OnClickListener()
@@ -96,7 +100,8 @@ public class EditRoomActivity extends AppCompatActivity {
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 Project.place = getString(R.string.room_other_room);
                 go.putExtra("Project", Project);
-                startActivity(go);
+                setResult(RESULT_OK, go);
+                finish();
             }
         });
 

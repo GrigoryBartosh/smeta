@@ -31,6 +31,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
     private static final int GETTING_NEW_MATERIAL = 1488;
     ProjectClass Project;
     WorkTypeClass tmp2;
+    int countreturned = 0;
     TreeSet<WorkTypeClass> incompleteTypes = new TreeSet<>();
 
     @Override
@@ -45,24 +46,31 @@ public class ChooseTypeActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
-                FragmentManager manager = getSupportFragmentManager();
-                MyDialogFragment myDialogFragment = new MyDialogFragment();
-                myDialogFragment.Message = "Если вы вернётесь, то потеряете всё.";
-                myDialogFragment.Title = "Вы уверены, что хотите вернуться?.";
-                myDialogFragment.PositiveButtonTitle = "Да";
-                myDialogFragment.NegativeButtonTitle = "Нет";
-                myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
+                if (countreturned > 0) {
+                    FragmentManager manager = getSupportFragmentManager();
+                    MyDialogFragment myDialogFragment = new MyDialogFragment();
+                    myDialogFragment.Message = getString(R.string.want_to_discard_changes);
+                    myDialogFragment.Title = getString(R.string.want_to_go_back);
+                    myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
+                    myDialogFragment.NegativeButtonTitle = getString(R.string.no);
+                    myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
                     {
-                        Intent temp = new Intent();
-                        temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        setResult(RESULT_CANCELED, temp);
-                        finish();
-                    }
-                };
-                myDialogFragment.show(manager, "dialog");
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
+                            Intent temp = new Intent();
+                            setResult(RESULT_CANCELED, temp);
+                            finish();
+                        }
+                    };
+                    myDialogFragment.show(manager, "dialog");
+                }
+                else
+                {
+                    Intent temp = new Intent();
+                    setResult(RESULT_CANCELED, temp);
+                    finish();
+                }
             }
         });
         adapter.open();
@@ -83,12 +91,12 @@ public class ChooseTypeActivity extends AppCompatActivity {
         if (incompleteTypes.size() != 0)
             Toast.makeText(getApplicationContext(), getString(R.string.makeSureAllTypesAreComplete), Toast.LENGTH_SHORT).show();
         else {
-            FileManager fileManager = new FileManager(this);
-            fileManager.Save(Project);
-            Intent x = new Intent(ChooseTypeActivity.this, MainActivity.class);
+            Intent x = new Intent();
+            x.putExtra("Project", Project);
             x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(x);
-            return true;
+            setResult(RESULT_OK, x);
+            finish();
+            return super.onOptionsItemSelected(item);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -103,24 +111,31 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        FragmentManager manager = getSupportFragmentManager();
-        MyDialogFragment myDialogFragment = new MyDialogFragment();
-        myDialogFragment.Message = "Если вы вернётесь, то потеряете всё.";
-        myDialogFragment.Title = "Вы уверены, что хотите вернуться?.";
-        myDialogFragment.PositiveButtonTitle = "Да";
-        myDialogFragment.NegativeButtonTitle = "Нет";
-        myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
+        if (countreturned > 0) {
+            FragmentManager manager = getSupportFragmentManager();
+            MyDialogFragment myDialogFragment = new MyDialogFragment();
+            myDialogFragment.Message = getString(R.string.want_to_discard_changes);
+            myDialogFragment.Title = getString(R.string.want_to_go_back);
+            myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
+            myDialogFragment.NegativeButtonTitle = getString(R.string.no);
+            myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
             {
-                Intent temp = new Intent();
-                temp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                setResult(RESULT_CANCELED, temp);
-                finish();
-            }
-        };
-        myDialogFragment.show(manager, "dialog");
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    Intent temp = new Intent();
+                    setResult(RESULT_CANCELED, temp);
+                    finish();
+                }
+            };
+            myDialogFragment.show(manager, "dialog");
+        }
+        else
+        {
+            Intent temp = new Intent();
+            setResult(RESULT_CANCELED, temp);
+            finish();
+        }
     }
 
     private void default_values()
@@ -202,6 +217,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        ++countreturned;
         ArrayList<WorkClass> tmp = (ArrayList<WorkClass>)data.getSerializableExtra("WorkSet");
         Project.put(tmp2, tmp);
         adapt.notifyDataSetChanged();

@@ -11,11 +11,11 @@
     <string name="title_activity_edit_name">Введите имя</string>
     <string name="title_activity_edit_room">Редактор комнаты</string>
     <string name="Sample_Text">Sample Text</string>
-    <string name="floors">Полы</string>
-    <string name="walls">Стены</string>
-    <string name="ceiling">Потолки</string>
-    <string name="length">Длина</string>
-    <string name="width">Ширина</string>
+    <string name="project_name">Название проекта</string>
+    <string name="edit_room">Изменить помещение</string>
+    <string name="want_to_discard_changes">Если вы вернётесь, то потеряете все внесённые изменения.</string>
+    <string name="want_to_go_back">Уверены, что хотите вернуться?</string>
+    <string name="choose_new_works">Изменить список работ</string>
     <string name="next_button">Далее</string>
     <string name="title_activity_choose_works">Выберите типы работ</string>
     <string name="new_material">Добавить тип работ</string>
@@ -150,6 +150,7 @@
     <string name="total">Итого:</string>
     <string name="done">Готово</string>
     <string name="save">Сохранить</string>
+    <string name="saved">Сохранено</string>
     <string name="delete">Удалить</string>
     <string name="help">Помощь</string>
     <string name="removed">удалено</string>
