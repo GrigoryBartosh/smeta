@@ -744,6 +744,9 @@ public class FileManager
             String material_sum = "";
             String work_sum = "";
 
+            double material_total = 0;
+            //double
+
             for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
                 row = sheet.createRow(rowcount++);
                 int worktype_row = rowcount;
@@ -757,7 +760,7 @@ public class FileManager
                 for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
                     WorkClass work = worklist.get(count_works - 1);
                     row = sheet.createRow(rowcount++);
-                    String rememberwork = "D" + rowcount;
+                    double worksize = work.size;
                     newCell(row, 0, count_works, Lefted(simple));
                     newCell(row, 1, work.name, Lefted(simple));
                     newCell(row, 2, context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring], Centered(simple));
@@ -776,9 +779,9 @@ public class FileManager
                         newCell(row, 1, material.name, simple);
                         newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement], Centered(simple));
                         if (material.per_object < (1e-8)) {
-                            newFormula(row, 3, rememberwork + "*" + work.Materials.get(i).second, Centered(simple));
+                            newCell(row, 3, worksize * work.Materials.get(i).second, Centered(simple));
                             newCell(row, 4, material.price, Centered(simple));
-                            newFormula(row, 5, "D" + rowcount + "*" + "E" + rowcount, Righted(simple));
+                            newCell(row, 5, worksize * work.Materials.get(i).second * material.price, Righted(simple));
                             if (material_sum.equals(""))
                                 material_sum = "F" + rowcount;
                             else
