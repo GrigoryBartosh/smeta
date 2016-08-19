@@ -42,7 +42,7 @@ public class MainActivity   extends AppCompatActivity
     private ArrayList<String> list_name;
     private ArrayList<ProjectClass> list_project;
 
-    private String[] list_share_alert;
+    private String[] list_alert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class MainActivity   extends AppCompatActivity
         mListView = (ListView) findViewById(R.id.main_listView);
         mTextEmpty = (TextView) findViewById(R.id.main_textView_empty);
 
-        list_share_alert = getResources().getStringArray(R.array.main_share_list);
+        list_alert = getResources().getStringArray(R.array.main_list);
 
         fileManager = new FileManager(MainActivity.this);
 
@@ -316,7 +316,30 @@ public class MainActivity   extends AppCompatActivity
     }
 
     private void ProjectView(final int position){
-        fileManager.openXLS(list_project.get(position));
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.setTitle(getString(R.string.main_view_alert_choose));
+        myDialogFragment.setUseMessage(false);
+        myDialogFragment.setUsePositiveButton(false);
+        myDialogFragment.setUseNegativeButton(false);
+        myDialogFragment.setUseList(true);
+        myDialogFragment.setList(list_alert);
+        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
+            File file;
+            Intent intent = new Intent();
+            public void onClick(DialogInterface dialog, int id) {
+                switch (id){
+                    case 0:
+                        fileManager.openPDF(list_project.get(position));
+                        break;
+                    case 1:
+                        fileManager.openXLS(list_project.get(position));
+                        break;
+                }
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.show(manager, "dialog");
     }
 
     private void ProjectEdit(final int position){
@@ -333,7 +356,7 @@ public class MainActivity   extends AppCompatActivity
         myDialogFragment.setUsePositiveButton(false);
         myDialogFragment.setUseNegativeButton(false);
         myDialogFragment.setUseList(true);
-        myDialogFragment.setList(list_share_alert);
+        myDialogFragment.setList(list_alert);
 
         myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
             File file;
@@ -341,18 +364,20 @@ public class MainActivity   extends AppCompatActivity
             public void onClick(DialogInterface dialog, int id) {
                 switch (id){
                     case 0:
-                        /*file =
+                        file = fileManager.createPDF(list_project.get(position));
+                        if (file == null) break;
                         intent.setAction(Intent.ACTION_SEND);
                         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
                         intent.setType("application/pdf");
-                        startActivity(intent);*/
+                        startActivity(intent);
                         break;
                     case 1:
-                        /*file =
+                        file = fileManager.createXLS(list_project.get(position));
+                        if (file == null) break;
                         intent.setAction(Intent.ACTION_SEND);
                         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                        intent.setType("application/xlsx");
-                        startActivity(intent);*/
+                        intent.setType("application/xls");
+                        startActivity(intent);
                         break;
                 }
                 dialog.cancel();

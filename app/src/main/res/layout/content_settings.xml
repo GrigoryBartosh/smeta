@@ -20,7 +20,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/layout_background">
+        android:background="@drawable/layout_background"
+        android:elevation="4dp">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -117,7 +118,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/layout_background">
+            android:background="@drawable/layout_background"
+            android:elevation="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
