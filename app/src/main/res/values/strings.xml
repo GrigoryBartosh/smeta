@@ -39,8 +39,9 @@
     <string name="main_popup_menu_edit">Править</string>
     <string name="main_popup_menu_shear">Поделиться</string>
     <string name="main_popup_menu_delete">Удалить</string>
-    <string name="main_share_alert_choose">Выберити тип файла</string>
-    <string-array name="main_share_list">
+    <string name="main_view_alert_choose">Выберити тип файла для просмотра</string>
+    <string name="main_share_alert_choose">Выберити тип файла для отправки</string>
+    <string-array name="main_list">
         <item>PDF файл</item>
         <item>XLS таблица</item>
     </string-array>
@@ -203,6 +204,6 @@
 
     <string-array name="bad_strings">
         <item>&amp;</item>
-        <item>^</item>
+        <item>=</item>
     </string-array>
 </resources>
