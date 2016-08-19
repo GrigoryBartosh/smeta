@@ -795,7 +795,7 @@ public class FileManager
                     }
                     row = sheet.createRow(rowcount++);
                     newCell(row, 1, context.getString(R.string.pdf_total_cost), simple);
-                    newFormula(row, 5, "SUM(F" + rememberwork.substring(1) + ":F" + (rowcount - 1) + ")", simple);
+                    //newFormula(row, 5, "SUM(F" + rememberwork.substring(1) + ":F" + (rowcount - 1) + ")", simple);
                 }
                 row = sheet.createRow(rowcount++);
                 newCell(row, 0, "", csWorkEnd);
