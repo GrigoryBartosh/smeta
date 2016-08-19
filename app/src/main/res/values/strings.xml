@@ -162,6 +162,7 @@
     <string name="room_bathroom">Ванная</string>
     <string name="room_dining_room">Гостиная</string>
     <string name="room_bedroom">Спальня</string>
+    <string name="room_other_room">Другое</string>
 
     <string name="ruble_short">руб</string>
 

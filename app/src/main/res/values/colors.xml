@@ -11,7 +11,7 @@
     <color name="colorPrimaryDark">#3f51b5</color>
     <color name="colorAccent">#f25022</color>
 
-    <color name="place_chosen">#2be65f2a</color>
+    <color name="place_chosen">#5ae65f2a</color>
     <color name="pdf_table_worktype_begin">#b4843b</color>
     <color name="pdf_table_worktype_end">#d1a25a</color>
     <color name="pdf_table_summary">#8d80d4</color>

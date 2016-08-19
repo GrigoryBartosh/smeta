@@ -420,6 +420,7 @@ public class FileManager
     public File createPDF(ProjectClass Project)
     {
         try {
+            pagenumber = 1;
             if (!Environment.getExternalStorageDirectory().canWrite())
             {
                 Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();

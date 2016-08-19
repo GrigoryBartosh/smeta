@@ -24,6 +24,7 @@ public class EditRoomActivity extends AppCompatActivity {
         ImageButton bathroomButton = (ImageButton)this.findViewById(R.id.bathroom_button);
         ImageButton diningRoomButton = (ImageButton)this.findViewById(R.id.dining_room_button);
         ImageButton bedroomButton = (ImageButton)this.findViewById(R.id.bedroom_button);
+        ImageButton otherroomButton = (ImageButton)this.findViewById(R.id.other_room_button);
         if (Project.place != null)
         {
             if (Project.place.equals(getString(R.string.room_kitchen)))
@@ -34,6 +35,8 @@ public class EditRoomActivity extends AppCompatActivity {
                 bathroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
             else if (Project.place.equals(getString(R.string.room_bedroom)))
                 bedroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
+            else if (Project.place.equals(getString(R.string.room_other_room)))
+                otherroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
         }
         kitchenButton.setOnClickListener(new View.OnClickListener()
         {
@@ -84,6 +87,19 @@ public class EditRoomActivity extends AppCompatActivity {
                 startActivity(go);
             }
         });
+        otherroomButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
+                Project.place = getString(R.string.room_other_room);
+                go.putExtra("Project", Project);
+                startActivity(go);
+            }
+        });
+
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
