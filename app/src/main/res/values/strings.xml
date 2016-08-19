@@ -54,7 +54,7 @@
     <string name="nav_price_material">Мои цены на товар</string>
     <string name="nav_menu_title">Приложение</string>
     <string name="nav_menu_settings">Настройки</string>
-    <string name="nav_menu_add">Дополниетльно</string>
+    <string name="nav_menu_add">Дополнительно</string>
     <string name="nav_menu_abut">О программе</string>
 
     <string name="title_activity_price_work_category">Мои типы работ</string>
