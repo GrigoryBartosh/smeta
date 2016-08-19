@@ -566,16 +566,6 @@ public class FileManager
             document.add(table);
             adapter.close();
             document.close();
-
-
-
-            Intent x = new Intent(Intent.ACTION_VIEW);
-            x.setDataAndType(Uri.fromFile(file), "application/pdf");
-            x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Intent intent = Intent.createChooser(x, "Open file");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
             settingsManager.close();
             return file;
         }
@@ -652,7 +642,7 @@ public class FileManager
         return style2;
     }
 
-    int[] xl_widths = {0,0,0,0,0,0};
+    float[] xl_widths = {1.7f,0,0,0,0,0};
 
     private Cell newCell(Row row, int i, int cellValue, CellStyle style)
     {
@@ -837,18 +827,11 @@ public class FileManager
             newCell(row, 4, "", csTotal);
             newFormula(row, 5, "SUM(F2:F" + totalrows + ") / 3", csTotal);
             for (int i = 0; i < 6; ++i)
-                sheet.setColumnWidth(i, xl_widths[i] * 256);
+                sheet.setColumnWidth(i, (int)(xl_widths[i] * 256));
             FileOutputStream os = new FileOutputStream(file);
             wb.write(os);
             os.close();
             adapter.close();
-            Intent x = new Intent(Intent.ACTION_VIEW);
-            x.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
-            x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Intent intent = Intent.createChooser(x, "Open file");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
             settingsManager.close();
             return file;
         }
