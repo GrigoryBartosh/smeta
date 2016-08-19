@@ -41,7 +41,7 @@ public class ListOverview extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TypeHere = (WorkTypeClass) getIntent().getSerializableExtra("keep_type");
         Project = (ProjectClass) getIntent().getSerializableExtra("Project");
-        setTitle(Project.name + "-" + Project.place + ":" + TypeHere.name);
+        setTitle(Project.name + " > " + TypeHere.name);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
             @Override

@@ -464,7 +464,7 @@ public class FileManager
 
 
             String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
-            int[] widths = {40, 320, 50, 50, 70, 80};
+            int[] widths = {40, 270, 50, 50, 70, 90};
             table.setWidths(widths);
             table.setPaddingTop(70f);
             table.setTotalWidth(PageSize.A4.getWidth() * 0.95f);
@@ -642,7 +642,7 @@ public class FileManager
         return style2;
     }
 
-    float[] xl_widths = {1.7f,0,0,0,0,0};
+    float[] xl_widths = {2.4f,0,0,0,0,0};
 
     private Cell newCell(Row row, int i, int cellValue, CellStyle style)
     {
@@ -665,7 +665,9 @@ public class FileManager
     private Cell newCell(Row row, int i, double cellValue, CellStyle style)
     {
         Cell c = row.createCell(i);
-        c.setCellValue(cellValue);
+        if (cellValue > 1)
+            cellValue = (int)(cellValue * 100 + 0.5) * 0.01;
+        c.setCellValue(Float.toString((float)cellValue));
         c.setCellStyle(style);
         xl_widths[i] = Math.max(xl_widths[i], Double.toString(cellValue).length());
         return c;
@@ -741,15 +743,13 @@ public class FileManager
             for (int i = 0; i < Headers.length; ++i)
                 newCell(row, i, Headers[i], simple);
 
-            String material_sum = "";
-            String work_sum = "";
-
             double material_total = 0;
-            //double
+            double works_total = 0;
 
             for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
                 row = sheet.createRow(rowcount++);
                 int worktype_row = rowcount;
+                double type_total = 0;
                 newCell(row, 0, csWorkBegin);
                 newCell(row, 1, x.getKey().name, Centered(csWorkBegin));
                 newCell(row, 2, csWorkBegin);
@@ -766,11 +766,9 @@ public class FileManager
                     newCell(row, 2, context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring], Centered(simple));
                     newCell(row, 3, work.size, Centered(simple));
                     newCell(row, 4, work.price, Centered(simple));
-                    newFormula(row, 5, "D" + rowcount + "*" + "E" + rowcount, Righted(simple));
-                    if (work_sum.equals(""))
-                        work_sum = "F" + rowcount;
-                    else
-                        work_sum += ";F" + rowcount;
+                    double work_total = work.size * work.price;
+                    works_total += work_total;
+                    newCell(row, 5, work_total, Righted(simple));
                     for (int i = 0; i < work.Materials.size(); ++i) {
                         MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
                         MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
@@ -782,20 +780,20 @@ public class FileManager
                             newCell(row, 3, worksize * work.Materials.get(i).second, Centered(simple));
                             newCell(row, 4, material.price, Centered(simple));
                             newCell(row, 5, worksize * work.Materials.get(i).second * material.price, Righted(simple));
-                            if (material_sum.equals(""))
-                                material_sum = "F" + rowcount;
-                            else
-                                material_sum += ";F" + rowcount;
+                            work_total += worksize * work.Materials.get(i).second * material.price;
                         } else {
                             int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
                             newCell(row, 3, amount, Centered(simple));
                             newCell(row, 4, material.price, Centered(simple));
-                            newFormula(row, 5, "D" + rowcount + "*" + "E" + rowcount, Righted(simple));
+                            newCell(row, 5, amount * material.price, Righted(simple));
+                            work_total += amount * material.price;
                         }
                     }
                     row = sheet.createRow(rowcount++);
                     newCell(row, 1, context.getString(R.string.pdf_total_cost), simple);
-                    //newFormula(row, 5, "SUM(F" + rememberwork.substring(1) + ":F" + (rowcount - 1) + ")", simple);
+                    newCell(row, 5, work_total, Righted(simple));
+                    material_total += work_total - work.size * work.price;
+                    type_total += work_total;
                 }
                 row = sheet.createRow(rowcount++);
                 newCell(row, 0, "", csWorkEnd);
@@ -803,9 +801,8 @@ public class FileManager
                 newCell(row, 2, "", csWorkEnd);
                 newCell(row, 3, "", csWorkEnd);
                 newCell(row, 4, "", csWorkEnd);
-                newFormula(row, 5, "SUMIF(B" + worktype_row + ":B" + (rowcount - 1) + ", \"" + context.getString(R.string.pdf_total_cost) + "\",F" + worktype_row + ":F" + (rowcount - 1) + ")", csWorkEnd);
+                newCell(row, 5, type_total, Righted(csWorkEnd));
             }
-            int totalrows = rowcount;
             sheet.createRow(rowcount++);
             row = sheet.createRow(rowcount++);
             newCell(row, 0, "", csTotal);
@@ -813,14 +810,14 @@ public class FileManager
             newCell(row, 2, "", csTotal);
             newCell(row, 3, "", csTotal);
             newCell(row, 4, "", csTotal);
-            newFormula(row, 5, "SUMIF(A2:A" + totalrows + ", \"*.*\",F2:F" + totalrows + ")", csTotal);
+            newCell(row, 5, material_total, Righted(csTotal));
             row = sheet.createRow(rowcount++);
             newCell(row, 0, "", csTotal);
             newCell(row, 1, context.getString(R.string.pdf_work_summary), csTotal);
             newCell(row, 2, "", csTotal);
             newCell(row, 3, "", csTotal);
             newCell(row, 4, "", csTotal);
-            newFormula(row, 5, "F" + (rowcount + 2) + "-" + "F" + (rowcount - 1), csTotal);
+            newCell(row, 5, works_total, Righted(csTotal));
             sheet.createRow(rowcount++);
             row = sheet.createRow(rowcount++);
             newCell(row, 0, "", csTotal);
@@ -828,7 +825,7 @@ public class FileManager
             newCell(row, 2, "", csTotal);
             newCell(row, 3, "", csTotal);
             newCell(row, 4, "", csTotal);
-            newFormula(row, 5, "SUM(F2:F" + totalrows + ") / 3", csTotal);
+            newCell(row, 5, works_total + material_total, Righted(csTotal));
             for (int i = 0; i < 6; ++i)
                 sheet.setColumnWidth(i, (int)(xl_widths[i] * 256));
             FileOutputStream os = new FileOutputStream(file);
@@ -858,7 +855,7 @@ public class FileManager
             File place = new File(Environment.getExternalStorageDirectory() + File.separator + APPNAME);
             if (!place.exists())
                 place.mkdir();
-            File file = new File(place + "/" + Project.name + ".pdf");
+            File file = new File(place + "/" + Project.name + ".xls");
             Intent x = new Intent(Intent.ACTION_VIEW);
             x.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
             x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
