@@ -7,8 +7,8 @@
     <color name="gray">#eeeeee</color>
     <color name="white">#ffffff</color>
 
-    <color name="colorPrimary">#00a4ef</color>
-    <color name="colorPrimaryDark">#3f51b5</color>
+    <color name="colorPrimary">#ffb900</color>
+    <color name="colorPrimaryDark">#7fba00</color>
     <color name="colorAccent">#f25022</color>
 
     <color name="place_chosen">#5ae65f2a</color>
