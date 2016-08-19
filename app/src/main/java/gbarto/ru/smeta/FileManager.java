@@ -276,6 +276,16 @@ public class FileManager
         return cell;
     }
 
+    private double round(double x)
+    {
+        return (long)(x * 100 + 0.5) / 100;
+    }
+
+    private float round(float x)
+    {
+        return (long)(x * 100 + 0.5) / 100;
+    }
+
     private PdfPCell RightedText(String text)
     {
         PdfPCell cell = new PdfPCell(new Phrase(text, arial[12]));
@@ -325,8 +335,10 @@ public class FileManager
     }
 
 
-    void MakeHeader (PdfWriter writer, Document document, SettingsManager settingsManager, float padding)
+    int MakeHeader (PdfWriter writer, Document document, SettingsManager settingsManager, float padding)
     {
+        int result = 0;
+        int result2 = 0;
         PdfContentByte cb = writer.getDirectContent();
 
         String companyName = settingsManager.getCompanyName();
@@ -338,6 +350,7 @@ public class FileManager
         float padfromtop = 0;
         if (!companyName.equals(""))
         {
+            ++result;
             Phrase footer = new Phrase(companyName, arial_underlined[12]);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
             padfromtop += 18;
@@ -345,6 +358,7 @@ public class FileManager
         }
         if (!companyPhone.equals(""))
         {
+            ++result;
             Phrase footer = new Phrase(companyPhone, arial_underlined[12]);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
             padfromtop += 18;
@@ -352,6 +366,7 @@ public class FileManager
         }
         if (!companyEmail.equals(""))
         {
+            ++result;
             Phrase footer = new Phrase(companyEmail, arial_underlined[12]);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
             padfromtop += 18;
@@ -359,6 +374,7 @@ public class FileManager
         }
         if (!companyAddress.equals(""))
         {
+            ++result;
             Phrase footer = new Phrase(companyAddress, arial_underlined[12]);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
             keep = Math.max(keep, padding + companyAddress.length() * size);
@@ -372,11 +388,13 @@ public class FileManager
         if (naming.equals(""))
             naming = surname;
         else {
-            if (!surname.equals(""))
-                naming += " " + surname;
+            if (!surname.equals("")) {
+                naming += " " + surname;;
+            }
         }
         if (!naming.equals(""))
         {
+            ++result2;
             Phrase footer = new Phrase(naming, arial_underlined[12]);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
             padfromtop += 18;
@@ -385,15 +403,18 @@ public class FileManager
         String phone = settingsManager.getPhone();
         if (!phone.equals(""))
         {
+            ++result2;
             Phrase footer = new Phrase(phone, arial_underlined[12]);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
             padfromtop += 18;
         }
         if (!mail.equals(""))
         {
+            ++result2;
             Phrase footer = new Phrase(mail, arial_underlined[12]);
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
         }
+        return Math.max(result, result2);
     }
 
     public double getPrice(ProjectClass Project)
@@ -441,16 +462,29 @@ public class FileManager
             document.open();
 
             SettingsManager settingsManager = new SettingsManager(context);
+            {
+                String name1 = settingsManager.getFirstName();
+                if (name1.equals(""))
+                    name1 = settingsManager.getSurname();
+                else if (!settingsManager.getSurname().equals(""))
+                    name1 += " " + settingsManager.getSurname();
+
+                if (!name1.equals(""))
+                    document.addAuthor(name1);
+                document.addCreationDate();
+                document.addCreator("Smart estimate");
+            }
             PdfPTable table = new PdfPTable(6);
             document.add(new Paragraph("\n"));
-            table.setSpacingBefore(80);
 
             float pad = 30;
+            int header = 0;
             if (settingsManager.havePhoto()) {
                 Image image = Image.getInstance(settingsManager.getPhotoPath());
+                header = 4;
                 if (image.getWidth() > image.getHeight()) {
                     image.scalePercent(100f / image.getWidth() * 120f);
-                    image.setAbsolutePosition(document.left() - 10, document.top() - 50);
+                    image.setAbsolutePosition(document.left() - 10, document.top() - 80);
                 }
                 else {
                     image.scalePercent(100f / image.getHeight() * 100f);
@@ -460,7 +494,8 @@ public class FileManager
                 canvas.addImage(image);
                 pad = document.left() - 10 + image.getScaledWidth() * 0.9f;
             }
-            MakeHeader(writer, document, settingsManager, pad);
+            header = Math.max(header, MakeHeader(writer, document, settingsManager, pad));
+            table.setSpacingBefore(header * 20);
 
 
             String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
@@ -505,7 +540,7 @@ public class FileManager
                             table.addCell(CenteredText(Float.toString(work.size * work.Materials.get(i).second)));
                             table.addCell(CenteredText(Float.toString(material.price)));
                             double wasted = work.size * work.Materials.get(i).second * material.price;
-                            table.addCell(RightedText(Double.toString(wasted)));
+                            table.addCell(RightedText(Double.toString(round(wasted))));
                             work_total += wasted;
                             material_cost += wasted;
                         } else {
@@ -513,7 +548,7 @@ public class FileManager
                             table.addCell(CenteredText(Integer.toString(amount)));
                             table.addCell(CenteredText(Float.toString(material.price)));
                             double wasted = amount * material.price;
-                            table.addCell(RightedText(Double.toString(wasted)));
+                            table.addCell(RightedText(Double.toString(round(wasted))));
                             work_total += wasted;
                             material_cost += wasted;
                         }
@@ -523,7 +558,7 @@ public class FileManager
                     table.addCell(Empty());
                     table.addCell(Empty());
                     table.addCell(Empty());
-                    table.addCell(RightedText(Double.toString(work_total)));
+                    table.addCell(RightedText(Double.toString(round(work_total))));
                     work_type_total += work_total;
                 }
                 table.addCell(ColoredEnd(Empty()));
@@ -531,7 +566,7 @@ public class FileManager
                 table.addCell(ColoredEnd(Empty()));
                 table.addCell(ColoredEnd(Empty()));
                 table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(RightedBold(Double.toString(work_type_total))));
+                table.addCell(ColoredEnd(RightedBold(Double.toString(round(work_type_total)))));
             }
             for (int i = 0; i < 6; ++i) {
                 PdfPCell cell = Empty();
@@ -543,14 +578,14 @@ public class FileManager
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
-            table.addCell(ColoredSummary(RightedBold(Double.toString(work_cost))));
+            table.addCell(ColoredSummary(RightedBold(Double.toString(round(work_cost)))));
 
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(LeftedBold(context.getString(R.string.pdf_materials_summary))));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
-            table.addCell(ColoredSummary(RightedBold(Double.toString(material_cost))));
+            table.addCell(ColoredSummary(RightedBold(Double.toString(round(material_cost)))));
             for (int i = 0; i < 6; ++i) {
                 PdfPCell cell = Empty();
                 cell.setMinimumHeight(12);
@@ -561,7 +596,7 @@ public class FileManager
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
-            table.addCell(ColoredSummary(RightedBold(Double.toString(work_cost + material_cost))));
+            table.addCell(ColoredSummary(RightedBold(Double.toString(round(work_cost + material_cost)))));
 
             document.add(table);
             adapter.close();
@@ -665,9 +700,7 @@ public class FileManager
     private Cell newCell(Row row, int i, double cellValue, CellStyle style)
     {
         Cell c = row.createCell(i);
-        if (cellValue > 1)
-            cellValue = (int)(cellValue * 100 + 0.5) * 0.01;
-        c.setCellValue(Float.toString((float)cellValue));
+        c.setCellValue(Double .toString(round(cellValue)));
         c.setCellStyle(style);
         xl_widths[i] = Math.max(xl_widths[i], Double.toString(cellValue).length());
         return c;
@@ -775,13 +808,14 @@ public class FileManager
                         row = sheet.createRow(rowcount++);
                         newCell(row, 0, count_works + "." + (i + 1), simple);
                         newCell(row, 1, material.name, simple);
-                        newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement], Centered(simple));
                         if (material.per_object < (1e-8)) {
+                            newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement], Centered(simple));
                             newCell(row, 3, worksize * work.Materials.get(i).second, Centered(simple));
                             newCell(row, 4, material.price, Centered(simple));
                             newCell(row, 5, worksize * work.Materials.get(i).second * material.price, Righted(simple));
                             work_total += worksize * work.Materials.get(i).second * material.price;
                         } else {
+                            newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[6], Centered(simple));
                             int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
                             newCell(row, 3, amount, Centered(simple));
                             newCell(row, 4, material.price, Centered(simple));
