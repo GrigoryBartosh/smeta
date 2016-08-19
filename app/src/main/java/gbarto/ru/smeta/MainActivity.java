@@ -3,6 +3,7 @@ package gbarto.ru.smeta;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +42,8 @@ public class MainActivity   extends AppCompatActivity
     private ArrayList<String> list_name;
     private ArrayList<ProjectClass> list_project;
 
+    private String[] list_share_alert;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +52,11 @@ public class MainActivity   extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         fab = (FloatingActionButton) findViewById(R.id.main_fab);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view); // чтобы реагировало на нажатия
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         mListView = (ListView) findViewById(R.id.main_listView);
         mTextEmpty = (TextView) findViewById(R.id.main_textView_empty);
+
+        list_share_alert = getResources().getStringArray(R.array.main_share_list);
 
         fileManager = new FileManager(MainActivity.this);
 
@@ -297,8 +303,7 @@ public class MainActivity   extends AppCompatActivity
     }
 
     private void Material(){
-        Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
-        startActivity(intent);
+
     }
 
     private void Settings(){
@@ -321,7 +326,39 @@ public class MainActivity   extends AppCompatActivity
     }
 
     private void ProjectShare(final int position){
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.setTitle(getString(R.string.main_share_alert_choose));
+        myDialogFragment.setUseMessage(false);
+        myDialogFragment.setUsePositiveButton(false);
+        myDialogFragment.setUseNegativeButton(false);
+        myDialogFragment.setUseList(true);
+        myDialogFragment.setList(list_share_alert);
 
+        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
+            File file;
+            Intent intent = new Intent();
+            public void onClick(DialogInterface dialog, int id) {
+                switch (id){
+                    case 0:
+                        /*file =
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        intent.setType("application/pdf");
+                        startActivity(intent);*/
+                        break;
+                    case 1:
+                        /*file =
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        intent.setType("application/xlsx");
+                        startActivity(intent);*/
+                        break;
+                }
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.show(manager, "dialog");
     }
 
     private void ProjectDelete(final int position){
