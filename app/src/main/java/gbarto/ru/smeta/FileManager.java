@@ -417,13 +417,13 @@ public class FileManager
         return ans;
     }
 
-    public void openPDF(ProjectClass Project)
+    public File createPDF(ProjectClass Project)
     {
         try {
             if (!Environment.getExternalStorageDirectory().canWrite())
             {
-                Toast.makeText(context, "APP HAS NO PERMISSIONS TO WRITE", Toast.LENGTH_SHORT).show();
-                return;
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
+                return null;
             }
             DBAdapter adapter = new DBAdapter(context);
             adapter.open();
@@ -432,9 +432,9 @@ public class FileManager
             if (!place.exists())
                 place.mkdir();
             File file = new File(place + "/" + Project.name + ".pdf");
+            if (file.exists())
+                file.delete();
             file.createNewFile();
-            System.out.println(PageSize.A4.getHeight());
-            System.out.println(PageSize.A4.getWidth());
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file));
             writer.setPageEvent(new MyPageEventHandler());
             document.open();
@@ -576,24 +576,77 @@ public class FileManager
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             settingsManager.close();
+            return file;
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(context.getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    public void openPDF(ProjectClass Project)
+    {
+        try {
+            if (!Environment.getExternalStorageDirectory().canWrite())
+            {
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            createPDF(Project);
+            File place = new File(Environment.getExternalStorageDirectory() + File.separator + APPNAME);
+            if (!place.exists())
+                place.mkdir();
+            File file = new File(place + "/" + Project.name + ".pdf");
+            Intent x = new Intent(Intent.ACTION_VIEW);
+            x.setDataAndType(Uri.fromFile(file), "application/pdf");
+            x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = Intent.createChooser(x, "Open file");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
         catch (Exception e)
         {
             Toast.makeText(context.getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
-        //File file = new File(context.getFilesDir(), path + extension);
-        //FileReader fileReader = new FileReader(file);
-        //PdfRenderer pdfRenderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE));
     }
 
     public void openXLS(ProjectClass Project)
+    {
+        try {
+            if (!Environment.getExternalStorageDirectory().canWrite())
+            {
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            createXLS(Project);
+            File place = new File(Environment.getExternalStorageDirectory() + File.separator + APPNAME);
+            if (!place.exists())
+                place.mkdir();
+            File file = new File(place + "/" + Project.name + ".pdf");
+            Intent x = new Intent(Intent.ACTION_VIEW);
+            x.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
+            x.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            x.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = Intent.createChooser(x, "Open file");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(context.getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public File createXLS(ProjectClass Project)
     {
         try
         {
             if (!Environment.getExternalStorageDirectory().canWrite())
             {
                 Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
-                return;
+                return null;
             }
             DBAdapter adapter = new DBAdapter(context);
             adapter.open();
@@ -601,6 +654,8 @@ public class FileManager
             if (!place.exists())
                 place.mkdir();
             File file = new File(place + "/" + Project.name + ".xls");
+            if (file.exists())
+                file.delete();
             file.createNewFile();
             SettingsManager settingsManager = new SettingsManager(context);
             HSSFWorkbook wb = new HSSFWorkbook();
@@ -618,10 +673,6 @@ public class FileManager
             color = context.getResources().getColor(R.color.pdf_table_summary);
             palette.setColorAtIndex(color_summary, (byte)((color>>16)&255), (byte)((color>>8)&255), (byte)(color&255));
             Cell c = null;
-            //cs.setFillForegroundColor(HSSFColor.LIME.index);
-            //cs.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-
-
             CellStyle csWorkBegin, csWorkEnd, csTotal;
             csWorkEnd = wb.createCellStyle();
             csWorkEnd.setFillForegroundColor(color_worktype_end);
@@ -632,8 +683,6 @@ public class FileManager
             csTotal = wb.createCellStyle();
             csTotal.setFillForegroundColor(color_summary);
             csTotal.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-
-
             String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
             Sheet sheet = null;
             sheet = wb.createSheet(APPNAME);
@@ -751,7 +800,6 @@ public class FileManager
             c.setCellType(HSSFCell.CELL_TYPE_FORMULA);
             c.setCellFormula("F" + (rowcount + 1) + "-" + "F" + (rowcount - 1));
             row = sheet.createRow(rowcount++);
-
             row.createCell(0).setCellStyle(csTotal);
             c = row.createCell(1);
             c.setCellValue(context.getString(R.string.pdf_total_invoice));
@@ -766,8 +814,6 @@ public class FileManager
             FileOutputStream os = new FileOutputStream(file);
             wb.write(os);
             os.close();
-
-
             adapter.close();
             Intent x = new Intent(Intent.ACTION_VIEW);
             x.setDataAndType(Uri.fromFile(file), "application/vnd.ms-excel");
@@ -777,10 +823,12 @@ public class FileManager
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             settingsManager.close();
+            return file;
         }
         catch (Exception e)
         {
             Toast.makeText(context.getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+            return null;
         }
 
     }
