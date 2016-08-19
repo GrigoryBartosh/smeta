@@ -83,10 +83,11 @@ public class ChooseTypeActivity extends AppCompatActivity {
         if (incompleteTypes.size() != 0)
             Toast.makeText(getApplicationContext(), getString(R.string.makeSureAllTypesAreComplete), Toast.LENGTH_SHORT).show();
         else {
-            FileManager temp = new FileManager(this);
-            temp.Save(Project);
-            ArrayList<String> fetch = temp.Load();
-            temp.LoadFromFile(fetch.get(0));
+            FileManager fileManager = new FileManager(this);
+            fileManager.Save(Project);
+            Intent x = new Intent(ChooseTypeActivity.this, MainActivity.class);
+            x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(x);
             return true;
         }
         return super.onOptionsItemSelected(item);
