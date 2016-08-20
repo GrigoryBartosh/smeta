@@ -33,7 +33,7 @@ public class EditNameActivity extends AppCompatActivity {
     String projectname = "";
     DBAdapter adapter;
     ImageButton imageButton;
-    ProjectClass Project = null;
+    ProjectClass Project;
     String keeper;
 
     //returns message
@@ -174,10 +174,6 @@ public class EditNameActivity extends AppCompatActivity {
             public void onClick(View view)
             {
                 Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
-                if (Project == null) {
-                    Project = new ProjectClass();
-                    Project.place = getString(R.string.room_other_room);
-                }
                 x.putExtra("Project", Project);
                 startActivityForResult(x, RoomResult);
             }
@@ -188,6 +184,13 @@ public class EditNameActivity extends AppCompatActivity {
             UpdateRoom();
             projectname = Project.name;
             mText.setText(Project.name);
+        }
+        else
+        {
+            if (Project == null) {
+                Project = new ProjectClass();
+                Project.place = getString(R.string.room_other_room);
+            }
         }
         Refresh();
         keeper = mText.getText().toString();

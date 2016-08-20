@@ -169,7 +169,8 @@ public class FileManager
         String[] temp2 = nospaces(temp[2]).split(",");
         for (int i = 0; i < temp2.length; ++i) {
             String[] lmao = temp2[i].split(";");
-            ans.Materials.add(new Pair(Long.valueOf(lmao[0]), Float.valueOf(lmao[1])));
+            if (lmao.length == 2)
+                ans.Materials.add(new Pair(Long.valueOf(lmao[0]), Float.valueOf(lmao[1])));
         }
         temp2 = nospaces(temp[3]).split(",");
         for (int i = 0; i < temp2.length; ++i)
