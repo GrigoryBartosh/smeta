@@ -5,8 +5,12 @@ package gbarto.ru.smeta;
  */
 public class WorkTypeClass extends DBObject implements Comparable<WorkTypeClass>
 {
+
+    double coeff;
+
     WorkTypeClass(WorkTypeClass a)
     {
+        this.coeff = a.coeff;
         this.name = new String(a.name);
         this.rowID = a.rowID;
     }
@@ -14,12 +18,13 @@ public class WorkTypeClass extends DBObject implements Comparable<WorkTypeClass>
     public WorkTypeClass(String name)
     {
         this.name = new String(name);
+        coeff = 1;
     }
 
     @Override
     public String toString()
     {
-        return name + "&" + rowID;
+        return name + "&" + rowID + "&" + coeff;
     }
 
     @Override

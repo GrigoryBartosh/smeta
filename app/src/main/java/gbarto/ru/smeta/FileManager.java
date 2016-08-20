@@ -208,11 +208,12 @@ public class FileManager
                 else {
                     if (tmp[0].equals("Object")) //then this is new KEY, otherwise whole string is VALUE
                     {
-                        String[] crap = tmp[1].split("&", 3);
+                        String[] crap = tmp[1].split("&");
                         String name = crap[0];
                         Long rowID = Long.valueOf(crap[1]);
                         temp = new WorkTypeClass(name);
                         temp.rowID = rowID;
+                        temp.coeff = Double.valueOf(crap[2]);
                     }
                     else {
                         if (!Project.contains(temp))

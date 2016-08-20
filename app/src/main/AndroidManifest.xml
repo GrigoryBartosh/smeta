@@ -50,7 +50,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".EditRoomActivity"
-            android:label="@string/title_activity_edit_room"
+            android:label="@string/edit_room"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity

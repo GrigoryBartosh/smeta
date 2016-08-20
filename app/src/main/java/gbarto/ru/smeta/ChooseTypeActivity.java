@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,11 @@ public class ChooseTypeActivity extends AppCompatActivity {
 
     private ArrayList<WorkTypeClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
+    LinearLayout linearLayout;
+    TextView seekBartitle;
+    SeekBar seekBar;
+    boolean userIsEditingNow = false;
+    int editingid;
     ArrayAdapter<WorkClass> adapt;
     private static final int NAMING = 228;
     private static final int GETTING_NEW_MATERIAL = 1488;
@@ -42,6 +49,33 @@ public class ChooseTypeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_type);
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.choose_works_toolbar);
         Project = (ProjectClass) getIntent().getSerializableExtra("Project");
+        seekBar = new SeekBar(this);
+        seekBar.setMax(50);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b)
+            {
+                WorkSet.get(editingid).coeff = i * 0.1;
+                String temp = getString(R.string.current_coeff) + " " + String.format("%.1f", i * 0.1);
+                seekBartitle.setText(temp);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+        });
+        seekBartitle = new TextView(this);
+
+        linearLayout = (LinearLayout)findViewById(R.id.works_linear_layout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
@@ -93,26 +127,45 @@ public class ChooseTypeActivity extends AppCompatActivity {
         d.setAlpha(255);
     }
 
+
+    private final ArrayList<View> mMenuItems = new ArrayList<>();
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.menu_choose_types, menu);
+        getMenuInflater().inflate(R.menu.menu_choose_types, menu);//
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (incompleteTypes.size() != 0)
-            Toast.makeText(getApplicationContext(), getString(R.string.makeSureAllTypesAreComplete), Toast.LENGTH_SHORT).show();
-        else {
-            Intent x = new Intent();
-            x.putExtra("Project", Project);
-            x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            setResult(RESULT_OK, x);
-            finish();
-            return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.menu_choose_types_done) {
+            if (incompleteTypes.size() != 0)
+                Toast.makeText(getApplicationContext(), getString(R.string.makeSureAllTypesAreComplete), Toast.LENGTH_SHORT).show();
+            else {
+                Intent x = new Intent();
+                x.putExtra("Project", Project);
+                x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                setResult(RESULT_OK, x);
+                finish();
+                return super.onOptionsItemSelected(item);
+            }
+        } else if (item.getItemId() == R.id.menu_choose_types_coeff) {
+            if (userIsEditingNow) {
+                linearLayout.removeView(seekBar);
+                linearLayout.removeView(seekBartitle);
+                item.setIcon(getResources().getDrawable(R.drawable.pencil));
+            } else {
+                linearLayout.addView(seekBar, 0);
+                linearLayout.addView(seekBartitle, 0);
+                editingid = 0;
+                seekBar.setProgress((int)Math.round(WorkSet.get(0).coeff * 10));
+                item.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+            }
+            userIsEditingNow = !userIsEditingNow;
+            adapt.notifyDataSetChanged();
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -190,6 +243,8 @@ public class ChooseTypeActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View item = getLayoutInflater().inflate(R.layout.listlayout, parent, false);
 
+            if (userIsEditingNow && position == editingid)
+                item.setBackgroundColor(getResources().getColor(R.color.place_chosen));
             WorkTypeClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
             t1.setText(w1.name);
@@ -220,12 +275,18 @@ public class ChooseTypeActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
         {
-            WorkTypeClass tmp = (WorkTypeClass) adapterView.getItemAtPosition(i);
-            Intent x = new Intent(ChooseTypeActivity.this, ListOverview.class);
-            x.putExtra("keep_type", tmp);
-            x.putExtra("Project", Project);
-            tmp2 = tmp;
-            startActivityForResult(x, NAMING);
+            if (!userIsEditingNow) {
+                WorkTypeClass tmp = (WorkTypeClass) adapterView.getItemAtPosition(i);
+                Intent x = new Intent(ChooseTypeActivity.this, ListOverview.class);
+                x.putExtra("keep_type", tmp);
+                x.putExtra("Project", Project);
+                tmp2 = tmp;
+                startActivityForResult(x, NAMING);
+            } else {
+                editingid = i;
+                seekBar.setProgress((int)Math.round(WorkSet.get(i).coeff * 10));
+                adapt.notifyDataSetChanged();
+            }
         }
     };
 
