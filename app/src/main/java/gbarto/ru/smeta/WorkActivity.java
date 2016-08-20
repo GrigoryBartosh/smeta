@@ -340,7 +340,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (work_type == 2) {
             String size = mEditSize.getText().toString();
-            if (size.equals("") || size.equals("-") || size.equals("-.")) {
+            if (size.equals("") || size.equals("-") || size.equals("-.") || size.equals(".")) {
                 work.size = 0;
             } else {
                 work.size = Float.valueOf(size);
@@ -458,7 +458,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     String cnt = charSequence.toString();
-                    if (cnt.equals("") || cnt.equals("-") || cnt.equals("-.")) {
+                    if (cnt.equals("") || cnt.equals("-") || cnt.equals("-.") || cnt.equals(".")) {
                         work.Materials.get(position).second = 0f;
                     } else {
                         work.Materials.get(position).second = Float.valueOf(cnt);
