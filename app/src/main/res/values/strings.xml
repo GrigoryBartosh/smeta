@@ -152,6 +152,9 @@
     <string name="title_activity_about">О приложении</string>
     <string name="about_version">Версия программы:</string>
 
+    <string name="title_activity_complete">Ход работы</string>
+    <string name="complete_empty_list">У вас нет работ. Вы все сделали!</string>
+
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>
 
