@@ -85,7 +85,7 @@ public class MainActivity   extends AppCompatActivity
             }
         });
 
-        int color = getResources().getColor(R.color.toolbar);
+        int color = getResources().getColor(R.color.ic_menu);
         PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
         Drawable d;
         d = getResources().getDrawable(android.R.drawable.ic_menu_help);
