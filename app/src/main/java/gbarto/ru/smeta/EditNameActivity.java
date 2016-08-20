@@ -67,6 +67,7 @@ public class EditNameActivity extends AppCompatActivity {
         for (String x : temp)
                 if (x.equals(s) && !x.equals(projectname))
                     return getString(R.string.such_project_already_exists);
+        projectname = s;
         if (have.equals(""))
             return "OK";
         return getString(R.string.popup_name_category_toast_bad_symbol) + " " + have;
@@ -133,7 +134,7 @@ public class EditNameActivity extends AppCompatActivity {
     {
         if (Project != null)
         {
-            String temp = getString(R.string.total) + " " + String.format("%.0f", new FileManager(this).getPrice(Project));
+            String temp = getString(R.string.total) + " " + String.format("%.2f", new FileManager(this).getPrice(Project));
             Summary.setText(temp);
         }
         else

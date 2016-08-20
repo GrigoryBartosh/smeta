@@ -57,7 +57,15 @@ public class ChooseTypeActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b)
             {
-                WorkSet.get(editingid).coeff = i * 0.1;
+                WorkTypeClass workTypeClass = WorkSet.get(editingid);
+                workTypeClass.coeff = i * 0.1;
+                if (!Project.works.containsKey(workTypeClass))
+                    Project.put(workTypeClass, new ArrayList<WorkClass>());
+                else {
+                    ArrayList<WorkClass> works = Project.get(workTypeClass);
+                    Project.works.remove(workTypeClass);
+                    Project.put(workTypeClass, works);
+                }
                 String temp = getString(R.string.current_coeff) + " " + String.format("%.1f", i * 0.1);
                 seekBartitle.setText(temp);
             }
@@ -236,12 +244,14 @@ public class ChooseTypeActivity extends AppCompatActivity {
             WorkTypeClass x1 = new WorkTypeClass(x.getKey());
             if (!all.contains(x1))
                 deleting.add(x1);
+            WorkSet.add(x1);
         }
         for (WorkTypeClass x : deleting)
                 Project.works.remove(x);
         //Arrays.sort(temp);
         for (DBObject x : temp)
-            WorkSet.add((WorkTypeClass) x);
+            if (!Project.works.containsKey(x))
+                WorkSet.add((WorkTypeClass) x);
     }
 
     private void AddAdapter()
