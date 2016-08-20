@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.icu.text.UnicodeSetSpanner;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -86,6 +88,19 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         mImageView.setOnClickListener(imageView_ocl);
+        int color = getResources().getColor(R.color.ic_menu);
+        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+        Drawable d;
+        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+
     }
 
     @Override

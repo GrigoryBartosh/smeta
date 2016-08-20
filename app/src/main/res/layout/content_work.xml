@@ -109,13 +109,16 @@
             android:text="@string/work_necessary_materials"
             android:textSize="16sp"
             android:paddingTop="25dp"
-            android:layout_below="@+id/work_text_size"/>
+            android:layout_below="@+id/work_text_size"
+            android:layout_toLeftOf="@+id/work_button_new"
+            android:layout_toStartOf="@+id/work_button_new"
+            android:paddingRight="88dp" />
 
         <Button
             android:id="@+id/work_button_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add"
+            android:text="добавить\nматериал"
             android:layout_alignBottom="@+id/work_text_list"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />

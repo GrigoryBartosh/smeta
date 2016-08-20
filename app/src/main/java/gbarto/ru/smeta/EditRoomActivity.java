@@ -1,6 +1,8 @@
 package gbarto.ru.smeta;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -116,6 +118,19 @@ public class EditRoomActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        int color = getResources().getColor(R.color.ic_menu);
+        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+        Drawable d;
+        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
     }
 
     @Override
