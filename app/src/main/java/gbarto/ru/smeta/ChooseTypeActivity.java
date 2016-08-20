@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -125,6 +126,9 @@ public class ChooseTypeActivity extends AppCompatActivity {
         d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
         d.setColorFilter(color, mMode);
         d.setAlpha(255);
+        d = getResources().getDrawable(R.drawable.pencil_blue);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
     }
 
 
@@ -132,7 +136,23 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.menu_choose_types, menu);//
+        getMenuInflater().inflate(R.menu.menu_choose_types, menu);
+        // Adjust the text color based on the connection
+            final View decor = getWindow().getDecorView();
+            decor.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+            {
+                @Override
+                public void onGlobalLayout()
+                {
+                    decor.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    decor.findViewsWithText(mMenuItems, getString(R.string.done),
+                            View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                    final TextView connected = !mMenuItems.isEmpty() ? (TextView) mMenuItems.get(0) : null;
+                    if (connected != null) {
+                        connected.setTextColor(getResources().getColor(R.color.ic_menu));
+                    }
+                }
+            });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -158,9 +178,8 @@ public class ChooseTypeActivity extends AppCompatActivity {
             } else {
                 linearLayout.addView(seekBar, 0);
                 linearLayout.addView(seekBartitle, 0);
-                editingid = 0;
-                seekBar.setProgress((int)Math.round(WorkSet.get(0).coeff * 10));
-                item.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_edit));
+                seekBar.setProgress((int)Math.round(WorkSet.get(editingid).coeff * 10));
+                item.setIcon(getResources().getDrawable(R.drawable.pencil_blue));
             }
             userIsEditingNow = !userIsEditingNow;
             adapt.notifyDataSetChanged();
