@@ -97,7 +97,7 @@
     <string name="work_snipper">Цена за </string>
     <string name="work_price">Равна </string>
     <string name="work_text_size">Объем работы </string>
-    <string name="work_necessary_materials">Необходимые материалы</string>
+    <string name="work_necessary_materials">Необходимые материалы\nна единицу</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_about_text">
         Чтобы удалить материал из списка
@@ -144,6 +144,8 @@
         <item>Сделать снимок</item>
         <item>Загрузить из галереи</item>
     </string-array>
+
+    <string name="title_activity_about">О приложение</string>
 
     <string name="button_done">Готово</string>
     <string name="button_cancel">Отмена</string>

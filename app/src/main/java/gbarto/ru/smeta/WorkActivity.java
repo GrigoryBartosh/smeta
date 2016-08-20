@@ -3,6 +3,8 @@ package gbarto.ru.smeta;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +44,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView mTextList;
     private TextView mTextSize;
     private EditText mEditSize;
-    private RelativeLayout mRelativeLayout;
     ArrayAdapter<CharSequence> spinner_adapter;
 
     private ListView mListView;
@@ -76,7 +77,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mTextSize = (TextView) findViewById(R.id.work_text_size);
         mEditSize = (EditText) findViewById(R.id.work_editText_size);
         mTextListEmpty = (TextView) findViewById(R.id.work_text_list_empty);
-        mRelativeLayout = (RelativeLayout) findViewById(R.id.work_relativeLayout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
 
         dbAdapter.open();
@@ -130,6 +130,19 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
             mTextList.setLayoutParams(relativeParams);
         }
+
+        int color = getResources().getColor(R.color.ic_menu);
+        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+        Drawable d;
+        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
     }
 
     @Override
