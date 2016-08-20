@@ -28,6 +28,7 @@ public class EditNameActivity extends AppCompatActivity {
     LinearLayout Button_Choose_Works;
     LinearLayout Save_Button;
     LinearLayout Share_Button;
+    LinearLayout Completed_Button;
     FileManager fileManager;
     EditText mText;
     int countreturned = 0;
@@ -36,6 +37,7 @@ public class EditNameActivity extends AppCompatActivity {
     private TextView ChooseRoomText;
     private int RoomResult = 1337;
     private int TypesResult = 1488;
+    private int CompletedResult = 239;
     String projectname = "";
     DBAdapter adapter;
     ImageButton imageButton;
@@ -216,6 +218,17 @@ public class EditNameActivity extends AppCompatActivity {
 
         mText = (EditText)findViewById(R.id.Project_name_field);
         ChooseRoomText = (TextView) findViewById(R.id.place_text);
+        Completed_Button = (LinearLayout)findViewById(R.id.button_mark_done);
+        Completed_Button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent x = new Intent(EditNameActivity.this, CompleteActivity.class);
+                x.putExtra("project", Project);
+                startActivityForResult(x, CompletedResult);
+            }
+        });
         Share_Button = (LinearLayout)findViewById(R.id.button_share);
         Share_Button.setOnClickListener(new View.OnClickListener()
                                         {
