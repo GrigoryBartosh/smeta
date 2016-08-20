@@ -36,41 +36,78 @@
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/choose_new_works"
-        android:id="@+id/edit_name_choose_works"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/linearLayout"
-        android:layout_alignStart="@+id/linearLayout"
-        android:layout_alignRight="@+id/linearLayout2"
-        android:layout_alignEnd="@+id/linearLayout2"
-        android:layout_marginBottom="150dp"/>
+        android:orientation="horizontal">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/choose_new_works"
-        android:id="@+id/add_materials"
-        android:layout_marginTop="48dp"
-        android:layout_alignTop="@+id/edit_name_choose_works"
-        android:layout_alignLeft="@+id/linearLayout"
-        android:layout_alignStart="@+id/linearLayout"
-        android:layout_alignRight="@+id/linearLayout2"
-        android:layout_alignEnd="@+id/linearLayout2"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:id="@+id/button_save"
-        android:layout_marginTop="48dp"
-        android:layout_alignTop="@+id/add_materials"
-        android:layout_alignLeft="@+id/linearLayout"
-        android:layout_alignStart="@+id/linearLayout"
-        android:layout_alignRight="@+id/linearLayout2"
-        android:layout_alignEnd="@+id/linearLayout2"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/choose_new_works"
+                android:gravity="center_horizontal"
+                android:background="@android:drawable/btn_default">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:src="@android:drawable/ic_menu_share"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_new_works"
+                    android:id="@+id/edit_name_choose_works_text"
+                    android:background="null"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/button_save"
+                android:gravity="center_horizontal"
+                android:background="@android:drawable/btn_default">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:src="@drawable/question_mark"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_new_works"
+                    android:id="@+id/save_text"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@android:drawable/btn_default"
+                android:gravity="center_horizontal">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:src="@drawable/checked_checkbox"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    android:id="@+id/add_materials"
+                    android:textAlignment="center"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="wrap_content"
