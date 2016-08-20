@@ -334,7 +334,8 @@ public class MainActivity   extends AppCompatActivity
     }
 
     private void AboutProgram(){
-
+        Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+        startActivity(intent);
     }
 
     private void ProjectView(final int position){
