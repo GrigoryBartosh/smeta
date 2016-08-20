@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,12 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class EditNameActivity extends AppCompatActivity {
 
     LinearLayout Button_Choose_Works;
     LinearLayout Save_Button;
+    LinearLayout Share_Button;
+    FileManager fileManager;
     EditText mText;
     int countreturned = 0;
     TextView Summary;
@@ -66,6 +70,44 @@ public class EditNameActivity extends AppCompatActivity {
         return getString(R.string.popup_name_category_toast_bad_symbol) + " " + have;
     }
 
+    public void ProjectShare(){
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.setTitle(getString(R.string.main_share_alert_choose));
+        myDialogFragment.setUseMessage(false);
+        myDialogFragment.setUsePositiveButton(false);
+        myDialogFragment.setUseNegativeButton(false);
+        myDialogFragment.setUseList(true);
+        myDialogFragment.setList(getResources().getStringArray(R.array.main_list));
+
+        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
+            File file;
+            Intent intent = new Intent();
+            public void onClick(DialogInterface dialog, int id) {
+                switch (id){
+                    case 0:
+                        file = fileManager.createPDF(Project);
+                        if (file == null) break;
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        intent.setType("application/pdf");
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        file = fileManager.createXLS(Project);
+                        if (file == null) break;
+                        intent.setAction(Intent.ACTION_SEND);
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                        intent.setType("application/vnd.ms-excel");
+                        startActivity(intent);
+                        break;
+                }
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.show(manager, "dialog");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -89,12 +131,38 @@ public class EditNameActivity extends AppCompatActivity {
     {
         if (Project != null)
         {
-            String temp = getString(R.string.total) + " " + Double.toString(new FileManager(this).getPrice(Project));
+            String temp = getString(R.string.total) + " " + String.format("%.0f", new FileManager(this).getPrice(Project));
             Summary.setText(temp);
         }
         else
             Summary.setVisibility(View.INVISIBLE);
         super.onResume();
+    }
+
+    private void ProjectView(){
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.setTitle(getString(R.string.main_view_alert_choose));
+        myDialogFragment.setUseMessage(false);
+        myDialogFragment.setUsePositiveButton(false);
+        myDialogFragment.setUseNegativeButton(false);
+        myDialogFragment.setUseList(true);
+        myDialogFragment.setList(getResources().getStringArray(R.array.main_list));
+        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
+            Intent intent = new Intent();
+            public void onClick(DialogInterface dialog, int id) {
+                switch (id){
+                    case 0:
+                        fileManager.openPDF(Project);
+                        break;
+                    case 1:
+                        fileManager.openXLS(Project);
+                        break;
+                }
+                dialog.cancel();
+            }
+        });
+        myDialogFragment.show(manager, "dialog");
     }
 
     @Override
@@ -110,6 +178,7 @@ public class EditNameActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_name_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        fileManager = new FileManager(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -147,7 +216,35 @@ public class EditNameActivity extends AppCompatActivity {
 
         mText = (EditText)findViewById(R.id.Project_name_field);
         ChooseRoomText = (TextView) findViewById(R.id.place_text);
-        Save_Button = (LinearLayout)findViewById(R.id.button_save);
+        Share_Button = (LinearLayout)findViewById(R.id.button_share);
+        Share_Button.setOnClickListener(new View.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(View view)
+                                            {
+                                                ProjectShare();
+                                            }
+                                        });
+
+        LinearLayout View_Button = (LinearLayout)findViewById(R.id.button_view);
+        View_Button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                String checker = mText.getText().toString();
+                final String message = check(checker);
+                if (message.equals("OK")) {
+                    Project.name = checker;
+                    ProjectView( );
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        Save_Button = (LinearLayout) findViewById(R.id.button_save);
         Save_Button.setOnClickListener(new View.OnClickListener()
         {
             @Override

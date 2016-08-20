@@ -174,7 +174,8 @@ public class FileManager
         }
         temp2 = nospaces(temp[3]).split(",");
         for (int i = 0; i < temp2.length; ++i)
-            ans.RealMaterials.add(Long.valueOf(temp2[i]));
+            if (temp2[i].length() > 0)
+                ans.RealMaterials.add(Long.valueOf(temp2[i]));
         ans.price = Float.valueOf(temp[4]);
         ans.measuring = Integer.valueOf(temp[5]);
         ans.size = Float.valueOf(temp[6]);
@@ -512,6 +513,8 @@ public class FileManager
             double material_cost = 0;
 
             for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
+                if (x.getValue().isEmpty())
+                    continue;
                 table.addCell(ColoredBegin(Empty()));
                 //table.addCell(CenteredText(Integer.toString(++countworks)));
                 table.addCell(ColoredBegin(CenteredBold(x.getKey().name)));
@@ -526,9 +529,9 @@ public class FileManager
                     table.addCell(LeftedText(Integer.toString(count_works)));
                     table.addCell(LeftedText(work.name));
                     table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring]));
-                    table.addCell(CenteredText(Float.toString(work.size)));
-                    table.addCell(CenteredText(Float.toString(work.price)));
-                    table.addCell(RightedText(Float.toString(work.price * work.size)));
+                    table.addCell(CenteredText(Float.toString(round(work.size))));
+                    table.addCell(CenteredText(Float.toString(round(work.price))));
+                    table.addCell(RightedText(Float.toString(round(work.price * work.size))));
                     double work_total = work.price * work.size;
                     work_cost += work_total;
                     for (int i = 0; i < work.Materials.size(); ++i) {
@@ -538,8 +541,8 @@ public class FileManager
                         table.addCell(LeftPadded(LeftedText(material.name)));
                         table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
                         if (material.per_object < (1e-8)) {
-                            table.addCell(CenteredText(Float.toString(work.size * work.Materials.get(i).second)));
-                            table.addCell(CenteredText(Float.toString(material.price)));
+                            table.addCell(CenteredText(Float.toString(round(work.size * work.Materials.get(i).second))));
+                            table.addCell(CenteredText(Float.toString(round(material.price))));
                             double wasted = work.size * work.Materials.get(i).second * material.price;
                             table.addCell(RightedText(Double.toString(round(wasted))));
                             work_total += wasted;
@@ -547,7 +550,7 @@ public class FileManager
                         } else {
                             int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
                             table.addCell(CenteredText(Integer.toString(amount)));
-                            table.addCell(CenteredText(Float.toString(material.price)));
+                            table.addCell(CenteredText(Float.toString(round(material.price))));
                             double wasted = amount * material.price;
                             table.addCell(RightedText(Double.toString(round(wasted))));
                             work_total += wasted;
@@ -781,6 +784,8 @@ public class FileManager
             double works_total = 0;
 
             for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
+                if (x.getValue().isEmpty())
+                    continue;
                 row = sheet.createRow(rowcount++);
                 int worktype_row = rowcount;
                 double type_total = 0;

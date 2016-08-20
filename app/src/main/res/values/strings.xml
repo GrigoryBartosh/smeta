@@ -9,14 +9,17 @@
     </string-array>
     <string name="app_has_no_permission_to_write">У приложения нет прав на запись в память.</string>
     <string name="title_activity_edit_name">Введите имя</string>
-    <string name="mark_done">Отметить сделанное</string>
+    <string name="add_materials">Материалы</string>
+    <string name="share">Поделиться</string>
+    <string name="view">Просмотреть</string>
+    <string name="mark_done">Выполненное</string>
     <string name="title_activity_edit_room">Редактор комнаты</string>
     <string name="Sample_Text">Sample Text</string>
     <string name="project_name">Название проекта</string>
     <string name="edit_room">Изменить помещение</string>
     <string name="want_to_discard_changes">Если вы вернётесь, то потеряете все внесённые изменения.</string>
     <string name="want_to_go_back">Уверены, что хотите вернуться?</string>
-    <string name="choose_new_works">Изменить список работ</string>
+    <string name="choose_new_works">Работы</string>
     <string name="next_button">Далее</string>
     <string name="title_activity_choose_works">Выберите типы работ</string>
     <string name="new_material">Добавить тип работ</string>

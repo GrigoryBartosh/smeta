@@ -14,14 +14,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout"
+        android:layout_alignParentRight="@+id/linearLayout2"
+        android:layout_alignParentEnd="@+id/linearLayout2"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp">
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="8"
             android:id="@+id/Project_name_field"
             android:singleLine="true"
             android:imeOptions="actionDone"/>
@@ -37,7 +38,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -45,24 +46,26 @@
         android:layout_marginBottom="16dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:orientation="vertical"
                 android:id="@+id/button_new_works"
                 android:gravity="center_horizontal"
-                android:background="@android:drawable/btn_default">
+                android:background="@android:drawable/btn_default"
+                android:layout_weight="1">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:src="@drawable/pencil"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_new_works"
                     android:id="@+id/edit_name_choose_works_text"/>
@@ -71,26 +74,28 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
-                android:id="@+id/button_save"
+                android:id="@+id/button_add_material"
                 android:gravity="center_horizontal"
                 android:background="@android:drawable/btn_default">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_menu_help"/>
+                    android:src="@android:drawable/ic_menu_preferences"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/choose_new_works"
+                    android:text="@string/add_materials"
                     android:id="@+id/save_text"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:background="@android:drawable/btn_default"
                 android:gravity="center_horizontal"
@@ -101,23 +106,24 @@
                     android:layout_height="48dp"
                     android:src="@drawable/checkmark"/>
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mark_done"
-                    android:id="@+id/add_materials"
                     android:textAlignment="center"/>
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:id="@+id/button_share"
                 android:gravity="center_horizontal"
@@ -128,15 +134,16 @@
                     android:src="@android:drawable/ic_menu_share"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/choose_new_works"
+                    android:text="@string/share"
                     android:id="@+id/button_share_text"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:id="@+id/button_view"
                 android:gravity="center_horizontal"
@@ -147,20 +154,21 @@
                     android:src="@android:drawable/ic_menu_view"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/choose_new_works"
+                    android:text="@string/view"
                     android:id="@+id/button_view_text"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:background="@android:drawable/btn_default"
                 android:gravity="center_horizontal"
-                android:id="@id/button_save">
+                android:id="@+id/button_save">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
@@ -178,15 +186,13 @@
 
     </LinearLayout>
 
-
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="24dp"
         android:orientation="vertical"
         android:id="@+id/linearLayout2">
