@@ -39,6 +39,10 @@ public class CompleteActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.complete_listView);
         mTextEmpty = (TextView) findViewById(R.id.complete_text_empty);
 
+        list_work_type = new ArrayList<WorkTypeClass>();
+        list_work = new ArrayList<ArrayList <WorkClass>>();
+        open = new ArrayList<Boolean>();
+
         Intent intent = getIntent();
         project = (ProjectClass) intent.getSerializableExtra("project");
         for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : project.works.entrySet()) {
