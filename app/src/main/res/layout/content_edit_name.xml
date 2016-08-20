@@ -95,6 +95,7 @@
                 android:background="@android:drawable/btn_default"
                 android:gravity="center_horizontal"
                 android:id="@+id/button_mark_done">
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
