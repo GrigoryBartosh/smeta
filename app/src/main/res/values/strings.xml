@@ -9,6 +9,7 @@
     </string-array>
     <string name="app_has_no_permission_to_write">У приложения нет прав на запись в память.</string>
     <string name="title_activity_edit_name">Введите имя</string>
+    <string name="mark_done">Отметить сделанное</string>
     <string name="title_activity_edit_room">Редактор комнаты</string>
     <string name="Sample_Text">Sample Text</string>
     <string name="project_name">Название проекта</string>

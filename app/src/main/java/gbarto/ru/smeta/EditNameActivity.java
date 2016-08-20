@@ -143,7 +143,7 @@ public class EditNameActivity extends AppCompatActivity {
         adapter = new DBAdapter(this);
         adapter.open();
 
-        Button_Choose_Works = (Button)findViewById(R.id.edit_name_choose_works);
+        //Button_Choose_Works = (Button)findViewById(R.id.edit_name_choose_works);
         mText = (EditText)findViewById(R.id.Project_name_field);
         ChooseRoomText = (TextView) findViewById(R.id.place_text);
         Save_Button = (Button)findViewById(R.id.button_save);

@@ -37,9 +37,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -50,20 +53,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/choose_new_works"
+                android:id="@+id/button_new_works"
                 android:gravity="center_horizontal"
                 android:background="@android:drawable/btn_default">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_share"/>
+                    android:src="@drawable/pencil"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_new_works"
-                    android:id="@+id/edit_name_choose_works_text"
-                    android:background="null"/>
+                    android:id="@+id/edit_name_choose_works_text"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -76,7 +79,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:src="@drawable/question_mark"/>
+                    android:src="@drawable/ic_menu_help"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -90,20 +93,87 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@android:drawable/btn_default"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:id="@+id/button_mark_done">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:src="@drawable/checked_checkbox"/>
+                    android:src="@android:drawable/checkbox_on_background"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/save"
+                    android:text="@string/mark_done"
                     android:id="@+id/add_materials"
                     android:textAlignment="center"/>
             </LinearLayout>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/button_share"
+                android:gravity="center_horizontal"
+                android:background="@android:drawable/btn_default">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:src="@android:drawable/ic_menu_share"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_new_works"
+                    android:id="@+id/button_share_text"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/button_view"
+                android:gravity="center_horizontal"
+                android:background="@android:drawable/btn_default">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:src="@android:drawable/ic_menu_view"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/choose_new_works"
+                    android:id="@+id/button_view_text"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@android:drawable/btn_default"
+                android:gravity="center_horizontal"
+                android:id="@id/button_save">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_menu_save"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
