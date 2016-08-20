@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,17 +7,21 @@
 
     <TextView
         android:id="@+id/complete_work_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="10"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/complete_work_checkBox"
         android:text="Work name"/>
 
     <CheckBox
         android:id="@+id/complete_work_checkBox"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:text=""
         android:checked="false"/>
 
-</RelativeLayout>
+</LinearLayout>
