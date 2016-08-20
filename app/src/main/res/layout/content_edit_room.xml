@@ -131,7 +131,7 @@
                 android:layout_width="96dp"
                 android:layout_height="96dp"
                 android:id="@+id/other_room_button"
-                android:src="@android:drawable/ic_menu_help"
+                android:src="@drawable/ic_menu_help"
                 android:layout_gravity="center"
                 android:scaleType="fitXY"/>
 

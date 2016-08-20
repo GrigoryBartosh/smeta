@@ -11,9 +11,9 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class EditNameActivity extends AppCompatActivity {
 
-    Button Button_Choose_Works;
-    Button Save_Button;
+    LinearLayout Button_Choose_Works;
+    LinearLayout Save_Button;
     EditText mText;
     int countreturned = 0;
     TextView Summary;
@@ -143,10 +143,9 @@ public class EditNameActivity extends AppCompatActivity {
         adapter = new DBAdapter(this);
         adapter.open();
 
-        //Button_Choose_Works = (Button)findViewById(R.id.edit_name_choose_works);
         mText = (EditText)findViewById(R.id.Project_name_field);
         ChooseRoomText = (TextView) findViewById(R.id.place_text);
-        Save_Button = (Button)findViewById(R.id.button_save);
+        Save_Button = (LinearLayout)findViewById(R.id.button_save);
         Save_Button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -181,7 +180,6 @@ public class EditNameActivity extends AppCompatActivity {
         Summary = (TextView)findViewById(R.id.project_summary);
         if (getIntent().getSerializableExtra("Project") != null) {
             Project = (ProjectClass) getIntent().getSerializableExtra("Project");
-            UpdateRoom();
             projectname = Project.name;
             mText.setText(Project.name);
         }
@@ -192,9 +190,11 @@ public class EditNameActivity extends AppCompatActivity {
                 Project.place = getString(R.string.room_other_room);
             }
         }
+        UpdateRoom();
         Refresh();
         keeper = mText.getText().toString();
 
+        Button_Choose_Works = (LinearLayout)findViewById(R.id.button_new_works);
         Button_Choose_Works.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,7 +223,6 @@ public class EditNameActivity extends AppCompatActivity {
                 else if (charSequence.length() > i && charSequence.charAt(i) == '\n') {
                     mText.setText(keeper);
                     mText.setSelection(keeper.length());
-                    //Button_Choose_Works.performClick();
                 }
                 else if (charSequence.length() > 100) {
                     mText.setText(keeper);
@@ -277,7 +276,7 @@ public class EditNameActivity extends AppCompatActivity {
         else if (Project.place.equals(getString(R.string.room_bedroom)))
             imageButton.setImageResource(R.drawable.bedroom);
         else if (Project.place.equals(getString(R.string.room_other_room)))
-            imageButton.setImageResource(android.R.drawable.ic_menu_help);
+            imageButton.setImageResource(R.drawable.ic_menu_help);
     }
 
     @Override

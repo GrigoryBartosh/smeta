@@ -38,6 +38,7 @@ public class EditRoomActivity extends AppCompatActivity {
             else if (Project.place.equals(getString(R.string.room_other_room)))
                 otherroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
         }
+
         kitchenButton.setOnClickListener(new View.OnClickListener()
         {
             @Override

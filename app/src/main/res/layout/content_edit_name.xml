@@ -96,10 +96,10 @@
                 android:gravity="center_horizontal"
                 android:id="@+id/button_mark_done">
 
-                <ImageView
+                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:src="@android:drawable/checkbox_on_background"/>
+                    android:src="@drawable/checkmark"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
