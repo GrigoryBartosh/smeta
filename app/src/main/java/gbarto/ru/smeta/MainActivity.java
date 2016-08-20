@@ -3,6 +3,8 @@ package gbarto.ru.smeta;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -60,6 +62,7 @@ public class MainActivity   extends AppCompatActivity
 
         fileManager = new FileManager(MainActivity.this);
 
+
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -81,6 +84,19 @@ public class MainActivity   extends AppCompatActivity
                 return false;
             }
         });
+
+        int color = getResources().getColor(R.color.ic_menu);
+        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+        Drawable d;
+        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
     }
 
     @Override
@@ -171,7 +187,9 @@ public class MainActivity   extends AppCompatActivity
 
         list_project = new ArrayList<ProjectClass>();
         for (int i = 0; i < list_name.size(); i++) {
-            list_project.add(fileManager.LoadFromFile(list_name.get(i)));
+            ProjectClass p = fileManager.LoadFromFile(list_name.get(i));
+            if (p != null)
+                list_project.add(p);
         }
     }
 
