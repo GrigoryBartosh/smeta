@@ -30,6 +30,7 @@ public class EditNameActivity extends AppCompatActivity {
     LinearLayout Share_Button;
     LinearLayout Completed_Button;
     FileManager fileManager;
+    String lastProjectname = "";
     EditText mText;
     int countreturned = 0;
     TextView Summary;
@@ -111,14 +112,14 @@ public class EditNameActivity extends AppCompatActivity {
         myDialogFragment.show(manager, "dialog");
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    void Save()
     {
         String checker = mText.getText().toString();
         final String message = check(checker);
         if (message.equals("OK")) {
-            fileManager.Delete(Project.name);
+            fileManager.Delete(lastProjectname);
             Project.name = checker;
+            lastProjectname = checker;
             FileManager fileManager = new FileManager(EditNameActivity.this);
             fileManager.Save(Project);
             countreturned = 0;
@@ -128,6 +129,12 @@ public class EditNameActivity extends AppCompatActivity {
         {
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Save();
         return super.onOptionsItemSelected(item);
     }
 
@@ -265,19 +272,7 @@ public class EditNameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                String checker = mText.getText().toString();
-                final String message = check(checker);
-                if (message.equals("OK")) {
-                    Project.name = checker;
-                    FileManager fileManager = new FileManager(EditNameActivity.this);
-                    fileManager.Save(Project);
-                    countreturned = 0;
-                    Toast.makeText(getApplicationContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                }
+                Save();
             }
         });
         imageButton = (ImageButton) findViewById(R.id.choose_room_imageButton);
