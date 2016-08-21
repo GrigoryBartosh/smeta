@@ -16,7 +16,6 @@ public class EditRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Project = (ProjectClass)getIntent().getSerializableExtra("Project");
-        setTitle(Project.name);
         setContentView(R.layout.activity_edit_room);
 
 
