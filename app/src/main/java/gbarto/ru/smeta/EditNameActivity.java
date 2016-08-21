@@ -275,7 +275,8 @@ public class EditNameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Save();
+                if (Save())
+                onBackPressed();
             }
         });
         imageButton = (ImageButton) findViewById(R.id.choose_room_imageButton);

@@ -2,6 +2,8 @@ package gbarto.ru.smeta;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
@@ -34,10 +36,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -471,7 +475,7 @@ public class FileManager
             document.add(new Paragraph("\n"));
 
             float pad = 30;
-            int header = 0;
+            int header = 4;
             if (settingsManager.havePhoto()) {
                 Image image = Image.getInstance(settingsManager.getPhotoPath());
                 header = 4;
@@ -489,6 +493,19 @@ public class FileManager
             }
             header = Math.max(header, MakeHeader(writer, document, settingsManager, pad));
             table.setSpacingBefore(header * 20);
+            PdfContentByte canvas = writer.getDirectContentUnder();
+            {
+                // get input stream
+                InputStream ims = context.getAssets().open("logo_text_left.png");
+                Bitmap bmp = BitmapFactory.decodeStream(ims);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 60, stream);
+                Image image = Image.getInstance(stream.toByteArray());
+                image.scalePercent(110f / image.getHeight() * 100f);
+                image.setAbsolutePosition(document.right() - image.getScaledWidth() + 5, document.top() - 90);
+                document.add(image);
+                canvas.addImage(image);
+            }
 
 
             String[] Headers = context.getResources().getStringArray(R.array.invoice_table);
