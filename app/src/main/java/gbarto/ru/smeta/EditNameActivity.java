@@ -422,6 +422,13 @@ public class EditNameActivity extends AppCompatActivity {
                 Project.works = ((ProjectClass) data.getSerializableExtra("Project")).works;
                 Refresh();
             }
+        } else if (requestCode == CompletedResult)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                ++countreturned;
+                Project.works = ((ProjectClass) data.getSerializableExtra("Project")).works;
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
