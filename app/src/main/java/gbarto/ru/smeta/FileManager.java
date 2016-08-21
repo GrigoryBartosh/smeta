@@ -374,7 +374,7 @@ public class FileManager
             try {
                 Phrase footer = new Phrase(companyAddress, arial_underlined[12]);
                 ColumnText ct = new ColumnText(cb);
-                ct.setSimpleColumn(footer, document.left() + padding, document.top() - padfromtop - 30, document.left() + padding + 120, document.top() - padfromtop, 15, Element.ALIGN_LEFT);
+                ct.setSimpleColumn(footer, document.left() + padding, document.top() - padfromtop - 45, document.left() + padding + 120, document.top() - padfromtop - 15, 15, Element.ALIGN_LEFT);
                 ct.go();
                 keep = Math.max(keep, padding + 120);
                 ++result;
