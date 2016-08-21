@@ -279,16 +279,6 @@ public class FileManager
         return cell;
     }
 
-    private double round(double x)
-    {
-        return (long)(x * 100 + 0.5) / 100;
-    }
-
-    private float round(float x)
-    {
-        return (long)(x * 100 + 0.5) / 100;
-    }
-
     private PdfPCell RightedText(String text)
     {
         PdfPCell cell = new PdfPCell(new Phrase(text, arial[12]));
@@ -438,7 +428,7 @@ public class FileManager
                         ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
                 }
             }
-        return round(ans);
+        return ans;
     }
 
     public File createPDF(ProjectClass Project)
@@ -530,9 +520,9 @@ public class FileManager
                     table.addCell(LeftedText(Integer.toString(count_works)));
                     table.addCell(LeftedText(work.name));
                     table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring]));
-                    table.addCell(CenteredText(Float.toString(round(work.size))));
-                    table.addCell(CenteredText(Float.toString(round(work.price))));
-                    table.addCell(RightedText(Float.toString(round(work.price * work.size))));
+                    table.addCell(CenteredText(String.format("%.2f", work.size)));
+                    table.addCell(CenteredText(String.format("%.2f", work.price)));
+                    table.addCell(RightedText(String.format("%.2f", work.price * work.size)));
                     double work_total = work.price * work.size;
                     work_cost += work_total * x.getKey().coeff;
                     for (int i = 0; i < work.Materials.size(); ++i) {
@@ -542,18 +532,18 @@ public class FileManager
                         table.addCell(LeftPadded(LeftedText(material.name)));
                         table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
                         if (material.per_object < (1e-8)) {
-                            table.addCell(CenteredText(Float.toString(round(work.size * work.Materials.get(i).second))));
-                            table.addCell(CenteredText(Float.toString(round(material.price))));
+                            table.addCell(CenteredText(String.format("%.2f", work.size * work.Materials.get(i).second)));
+                            table.addCell(CenteredText(String.format("%.2f", material.price)));
                             double wasted = work.size * work.Materials.get(i).second * material.price;
-                            table.addCell(RightedText(Double.toString(round(wasted))));
+                            table.addCell(RightedText(String.format("%.2f", wasted)));
                             work_total += wasted;
                             material_cost += wasted * x.getKey().coeff;
                         } else {
                             int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
                             table.addCell(CenteredText(Integer.toString(amount)));
-                            table.addCell(CenteredText(Float.toString(round(material.price))));
+                            table.addCell(CenteredText(String.format("%.2f", material.price)));
                             double wasted = amount * material.price;
-                            table.addCell(RightedText(Double.toString(round(wasted))));
+                            table.addCell(RightedText(String.format("%.2f", wasted)));
                             work_total += wasted;
                             material_cost += wasted * x.getKey().coeff;
                         }
@@ -563,7 +553,7 @@ public class FileManager
                     table.addCell(Empty());
                     table.addCell(Empty());
                     table.addCell(Empty());
-                    table.addCell(RightedText(Double.toString(round(work_total))));
+                    table.addCell(RightedText(String.format("%.2f", work_total)));
                     work_type_total += work_total;
                 }
                 table.addCell(ColoredEnd(Empty()));
@@ -578,7 +568,7 @@ public class FileManager
                 table.addCell(ColoredEnd(Empty()));
                 table.addCell(ColoredEnd(Empty()));
                 table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(RightedBold(Double.toString(round(work_type_total * x.getKey().coeff)))));
+                table.addCell(ColoredEnd(RightedBold(String.format("%.2f", work_type_total * x.getKey().coeff))));
             }
             for (int i = 0; i < 6; ++i) {
                 PdfPCell cell = Empty();
@@ -590,14 +580,14 @@ public class FileManager
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
-            table.addCell(ColoredSummary(RightedBold(Double.toString(round(work_cost)))));
+            table.addCell(ColoredSummary(RightedBold(String.format("%.2f", work_cost))));
 
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(LeftedBold(context.getString(R.string.pdf_materials_summary))));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
-            table.addCell(ColoredSummary(RightedBold(Double.toString(round(material_cost)))));
+            table.addCell(ColoredSummary(RightedBold(String.format("%.2f", material_cost))));
             for (int i = 0; i < 6; ++i) {
                 PdfPCell cell = Empty();
                 cell.setMinimumHeight(12);
@@ -608,7 +598,7 @@ public class FileManager
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
             table.addCell(ColoredSummary(Empty()));
-            table.addCell(ColoredSummary(RightedBold(Double.toString(round(work_cost + material_cost)))));
+            table.addCell(ColoredSummary(RightedBold(String.format("%.2f", work_cost + material_cost))));
 
             document.add(table);
             adapter.close();
@@ -712,7 +702,7 @@ public class FileManager
     private Cell newCell(Row row, int i, double cellValue, CellStyle style)
     {
         Cell c = row.createCell(i);
-        c.setCellValue(Double .toString(round(cellValue)));
+        c.setCellValue(String.format("%.2f", cellValue));
         c.setCellStyle(style);
         xl_widths[i] = Math.max(xl_widths[i], Double.toString(cellValue).length());
         return c;

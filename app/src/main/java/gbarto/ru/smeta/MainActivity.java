@@ -245,7 +245,7 @@ public class MainActivity   extends AppCompatActivity
 
             mTextName.setText(list_project.get(position).name);
             mTextSummary.setText(list_project.get(position).place);
-            mTextPrice.setText(Double.toString(fileManager.getPrice(list_project.get(position))));
+            mTextPrice.setText(String.format("%.2f", fileManager.getPrice(list_project.get(position))));
 
             View.OnClickListener ocl = new View.OnClickListener() {
                 @Override
