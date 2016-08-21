@@ -290,6 +290,7 @@ public class EditNameActivity extends AppCompatActivity {
         if (getIntent().getSerializableExtra("Project") != null) {
             Project = (ProjectClass) getIntent().getSerializableExtra("Project");
             projectname = Project.name;
+            lastProjectname = projectname;
             mText.setText(Project.name);
         }
         else
