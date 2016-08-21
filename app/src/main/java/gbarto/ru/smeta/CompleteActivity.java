@@ -105,7 +105,7 @@ public class CompleteActivity extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = null;
-            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
+            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_complete_category, parent, false);
 
             TextView mTextName = (TextView) view.findViewById(R.id.complete_category_name);
             ListView mListView = (ListView) view.findViewById(R.id.complete_category_listView);
@@ -114,13 +114,13 @@ public class CompleteActivity extends AppCompatActivity {
             ArrayList<WorkClass> works = list_work.get(position);
 
             mTextName.setText(work_type.name);
-            setListWork(mListView, works);
+            setListWork(mListView, works, position);
 
             return view;
         }
     }
 
-    void setListWork(ListView mListView, ArrayList<WorkClass> list_work) {
+    void setListWork(ListView mListView, ArrayList<WorkClass> list_work, Integer n) {
         ArrayList<HashMap<String,Object>> mCatList = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> hm;
 
@@ -133,8 +133,12 @@ public class CompleteActivity extends AppCompatActivity {
                 mCatList, R.layout.list_item_complete_category,
                 new String[]{},
                 new int[]{});
+        adapter.setN(n);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mItemListenerWork);
+        //View c = mListView.getChildAt(0);
+        //mListView.setDividerHeight(c.getHeight() * list_work.size());
+        mListView.setDividerHeight(1000);
     }
 
     AdapterView.OnItemClickListener mItemListenerWork = new AdapterView.OnItemClickListener(){
@@ -158,7 +162,7 @@ public class CompleteActivity extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = null;
-            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
+            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_complete_work, parent, false);
 
             TextView mTextName = (TextView) view.findViewById(R.id.complete_work_name);
             CheckBox mCheckBox = (CheckBox) view.findViewById(R.id.complete_work_checkBox);
