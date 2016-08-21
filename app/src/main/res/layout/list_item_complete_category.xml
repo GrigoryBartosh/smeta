@@ -3,8 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="6dp"
-    android:paddingBottom="0dp"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/layout_background"
         android:elevation="5dp"
-        android:padding="5dp"
-        android:animateLayoutChanges="true">
+        android:padding="5dp">
 
         <RelativeLayout
+            android:id="@+id/complete_category_relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -35,7 +35,6 @@
                 android:id="@+id/complete_category_imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_arrow_down"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
@@ -43,15 +42,15 @@
 
         </RelativeLayout>
 
-        <ListView
-            android:id="@+id/complete_category_listView"
+        <LinearLayout
+            android:id="@+id/complete_category_linerLayout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:paddingRight="13dp"
-            android:paddingLeft="35dp"
-            android:scrollbars="none">
-        </ListView>
+            android:paddingLeft="35dp">
+        </LinearLayout>
 
     </LinearLayout>
 

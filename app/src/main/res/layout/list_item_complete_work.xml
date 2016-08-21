@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/complete_work_name"
-        android:layout_width="0dp"
-        android:layout_weight="10"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/complete_work_checkBox"
-        android:text="Work name"/>
+        android:gravity="center_vertical">
 
-    <CheckBox
-        android:id="@+id/complete_work_checkBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text=""
-        android:checked="false"/>
+        <TextView
+            android:id="@+id/complete_work_name"
+            android:layout_width="0dp"
+            android:layout_weight="10"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/complete_work_checkBox"
+            android:text="Work name"
+            android:textColor="@color/black"/>
+
+        <CheckBox
+            android:id="@+id/complete_work_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text=""
+            android:checked="false"
+            android:buttonTint="@color/blue"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/complete_work_line"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#55646464" />
 
 </LinearLayout>
