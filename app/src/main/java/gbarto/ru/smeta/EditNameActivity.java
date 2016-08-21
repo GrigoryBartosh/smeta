@@ -135,6 +135,7 @@ public class EditNameActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item)
     {
         Save();
+        finish();
         return super.onOptionsItemSelected(item);
     }
 
