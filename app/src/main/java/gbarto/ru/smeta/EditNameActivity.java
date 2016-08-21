@@ -117,6 +117,7 @@ public class EditNameActivity extends AppCompatActivity {
         String checker = mText.getText().toString();
         final String message = check(checker);
         if (message.equals("OK")) {
+            fileManager.Delete(Project.name);
             Project.name = checker;
             FileManager fileManager = new FileManager(EditNameActivity.this);
             fileManager.Save(Project);
