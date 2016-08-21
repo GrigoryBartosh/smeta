@@ -371,10 +371,15 @@ public class FileManager
         }
         if (!companyAddress.equals(""))
         {
-            ++result;
-            Phrase footer = new Phrase(companyAddress, arial_underlined[12]);
-            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,footer,document.left() + padding,document.top() - padfromtop, 0);
-            keep = Math.max(keep, padding + companyAddress.length() * size);
+            try {
+                Phrase footer = new Phrase(companyAddress, arial_underlined[12]);
+                ColumnText ct = new ColumnText(cb);
+                ct.setSimpleColumn(footer, document.left() + padding, document.top() - padfromtop - 30, document.left() + padding + 120, document.top() - padfromtop, 15, Element.ALIGN_LEFT);
+                ct.go();
+                keep = Math.max(keep, padding + 120);
+                ++result;
+            } catch (Exception e) {
+            }
         }
 
         padding = keep;
@@ -501,8 +506,8 @@ public class FileManager
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 60, stream);
                 Image image = Image.getInstance(stream.toByteArray());
-                image.scalePercent(110f / image.getHeight() * 100f);
-                image.setAbsolutePosition(document.right() - image.getScaledWidth() + 5, document.top() - 90);
+                image.scalePercent(50f / image.getHeight() * 100f);
+                image.setAbsolutePosition(document.right() - image.getScaledWidth() + 20, document.top() - 25);
                 document.add(image);
                 canvas.addImage(image);
             }
