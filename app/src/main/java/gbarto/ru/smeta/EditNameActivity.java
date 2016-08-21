@@ -136,8 +136,8 @@ public class EditNameActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Save();
-        onBackPressed();
+        if (Save())
+            onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
