@@ -112,7 +112,7 @@ public class EditNameActivity extends AppCompatActivity {
         myDialogFragment.show(manager, "dialog");
     }
 
-    void Save()
+    boolean Save()
     {
         String checker = mText.getText().toString();
         final String message = check(checker);
@@ -124,10 +124,12 @@ public class EditNameActivity extends AppCompatActivity {
             fileManager.Save(Project);
             countreturned = 0;
             Toast.makeText(getApplicationContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
+            return true;
         }
         else
         {
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
@@ -135,7 +137,7 @@ public class EditNameActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item)
     {
         Save();
-        finish();
+        onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
