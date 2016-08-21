@@ -217,7 +217,7 @@ public class MainActivity   extends AppCompatActivity
     AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            ProjectView(i);
+            ProjectEdit(i);
         }
     };
 
@@ -240,55 +240,10 @@ public class MainActivity   extends AppCompatActivity
             TextView mTextName = (TextView) view.findViewById(R.id.text);
             TextView mTextSummary = (TextView) view.findViewById(R.id.summary);
             TextView mTextPrice = (TextView) view.findViewById(R.id.price);
-            ImageView mImageView = (ImageView) view.findViewById(R.id.imageView_menu);
-            ImageView mImageViewClear = (ImageView) view.findViewById(R.id.imageView_clear);
 
             mTextName.setText(list_project.get(position).name);
             mTextSummary.setText(list_project.get(position).place);
             mTextPrice.setText(Double.toString(fileManager.getPrice(list_project.get(position))));
-
-            View.OnClickListener ocl = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    PopupMenu popup = new PopupMenu(MainActivity.this, view);
-                    popup.getMenuInflater().inflate(R.menu.popup_menu_main, popup.getMenu());
-                    popup.show();
-
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            int id = item.getItemId();
-                            boolean res = false;
-
-                            switch (id)
-                            {
-                                case R.id.main_popup_menu_view:
-                                    ProjectView(position);
-                                    res = true;
-                                    break;
-                                case R.id.main_popup_menu_edit:
-                                    ProjectEdit(position);
-                                    res = true;
-                                    break;
-                                case R.id.main_popup_menu_share:
-                                    ProjectShare(position);
-                                    res = true;
-                                    break;
-                                case R.id.main_popup_menu_delete:
-                                    ProjectDelete(position);
-                                    res = true;
-                                    break;
-                            }
-
-                            return  res;
-                        }
-                    });
-                }
-            };
-
-            mImageView.setOnClickListener(ocl);
-            mImageViewClear.setOnClickListener(ocl);
-            mTextPrice.setOnClickListener(ocl);
 
             return view;
         }

@@ -22,15 +22,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"/>
 
-        <ImageView
-            android:id="@+id/imageView_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_more"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/textView" />
-
         <TextView
             android:id="@+id/summary"
             android:layout_width="wrap_content"
@@ -55,17 +46,6 @@
             android:text="price"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/text"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView_clear"
-            android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/textView"
-            android:layout_alignStart="@+id/textView"
-            android:layout_above="@+id/textView"
-            android:layout_alignRight="@+id/price"
-            android:layout_alignEnd="@+id/price" />
 
     </RelativeLayout>
 </LinearLayout>

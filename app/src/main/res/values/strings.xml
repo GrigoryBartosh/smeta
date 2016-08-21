@@ -24,11 +24,13 @@
     <string name="current_coeff">Текущий коэффициент: </string>
     <string name="title_activity_choose_works">Выберите тип</string>
     <string name="new_material">Добавить тип работ</string>
-    <string name="title_activity_list_overview">ListOverview</string>
     <string name="new_type">Новый тип</string>
     <string name="coeff">Коэффициент</string>
     <string name="such_project_already_exists">Проект с таким названием уже существует</string>
     <string name="title_activity_list_overview_new_material">ListOverviewNewMaterial</string>
+
+    <string name="title_activity_list_overview">ListOverview</string>
+    <string name="list_overview_empty">Список работ данного типа пуст. Нажмите на ПЛЮС, чтобы добавить работу.</string>
 
     <string name="app_name">Смарт Смета</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -37,15 +39,11 @@
     <string name="main_alert_delete_summary">Вы уверены, что хотите удалить этот проект? Вся его информация будет удалена.</string>
     <string name="main_about_text">
         Чтобы удалить проект из списка
-        нажмите и удерживайте.\n
+        нажмите на проект и удерживайте.\n
         \n
         Для добавления нового проекта, нажмите на ПЛЮС.
     </string>
-    <string name="main_empty_list">У вас нет проектов. Нажмите ПЛЮС, чтобы Создать проект.</string>
-    <string name="main_popup_menu_view">Просмотреть</string>
-    <string name="main_popup_menu_edit">Править</string>
-    <string name="main_popup_menu_shear">Поделиться</string>
-    <string name="main_popup_menu_delete">Удалить</string>
+    <string name="main_empty_list">У вас нет проектов. Нажмите на ПЛЮС, чтобы создать проект.</string>
     <string name="main_view_alert_choose">Выберите тип файла для просмотра</string>
     <string name="main_share_alert_choose">Выберите тип файла для отправки</string>
     <string-array name="main_list">
@@ -54,9 +52,8 @@
     </string-array>
 
     <string name="nav_new_project">Новый проект</string>
-    <string name="nav_price_work">Мои расценки</string>
-    <string name="nav_price_material">Мои цены на товар</string>
-    <string name="nav_menu_title">Приложение</string>
+    <string name="nav_price_work">Мои цены</string>
+    <string name="nav_price_material">материалы</string>
     <string name="nav_menu_settings">Настройки</string>
     <string name="nav_menu_add">Дополнительно</string>
     <string name="nav_menu_abut">О программе</string>
@@ -64,7 +61,7 @@
     <string name="title_activity_price_work_category">Мои типы работ</string>
     <string name="price_work_category_about_text">
         Чтобы удалить тип работ из списка
-        нажмите и удерживайте.\n
+        нажмите на тип работ и удерживайте.\n
         \n
         Для добавления нового типа работ
         в список, нажмите на ПЛЮС.
@@ -75,17 +72,17 @@
         \n
         Этот тип работ и все его работы будут удалены из всех проектов, где они используются.
     </string>
-    <string name="price_work_category_empty_list">Список типов работ пуст. Нажмите ПЛЮС, чтобы добавить новый тип работ.</string>
+    <string name="price_work_category_empty_list">Список типов работ пуст. Нажмите на ПЛЮС, чтобы добавить новый тип работ.</string>
 
-    <string name="title_popup_name_category">Введите название группы работ.</string>
+    <string name="title_popup_name_category">Введите название типа работ.</string>
     <string name="popup_name_category_toast_need_name">Пожалуйста, введите название типа работ.</string>
-    <string name="popup_name_category_toast_bad_symbol">Название категории работ не должно содержать символов:</string>
+    <string name="popup_name_category_toast_bad_symbol">Название типа работ не должно содержать символов:</string>
     <string name="popup_name_category_toast_equal_name">Такое название уже существует.</string>
 
-    <string name="title_activity_price_work">PriceWorkActivity</string>
+    <string name="title_activity_price_work"></string>
     <string name="price_work_about_text">
         Чтобы удалить работу из списка
-        нажмите и удерживайте.\n
+        нажмите на работу и удерживайте.\n
         \n
         Для добавления новой работы
         в список, нажмите на ПЛЮС.
@@ -107,7 +104,7 @@
     <string name="work_about_text">
         Чтобы удалить материал из списка
         необходимых материалов,
-        нажмите и удерживайте.\n
+        нажмите на материал и удерживайте.\n
         \n
         Для добавления нового материала,
         в список необходимых

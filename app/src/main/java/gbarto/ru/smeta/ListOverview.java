@@ -14,11 +14,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ListOverview extends AppCompatActivity
 {
+    private TextView mTextEmpty;
 
     ArrayList<WorkClass> WorkSet = new ArrayList<>();
     DBAdapter adapter = new DBAdapter(this);
@@ -36,6 +39,9 @@ public class ListOverview extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_overview);
+
+        mTextEmpty = (TextView) findViewById(R.id.list_overview_text_empty);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.list_overview_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -178,6 +184,9 @@ public class ListOverview extends AppCompatActivity
                     }
                 });
         l.setAdapter(adapt);
+
+        if (adapt.getCount() == 0) mTextEmpty.setText(getString(R.string.list_overview_empty));
+        else mTextEmpty.setText("");
     }
 
     private class MyListAdapter extends ArrayAdapter
@@ -229,5 +238,8 @@ public class ListOverview extends AppCompatActivity
                 WorkSet.add(x);
         }
         adapt.notifyDataSetChanged();
+
+        if (adapt.getCount() == 0) mTextEmpty.setText(getString(R.string.list_overview_empty));
+        else mTextEmpty.setText("");
     }
 }
