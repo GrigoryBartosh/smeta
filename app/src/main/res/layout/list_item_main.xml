@@ -23,14 +23,6 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
-            android:id="@+id/summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Summary"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/text"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total"

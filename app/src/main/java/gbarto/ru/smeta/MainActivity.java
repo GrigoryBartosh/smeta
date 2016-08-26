@@ -238,11 +238,9 @@ public class MainActivity   extends AppCompatActivity
             if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
 
             TextView mTextName = (TextView) view.findViewById(R.id.text);
-            TextView mTextSummary = (TextView) view.findViewById(R.id.summary);
             TextView mTextPrice = (TextView) view.findViewById(R.id.price);
 
             mTextName.setText(list_project.get(position).name);
-            mTextSummary.setText(list_project.get(position).place);
             mTextPrice.setText(String.format("%.2f", fileManager.getPrice(list_project.get(position))));
 
             return view;
