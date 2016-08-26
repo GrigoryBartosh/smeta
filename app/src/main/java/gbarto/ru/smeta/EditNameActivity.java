@@ -171,6 +171,12 @@ public class EditNameActivity extends AppCompatActivity {
         d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
         d.setColorFilter(color, mMode);
         d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_view);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_share);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
     }
 
     private String check(String s)
