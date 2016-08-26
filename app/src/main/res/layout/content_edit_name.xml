@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="gbarto.ru.smeta.EditNameActivity"
     tools:showIn="@layout/activity_edit_name">
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearLayout"
-        android:layout_alignParentRight="@+id/linearLayout2"
-        android:layout_alignParentEnd="@+id/linearLayout2"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/Project_name_field"
+            android:isScrollContainer="true"
+            android:minHeight="20dp"
+            android:inputType="textMultiLine"
             android:singleLine="true"
             android:imeOptions="actionDone"/>
 
@@ -37,201 +41,23 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                android:id="@+id/button_new_works"
-                android:gravity="center_horizontal"
-                android:background="@android:drawable/btn_default"
-                android:layout_weight="1">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:src="@drawable/pencil"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/choose_new_works"
-                    android:id="@+id/edit_name_choose_works_text"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:id="@+id/button_add_material"
-                android:gravity="center_horizontal"
-                android:background="@android:drawable/btn_default">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_preferences"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_materials"
-                    android:id="@+id/save_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:background="@android:drawable/btn_default"
-                android:gravity="center_horizontal"
-                android:id="@+id/button_mark_done">
-
-                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:src="@drawable/checkmark"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mark_done"
-                    android:textAlignment="center"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:id="@+id/button_share"
-                android:gravity="center_horizontal"
-                android:background="@android:drawable/btn_default">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_share"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/share"
-                    android:id="@+id/button_share_text"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:id="@+id/button_view"
-                android:gravity="center_horizontal"
-                android:background="@android:drawable/btn_default">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:src="@android:drawable/ic_menu_view"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/view"
-                    android:id="@+id/button_view_text"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:background="@android:drawable/btn_default"
-                android:gravity="center_horizontal"
-                android:id="@+id/button_save">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_menu_save"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/save"
-                    android:layout_gravity="center_horizontal"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="24dp"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout2">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/edit_room"
-            android:id="@+id/choose_room_text"
-            android:layout_gravity="center_horizontal"/>
-
-        <ImageButton
-            android:layout_width="144dp"
-            android:layout_height="144dp"
-            android:scaleType="fitCenter"
-            android:id="@+id/choose_room_imageButton"
-            android:src="@android:drawable/ic_menu_help"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/room_other_room"
-            android:id="@+id/place_text"
-            android:layout_gravity="center_horizontal"/>
-
-    </LinearLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/Sample_Text"
         android:id="@+id/project_summary"
-        android:layout_alignBottom="@+id/linearLayout2"
-        android:layout_alignLeft="@+id/linearLayout"
-        android:layout_alignStart="@+id/linearLayout"/>
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"/>
 
-</RelativeLayout>
+    <ListView
+        android:id="@+id/edit_name_roomlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:longClickable="true"
+        android:clickable="true"
+        android:divider="@null">
+    </ListView>
+
+</LinearLayout>

@@ -5,9 +5,16 @@
       tools:context=".EditNameActivity">
     <item
         android:title=""
-        android:id="@+id/menu_save"
+        android:id="@+id/menu_edit_name_view"
         android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@android:drawable/ic_menu_view"
+        app:showAsAction="always"/>
+
+    <item
+        android:title=""
+        android:id="@+id/menu_edit_name_share"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_share"
         app:showAsAction="always"/>
 
 </menu>

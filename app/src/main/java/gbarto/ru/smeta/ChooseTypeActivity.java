@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -41,7 +40,6 @@ public class ChooseTypeActivity extends AppCompatActivity {
     private static final int GETTING_NEW_MATERIAL = 1488;
     ProjectClass Project;
     WorkTypeClass tmp2;
-    int countreturned = 0;
     TreeSet<WorkTypeClass> incompleteTypes = new TreeSet<>();
 
     @Override
@@ -59,7 +57,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
             {
                 WorkTypeClass workTypeClass = WorkSet.get(editingid);
                 workTypeClass.coeff = i * 0.1;
-                if (!Project.works.containsKey(workTypeClass))
+                if (!Project.works.get(Project.place).second.containsKey(workTypeClass))
                     Project.put(workTypeClass, new ArrayList<WorkClass>());
                 else {
                     ArrayList<WorkClass> works = Project.get(workTypeClass);
@@ -91,31 +89,11 @@ public class ChooseTypeActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
-                if (countreturned > 0) {
-                    FragmentManager manager = getSupportFragmentManager();
-                    MyDialogFragment myDialogFragment = new MyDialogFragment();
-                    myDialogFragment.Message = getString(R.string.want_to_discard_changes);
-                    myDialogFragment.Title = getString(R.string.want_to_go_back);
-                    myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
-                    myDialogFragment.NegativeButtonTitle = getString(R.string.no);
-                    myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            Intent temp = new Intent();
-                            setResult(RESULT_CANCELED, temp);
-                            finish();
-                        }
-                    };
-                    myDialogFragment.show(manager, "dialog");
-                }
-                else
-                {
-                    Intent temp = new Intent();
-                    setResult(RESULT_CANCELED, temp);
-                    finish();
-                }
+                Intent x = new Intent();
+                x.putExtra("Project", Project);
+                x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                setResult(RESULT_OK, x);
+                finish();
             }
         });
         adapter.open();
@@ -168,16 +146,12 @@ public class ChooseTypeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if (item.getItemId() == R.id.menu_choose_types_done) {
-            if (incompleteTypes.size() != 0)
-                Toast.makeText(getApplicationContext(), getString(R.string.makeSureAllTypesAreComplete), Toast.LENGTH_SHORT).show();
-            else {
-                Intent x = new Intent();
-                x.putExtra("Project", Project);
-                x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                setResult(RESULT_OK, x);
-                finish();
-                return super.onOptionsItemSelected(item);
-            }
+            Intent x = new Intent();
+            x.putExtra("Project", Project);
+            x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            setResult(RESULT_OK, x);
+            finish();
+            return super.onOptionsItemSelected(item);
         } else if (item.getItemId() == R.id.menu_choose_types_coeff) {
             if (userIsEditingNow) {
                 linearLayout.removeView(seekBar);
@@ -206,31 +180,23 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        if (countreturned > 0) {
-            FragmentManager manager = getSupportFragmentManager();
-            MyDialogFragment myDialogFragment = new MyDialogFragment();
-            myDialogFragment.Message = getString(R.string.want_to_discard_changes);
-            myDialogFragment.Title = getString(R.string.want_to_go_back);
-            myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
-            myDialogFragment.NegativeButtonTitle = getString(R.string.no);
-            myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    Intent temp = new Intent();
-                    setResult(RESULT_CANCELED, temp);
-                    finish();
-                }
-            };
-            myDialogFragment.show(manager, "dialog");
-        }
-        else
+        FragmentManager manager = getSupportFragmentManager();
+        MyDialogFragment myDialogFragment = new MyDialogFragment();
+        myDialogFragment.Message = getString(R.string.want_to_discard_changes);
+        myDialogFragment.Title = getString(R.string.want_to_go_back);
+        myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
+        myDialogFragment.NegativeButtonTitle = getString(R.string.no);
+        myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
         {
-            Intent temp = new Intent();
-            setResult(RESULT_CANCELED, temp);
-            finish();
-        }
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                Intent temp = new Intent();
+                setResult(RESULT_CANCELED, temp);
+                finish();
+            }
+        };
+        myDialogFragment.show(manager, "dialog");
     }
 
     private void default_values()
@@ -240,17 +206,17 @@ public class ChooseTypeActivity extends AppCompatActivity {
         for (int i = 0; i < temp.length; ++i)
             all.add((WorkTypeClass)temp[i]);
         ArrayList <WorkTypeClass> deleting = new ArrayList<>();
-        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
+        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(Project.place).second.entrySet()) {
             WorkTypeClass x1 = new WorkTypeClass(x.getKey());
             if (!all.contains(x1))
                 deleting.add(x1);
             WorkSet.add(x1);
         }
         for (WorkTypeClass x : deleting)
-                Project.works.remove(x);
+                Project.works.get(Project.place).second.remove(x);
         //Arrays.sort(temp);
         for (DBObject x : temp)
-            if (!Project.works.containsKey(x))
+            if (!Project.contains((WorkTypeClass)x))
                 WorkSet.add((WorkTypeClass) x);
     }
 
@@ -322,7 +288,6 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        ++countreturned;
         ArrayList<WorkClass> tmp = (ArrayList<WorkClass>)data.getSerializableExtra("WorkSet");
         Project.put(tmp2, tmp);
         adapt.notifyDataSetChanged();

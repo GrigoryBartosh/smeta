@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Noobgam on 16.08.2016.
@@ -77,7 +78,6 @@ public class FileManager
         }
     }
 
-
     public void Save(ProjectClass Project)
     {
         try {
@@ -86,13 +86,16 @@ public class FileManager
             FileWriter fileWriter = new FileWriter(path);
             BufferedWriter printer = new BufferedWriter(fileWriter);
             printer.append("//This is automatically generated file, do not edit on your own.\n");
-            printer.append("place&" + Project.place + '\n');
-            for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
-                WorkTypeClass x1 = new WorkTypeClass(x.getKey());
-                printer.append("Object&" + x1.toString() + '\n');
-                ArrayList <WorkClass> tmp = new ArrayList<>();
-                for (WorkClass y : x.getValue())
-                    printer.append("Thing&" + y.toString() + '\n');
+            for (int room = 0; room < Project.works.size(); ++room)
+            {
+                printer.append("place&" + Project.works.get(room).first + '\n');
+                for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet()) {
+                    WorkTypeClass x1 = new WorkTypeClass(x.getKey());
+                    printer.append("Object&" + x1.toString() + '\n');
+                    ArrayList<WorkClass> tmp = new ArrayList<>();
+                    for (WorkClass y : x.getValue())
+                        printer.append("Thing&" + y.toString() + '\n');
+                }
             }
             printer.append("_END_OF_FILE_");
             printer.close();
@@ -207,9 +210,10 @@ public class FileManager
                 if (s.substring(0, 2).equals("//"))
                     continue;
                 String tmp[] = s.split("&", 2);
-                if (tmp[0].equals("place"))
-                    Project.place = tmp[1];
-                else {
+                if (tmp[0].equals("place")) {
+                    Project.place = Project.works.size();
+                    Project.works.add(new Pair(tmp[1], new TreeMap<>()));
+                } else {
                     if (tmp[0].equals("Object")) //then this is new KEY, otherwise whole string is VALUE
                     {
                         String[] crap = tmp[1].split("&");
@@ -419,17 +423,19 @@ public class FileManager
         return Math.max(result, result2);
     }
 
-    public double getPrice(ProjectClass Project)
+    public double getPrice(ProjectClass Project, int position)
     {
         double ans = 0;
         DBAdapter adapter = new DBAdapter(context);
         adapter.open();
-        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet())
+        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(position).second.entrySet())
             for (int count_works = 0; count_works < x.getValue().size(); ++count_works)
             {
                 WorkClass work = x.getValue().get(count_works);
                 ans += work.size * work.price * x.getKey().coeff;
                 for (int i = 0; i < work.Materials.size(); ++i) {
+                    if (work.RealMaterials.get(i) == -1)
+                        continue;
                     MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
                     if (material.per_object < (1e-8))
                         ans += work.size * work.Materials.get(i).second * material.price * x.getKey().coeff;
@@ -437,6 +443,30 @@ public class FileManager
                         ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
                 }
             }
+        return ans;
+    }
+
+    public double getPrice(ProjectClass Project)
+    {
+        double ans = 0;
+        DBAdapter adapter = new DBAdapter(context);
+        adapter.open();
+        for (int room = 0; room < Project.works.size(); ++room)
+            for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet())
+                for (int count_works = 0; count_works < x.getValue().size(); ++count_works)
+                {
+                    WorkClass work = x.getValue().get(count_works);
+                    ans += work.size * work.price * x.getKey().coeff;
+                    for (int i = 0; i < work.Materials.size(); ++i) {
+                        if (work.RealMaterials.get(i) == -1)
+                            continue;
+                        MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                        if (material.per_object < (1e-8))
+                            ans += work.size * work.Materials.get(i).second * material.price * x.getKey().coeff;
+                        else
+                            ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
+                    }
+                }
         return ans;
     }
 
@@ -525,72 +555,84 @@ public class FileManager
             double work_cost = 0;
             double material_cost = 0;
 
-            for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
-                if (x.getValue().isEmpty())
-                    continue;
-                table.addCell(ColoredBegin(Empty()));
-                //table.addCell(CenteredText(Integer.toString(++countworks)));
-                table.addCell(ColoredBegin(CenteredBold(x.getKey().name)));
-                table.addCell(ColoredBegin(Empty()));
-                table.addCell(ColoredBegin(Empty()));
-                table.addCell(ColoredBegin(Empty()));
-                table.addCell(ColoredBegin(Empty()));
-                ArrayList<WorkClass> worklist = x.getValue();
-                double work_type_total = 0;
-                for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
-                    WorkClass work = worklist.get(count_works - 1);
-                    table.addCell(LeftedText(Integer.toString(count_works)));
-                    table.addCell(LeftedText(work.name));
-                    table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring]));
-                    table.addCell(CenteredText(String.format("%.2f", work.size)));
-                    table.addCell(CenteredText(String.format("%.2f", work.price)));
-                    table.addCell(RightedText(String.format("%.2f", work.price * work.size)));
-                    double work_total = work.price * work.size;
-                    work_cost += work_total * x.getKey().coeff;
-                    for (int i = 0; i < work.Materials.size(); ++i) {
-                        MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
-                        MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
-                        table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
-                        table.addCell(LeftPadded(LeftedText(material.name)));
-                        table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
-                        if (material.per_object < (1e-8)) {
-                            table.addCell(CenteredText(String.format("%.2f", work.size * work.Materials.get(i).second)));
-                            table.addCell(CenteredText(String.format("%.2f", material.price)));
-                            double wasted = work.size * work.Materials.get(i).second * material.price;
-                            table.addCell(RightedText(String.format("%.2f", wasted)));
-                            work_total += wasted;
-                            material_cost += wasted * x.getKey().coeff;
-                        } else {
-                            int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
-                            table.addCell(CenteredText(Integer.toString(amount)));
-                            table.addCell(CenteredText(String.format("%.2f", material.price)));
-                            double wasted = amount * material.price;
-                            table.addCell(RightedText(String.format("%.2f", wasted)));
-                            work_total += wasted;
-                            material_cost += wasted * x.getKey().coeff;
+            for (int room = 0; room < Project.works.size(); ++room) {
+                table.addCell(Empty());
+                table.addCell(CenteredBold(Project.works.get(room).first));
+                table.addCell(Empty());
+                table.addCell(Empty());
+                table.addCell(Empty());
+                table.addCell(Empty());
+                double room_sum = 0;
+                for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet()) {
+                    if (x.getValue().isEmpty())
+                        continue;
+                    table.addCell(ColoredBegin(Empty()));
+                    //table.addCell(CenteredText(Integer.toString(++countworks)));
+                    table.addCell(ColoredBegin(CenteredBold(x.getKey().name)));
+                    table.addCell(ColoredBegin(Empty()));
+                    table.addCell(ColoredBegin(Empty()));
+                    table.addCell(ColoredBegin(Empty()));
+                    table.addCell(ColoredBegin(Empty()));
+                    ArrayList<WorkClass> worklist = x.getValue();
+                    double work_type_total = 0;
+                    for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
+                        WorkClass work = worklist.get(count_works - 1);
+                        table.addCell(LeftedText(Integer.toString(count_works)));
+                        table.addCell(LeftedText(work.name));
+                        table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring]));
+                        table.addCell(CenteredText(String.format("%.2f", work.size)));
+                        table.addCell(CenteredText(String.format("%.2f", work.price)));
+                        table.addCell(RightedText(String.format("%.2f", work.price * work.size)));
+                        double work_total = work.price * work.size;
+                        work_cost += work_total * x.getKey().coeff;
+                        for (int i = 0; i < work.Materials.size(); ++i) {
+                            MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
+                            MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                            table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
+                            table.addCell(LeftPadded(LeftedText(material.name)));
+                            table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
+                            if (material.per_object < (1e-8)) {
+                                table.addCell(CenteredText(String.format("%.2f", work.size * work.Materials.get(i).second)));
+                                table.addCell(CenteredText(String.format("%.2f", material.price)));
+                                double wasted = work.size * work.Materials.get(i).second * material.price;
+                                table.addCell(RightedText(String.format("%.2f", wasted)));
+                                work_total += wasted;
+                                material_cost += wasted * x.getKey().coeff;
+                            } else {
+                                int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
+                                table.addCell(CenteredText(Integer.toString(amount)));
+                                table.addCell(CenteredText(String.format("%.2f", material.price)));
+                                double wasted = amount * material.price;
+                                table.addCell(RightedText(String.format("%.2f", wasted)));
+                                work_total += wasted;
+                                material_cost += wasted * x.getKey().coeff;
+                            }
                         }
+                        table.addCell(Empty());
+                        table.addCell(LeftedText(context.getString(R.string.pdf_total_cost)));
+                        table.addCell(Empty());
+                        table.addCell(Empty());
+                        table.addCell(Empty());
+                        table.addCell(RightedText(String.format("%.2f", work_total)));
+                        work_type_total += work_total;
                     }
-                    table.addCell(Empty());
-                    table.addCell(LeftedText(context.getString(R.string.pdf_total_cost)));
-                    table.addCell(Empty());
-                    table.addCell(Empty());
-                    table.addCell(Empty());
-                    table.addCell(RightedText(String.format("%.2f", work_total)));
-                    work_type_total += work_total;
-                }
-                table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(LeftedBold(context.getString(R.string.coeff))));
-                table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(LeftedBold(String.format("%.1f", x.getKey().coeff))));
-                table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(Empty()));
 
-                table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(LeftedBold(context.getString(R.string.pdf_total_cost))));
-                table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(Empty()));
-                table.addCell(ColoredEnd(RightedBold(String.format("%.2f", work_type_total * x.getKey().coeff))));
+                    table.addCell(ColoredEnd(Empty()));
+                    table.addCell(ColoredEnd(LeftedBold(context.getString(R.string.pdf_total_cost))));
+                    table.addCell(ColoredEnd(Empty()));
+                    table.addCell(ColoredEnd(Empty()));
+                    table.addCell(ColoredEnd(Empty()));
+                    table.addCell(ColoredEnd(RightedBold(String.format("%.2f", work_type_total * x.getKey().coeff))));
+                    room_sum += work_type_total;
+                }
+
+                table.addCell(Empty());
+                table.addCell(LeftedBold(context.getString(R.string.pdf_room_cost)));
+                table.addCell(Empty());
+                table.addCell(Empty());
+                table.addCell(Empty());
+                table.addCell(RightedBold(String.format("%.2f", room_sum)));
+
             }
             for (int i = 0; i < 6; ++i) {
                 PdfPCell cell = Empty();
@@ -803,74 +845,85 @@ public class FileManager
             double material_total = 0;
             double works_total = 0;
 
-            for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.entrySet()) {
-                if (x.getValue().isEmpty())
-                    continue;
+            for (int room = 0; room < Project.works.size(); ++room) {
+
                 row = sheet.createRow(rowcount++);
-                int worktype_row = rowcount;
-                double type_total = 0;
-                newCell(row, 0, csWorkBegin);
-                newCell(row, 1, x.getKey().name, Centered(csWorkBegin));
-                newCell(row, 2, csWorkBegin);
-                newCell(row, 3, csWorkBegin);
-                newCell(row, 4, csWorkBegin);
-                newCell(row, 5, csWorkBegin);
-                ArrayList<WorkClass> worklist = x.getValue();
-                for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
-                    WorkClass work = worklist.get(count_works - 1);
+                newCell(row, 1, Project.works.get(room).first, simple);
+                double room_sum = 0;
+                for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet()) {
+                    if (x.getValue().isEmpty())
+                        continue;
                     row = sheet.createRow(rowcount++);
-                    double worksize = work.size;
-                    newCell(row, 0, count_works, Lefted(simple));
-                    newCell(row, 1, work.name, Lefted(simple));
-                    newCell(row, 2, context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring], Centered(simple));
-                    newCell(row, 3, work.size, Centered(simple));
-                    newCell(row, 4, work.price, Centered(simple));
-                    double work_total = work.size * work.price;
-                    works_total += work_total * x.getKey().coeff;
-                    newCell(row, 5, work_total, Righted(simple));
-                    for (int i = 0; i < work.Materials.size(); ++i) {
-                        MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
-                        MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                    int worktype_row = rowcount;
+                    double type_total = 0;
+                    newCell(row, 0, csWorkBegin);
+                    newCell(row, 1, x.getKey().name, Centered(csWorkBegin));
+                    newCell(row, 2, csWorkBegin);
+                    newCell(row, 3, csWorkBegin);
+                    newCell(row, 4, csWorkBegin);
+                    newCell(row, 5, csWorkBegin);
+                    ArrayList<WorkClass> worklist = x.getValue();
+                    for (int count_works = 1; count_works <= worklist.size(); ++count_works) {
+                        WorkClass work = worklist.get(count_works - 1);
                         row = sheet.createRow(rowcount++);
-                        newCell(row, 0, count_works + "." + (i + 1), simple);
-                        newCell(row, 1, material.name, simple);
-                        if (material.per_object < (1e-8)) {
-                            newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement], Centered(simple));
-                            newCell(row, 3, worksize * work.Materials.get(i).second, Centered(simple));
-                            newCell(row, 4, material.price, Centered(simple));
-                            newCell(row, 5, worksize * work.Materials.get(i).second * material.price, Righted(simple));
-                            work_total += worksize * work.Materials.get(i).second * material.price;
-                        } else {
-                            newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[6], Centered(simple));
-                            int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
-                            newCell(row, 3, amount, Centered(simple));
-                            newCell(row, 4, material.price, Centered(simple));
-                            newCell(row, 5, amount * material.price, Righted(simple));
-                            work_total += amount * material.price;
+                        double worksize = work.size;
+                        newCell(row, 0, count_works, Lefted(simple));
+                        newCell(row, 1, work.name, Lefted(simple));
+                        newCell(row, 2, context.getResources().getStringArray(R.array.measurements_work_short)[work.measuring], Centered(simple));
+                        newCell(row, 3, work.size, Centered(simple));
+                        newCell(row, 4, work.price, Centered(simple));
+                        double work_total = work.size * work.price;
+                        works_total += work_total * x.getKey().coeff;
+                        newCell(row, 5, work_total, Righted(simple));
+                        for (int i = 0; i < work.Materials.size(); ++i) {
+                            MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
+                            MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                            row = sheet.createRow(rowcount++);
+                            newCell(row, 0, count_works + "." + (i + 1), simple);
+                            newCell(row, 1, material.name, simple);
+                            if (material.per_object < (1e-8)) {
+                                newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement], Centered(simple));
+                                newCell(row, 3, worksize * work.Materials.get(i).second, Centered(simple));
+                                newCell(row, 4, material.price, Centered(simple));
+                                newCell(row, 5, worksize * work.Materials.get(i).second * material.price, Righted(simple));
+                                work_total += worksize * work.Materials.get(i).second * material.price;
+                            } else {
+                                newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[6], Centered(simple));
+                                int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
+                                newCell(row, 3, amount, Centered(simple));
+                                newCell(row, 4, material.price, Centered(simple));
+                                newCell(row, 5, amount * material.price, Righted(simple));
+                                work_total += amount * material.price;
+                            }
                         }
+                        row = sheet.createRow(rowcount++);
+                        newCell(row, 1, context.getString(R.string.pdf_total_cost), simple);
+                        newCell(row, 5, work_total, Righted(simple));
+                        material_total += (work_total - work.size * work.price) * x.getKey().coeff;
+                        type_total += work_total;
                     }
+
+/*                    row = sheet.createRow(rowcount++);
+                    newCell(row, 0, "", csWorkEnd);
+                    newCell(row, 1, context.getString(R.string.coeff), csWorkEnd);
+                    newCell(row, 2, "", csWorkEnd);
+                    newCell(row, 3, String.format("%.1f", x.getKey().coeff), csWorkEnd);
+                    newCell(row, 4, "", csWorkEnd);
+                    newCell(row, 5, "", csWorkEnd);*/
+
                     row = sheet.createRow(rowcount++);
-                    newCell(row, 1, context.getString(R.string.pdf_total_cost), simple);
-                    newCell(row, 5, work_total, Righted(simple));
-                    material_total += (work_total - work.size * work.price) * x.getKey().coeff;
-                    type_total += work_total;
+                    newCell(row, 0, "", csWorkEnd);
+                    newCell(row, 1, context.getString(R.string.pdf_total_cost), csWorkEnd);
+                    newCell(row, 2, "", csWorkEnd);
+                    newCell(row, 3, "", csWorkEnd);
+                    newCell(row, 4, "", csWorkEnd);
+                    newCell(row, 5, type_total * x.getKey().coeff, Righted(csWorkEnd));
+                    room_sum += type_total * x.getKey().coeff;
                 }
 
                 row = sheet.createRow(rowcount++);
-                newCell(row, 0, "", csWorkEnd);
-                newCell(row, 1, context.getString(R.string.coeff), csWorkEnd);
-                newCell(row, 2, "", csWorkEnd);
-                newCell(row, 3, String.format("%.1f", x.getKey().coeff), csWorkEnd);
-                newCell(row, 4, "", csWorkEnd);
-                newCell(row, 5, "", csWorkEnd);
-
-                row = sheet.createRow(rowcount++);
-                newCell(row, 0, "", csWorkEnd);
-                newCell(row, 1, context.getString(R.string.pdf_total_cost), csWorkEnd);
-                newCell(row, 2, "", csWorkEnd);
-                newCell(row, 3, "", csWorkEnd);
-                newCell(row, 4, "", csWorkEnd);
-                newCell(row, 5, type_total * x.getKey().coeff, Righted(csWorkEnd));
+                newCell(row, 1, context.getString(R.string.pdf_room_cost), simple);
+                newCell(row, 5, room_sum, simple);
             }
             sheet.createRow(rowcount++);
             row = sheet.createRow(rowcount++);

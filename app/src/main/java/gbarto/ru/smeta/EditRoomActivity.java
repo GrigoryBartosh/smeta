@@ -11,11 +11,9 @@ import android.widget.ImageButton;
 
 public class EditRoomActivity extends AppCompatActivity {
 
-    ProjectClass Project;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Project = (ProjectClass)getIntent().getSerializableExtra("Project");
         setContentView(R.layout.activity_edit_room);
 
 
@@ -26,7 +24,7 @@ public class EditRoomActivity extends AppCompatActivity {
         ImageButton diningRoomButton = (ImageButton)this.findViewById(R.id.dining_room_button);
         ImageButton bedroomButton = (ImageButton)this.findViewById(R.id.bedroom_button);
         ImageButton otherroomButton = (ImageButton)this.findViewById(R.id.other_room_button);
-        if (Project.place != null)
+        /*if (Project.place != null)
         {
             if (Project.place.equals(getString(R.string.room_kitchen)))
                 kitchenButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
@@ -38,7 +36,7 @@ public class EditRoomActivity extends AppCompatActivity {
                 bedroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
             else if (Project.place.equals(getString(R.string.room_other_room)))
                 otherroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
-        }
+        }*/
 
         kitchenButton.setOnClickListener(new View.OnClickListener()
         {
@@ -48,8 +46,7 @@ public class EditRoomActivity extends AppCompatActivity {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
                 go.putExtras(getIntent());
-                Project.place = getString(R.string.room_kitchen);
-                go.putExtra("Project", Project);
+                go.putExtra("new_room", getString(R.string.room_kitchen));
                 setResult(RESULT_OK, go);
                 finish();
             }
@@ -61,8 +58,7 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                Project.place = getString(R.string.room_bathroom);
-                go.putExtra("Project", Project);
+                go.putExtra("new_room", getString(R.string.room_bathroom));
                 setResult(RESULT_OK, go);
                 finish();
             }
@@ -74,8 +70,7 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                Project.place = getString(R.string.room_dining_room);
-                go.putExtra("Project", Project);
+                go.putExtra("new_room", getString(R.string.room_dining_room));
                 setResult(RESULT_OK, go);
                 finish();
             }
@@ -87,8 +82,7 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                Project.place = getString(R.string.room_bedroom);
-                go.putExtra("Project", Project);
+                go.putExtra("new_room", getString(R.string.room_bedroom));
                 setResult(RESULT_OK, go);
                 finish();
             }
@@ -100,8 +94,7 @@ public class EditRoomActivity extends AppCompatActivity {
             {
 
                 Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                Project.place = getString(R.string.room_other_room);
-                go.putExtra("Project", Project);
+                go.putExtra("new_room", getString(R.string.room_other_room));
                 setResult(RESULT_OK, go);
                 finish();
             }

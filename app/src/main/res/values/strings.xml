@@ -183,6 +183,7 @@
         <item>Штука</item>
     </string-array>
     <string name="pdf_total_cost">Итого:</string>
+    <string name="pdf_room_cost">Итого за помещение:</string>
     <string name="pdf_work_summary">Всего за работы:</string>
     <string name="pdf_materials_summary">Всего за материалы:</string>
     <string name="pdf_total_invoice">Итого по смете:</string>

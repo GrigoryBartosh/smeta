@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,21 +15,24 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class EditNameActivity extends AppCompatActivity {
 
-    LinearLayout Button_Choose_Works;
-    LinearLayout Save_Button;
-    LinearLayout Share_Button;
-    LinearLayout Completed_Button;
+    ArrayList <String> RoomList = new ArrayList<>();
+    ArrayAdapter<String> adapt;
+    FloatingActionButton fab;
     FileManager fileManager;
     String lastProjectname = "";
     EditText mText;
@@ -45,7 +49,130 @@ public class EditNameActivity extends AppCompatActivity {
     ProjectClass Project;
     String keeper;
 
-    //returns message
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_name);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.edit_name_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        fileManager = new FileManager(this);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                if (Save())
+                    onBackPressed();
+            }
+        });
+
+        mText = (EditText)findViewById(R.id.Project_name_field);
+        if (getIntent().getSerializableExtra("Project") != null) {
+            Project = (ProjectClass) getIntent().getSerializableExtra("Project");
+            projectname = Project.name;
+            lastProjectname = projectname;
+            mText.setText(Project.name);
+        }
+        else
+        {
+            if (Project == null) {
+                Project = new ProjectClass();
+            }
+        }
+
+        fab = (FloatingActionButton) findViewById(R.id.main_fab);
+        fab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
+                startActivityForResult(x, RoomResult);
+            }
+        });
+
+        adapter = new DBAdapter(this);
+        adapter.open();
+        default_values();
+        AddAdapter();
+
+
+        /*LinearLayout View_Button = (LinearLayout)findViewById(R.id.button_view);
+        View_Button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                String checker = mText.getText().toString();
+                final String message = check(checker);
+                if (message.equals("OK")) {
+                    Project.name = checker;
+                    ProjectView( );
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });*/
+        Summary = (TextView)findViewById(R.id.project_summary);
+        Refresh();
+        keeper = mText.getText().toString();
+
+        /*Button_Choose_Works = (LinearLayout)findViewById(R.id.button_new_works);
+        Button_Choose_Works.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent x = new Intent(EditNameActivity.this, ChooseTypeActivity.class);
+                if (Project == null)
+                    Project = new ProjectClass();
+                x.putExtra("Project", Project);
+                startActivityForResult(x, TypesResult);
+            }
+        });*/
+
+        mText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                if (charSequence.length() < keeper.length())
+                    keeper = charSequence.toString();
+                else if (charSequence.length() > i && charSequence.charAt(i) == '\n') {
+                    mText.setText(keeper);
+                    mText.setSelection(keeper.length());
+                }
+                else if (charSequence.length() > 100) {
+                    mText.setText(keeper);
+                    mText.setSelection(keeper.length());
+                }
+                else
+                    keeper = charSequence.toString();
+
+            }});
+
+        int color = getResources().getColor(R.color.ic_menu);
+        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+        Drawable d;
+        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+    }
+
     private String check(String s)
     {
         if (s == null)
@@ -136,8 +263,10 @@ public class EditNameActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (Save())
-            onBackPressed();
+        if (item.getItemId() == R.id.menu_edit_name_view )
+            ProjectView();
+        else if (item.getItemId() == R.id.menu_edit_name_share)
+            ProjectShare();
         return super.onOptionsItemSelected(item);
     }
 
@@ -186,182 +315,6 @@ public class EditNameActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_name);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.edit_name_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        fileManager = new FileManager(this);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view) {
-                if (countreturned > 0) {
-                    FragmentManager manager = getSupportFragmentManager();
-                    MyDialogFragment myDialogFragment = new MyDialogFragment();
-                    myDialogFragment.Message = getString(R.string.want_to_discard_changes);
-                    myDialogFragment.Title = getString(R.string.want_to_go_back);
-                    myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
-                    myDialogFragment.NegativeButtonTitle = getString(R.string.no);
-                    myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            Intent temp = new Intent();
-                            setResult(RESULT_CANCELED, temp);
-                            finish();
-                        }
-                    };
-                    myDialogFragment.show(manager, "dialog");
-                }
-                else
-                {
-                    Intent temp = new Intent();
-                    setResult(RESULT_CANCELED, temp);
-                    finish();
-                }
-            }
-        });
-
-        adapter = new DBAdapter(this);
-        adapter.open();
-
-        mText = (EditText)findViewById(R.id.Project_name_field);
-        ChooseRoomText = (TextView) findViewById(R.id.place_text);
-        Completed_Button = (LinearLayout)findViewById(R.id.button_mark_done);
-        Completed_Button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent x = new Intent(EditNameActivity.this, CompleteActivity.class);
-                x.putExtra("project", Project);
-                startActivityForResult(x, CompletedResult);
-            }
-        });
-        Share_Button = (LinearLayout)findViewById(R.id.button_share);
-        Share_Button.setOnClickListener(new View.OnClickListener()
-                                        {
-                                            @Override
-                                            public void onClick(View view)
-                                            {
-                                                ProjectShare();
-                                            }
-                                        });
-
-        LinearLayout View_Button = (LinearLayout)findViewById(R.id.button_view);
-        View_Button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                String checker = mText.getText().toString();
-                final String message = check(checker);
-                if (message.equals("OK")) {
-                    Project.name = checker;
-                    ProjectView( );
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        Save_Button = (LinearLayout) findViewById(R.id.button_save);
-        Save_Button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if (Save())
-                onBackPressed();
-            }
-        });
-        imageButton = (ImageButton) findViewById(R.id.choose_room_imageButton);
-        imageButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent x = new Intent(EditNameActivity.this, EditRoomActivity.class);
-                x.putExtra("Project", Project);
-                startActivityForResult(x, RoomResult);
-            }
-        });
-        Summary = (TextView)findViewById(R.id.project_summary);
-        if (getIntent().getSerializableExtra("Project") != null) {
-            Project = (ProjectClass) getIntent().getSerializableExtra("Project");
-            projectname = Project.name;
-            lastProjectname = projectname;
-            mText.setText(Project.name);
-        }
-        else
-        {
-            if (Project == null) {
-                Project = new ProjectClass();
-                Project.place = getString(R.string.room_other_room);
-            }
-        }
-        UpdateRoom();
-        Refresh();
-        keeper = mText.getText().toString();
-
-        Button_Choose_Works = (LinearLayout)findViewById(R.id.button_new_works);
-        Button_Choose_Works.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent x = new Intent(EditNameActivity.this, ChooseTypeActivity.class);
-                if (Project == null)
-                    Project = new ProjectClass();
-                x.putExtra("Project", Project);
-                startActivityForResult(x, TypesResult);
-            }
-        });
-
-        mText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable)
-            {
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-                if (charSequence.length() < keeper.length())
-                    keeper = charSequence.toString();
-                else if (charSequence.length() > i && charSequence.charAt(i) == '\n') {
-                    mText.setText(keeper);
-                    mText.setSelection(keeper.length());
-                }
-                else if (charSequence.length() > 100) {
-                    mText.setText(keeper);
-                    mText.setSelection(keeper.length());
-                }
-                else
-                    keeper = charSequence.toString();
-
-             }});
-
-        int color = getResources().getColor(R.color.ic_menu);
-        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
-        Drawable d;
-        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-    }
-
-    @Override
     public void onBackPressed()
     {
         if (countreturned > 0) {
@@ -391,43 +344,23 @@ public class EditNameActivity extends AppCompatActivity {
         }
     }
 
-    void UpdateRoom()
-    {
-        ChooseRoomText.setText(Project.place);
-        if (Project.place.equals(getString(R.string.room_kitchen)))
-            imageButton.setImageResource(R.drawable.kitchen);
-        else if (Project.place.equals(getString(R.string.room_dining_room)))
-            imageButton.setImageResource(R.drawable.dining_room);
-        else if (Project.place.equals(getString(R.string.room_bathroom)))
-            imageButton.setImageResource(R.drawable.bathroom);
-        else if (Project.place.equals(getString(R.string.room_bedroom)))
-            imageButton.setImageResource(R.drawable.bedroom);
-        else if (Project.place.equals(getString(R.string.room_other_room)))
-            imageButton.setImageResource(R.drawable.ic_menu_help);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == RoomResult) {
             if (resultCode == RESULT_OK) {
                 ++countreturned;
-                Project.place = ((ProjectClass) data.getSerializableExtra("Project")).place;
-                UpdateRoom();
+                Project.works.add(new Pair(data.getStringExtra("new_room"), new TreeMap<>()));
+                RoomList.add(data.getStringExtra("new_room"));
+                adapt.notifyDataSetChanged();
             }
         } else if (requestCode == TypesResult) {
             if (resultCode == RESULT_OK)
             {
                 ++countreturned;
-                Project.works = ((ProjectClass) data.getSerializableExtra("Project")).works;
+                Project.works.get(Project.place).second = ((ProjectClass) data.getSerializableExtra("Project")).works.get(Project.place).second;
                 Refresh();
-            }
-        } else if (requestCode == CompletedResult)
-        {
-            if (resultCode == RESULT_OK)
-            {
-                ++countreturned;
-                Project.works = ((ProjectClass) data.getSerializableExtra("Project")).works;
+                adapt.notifyDataSetChanged();
             }
         }
 
@@ -439,5 +372,50 @@ public class EditNameActivity extends AppCompatActivity {
     {
         adapter.close();
         super.onDestroy();
+    }
+
+    private void default_values()
+    {
+        for (Pair <String, TreeMap<WorkTypeClass, ArrayList<WorkClass> > > x : Project.works)
+            RoomList.add(x.first);
+    }
+
+    private void AddAdapter()
+    {
+        adapt = new MyListAdapter();
+        ListView l = (ListView)findViewById(R.id.edit_name_roomlist);
+        l.setOnItemClickListener(mItemListener);
+        l.setAdapter(adapt);
+    }
+
+    AdapterView.OnItemClickListener mItemListener = new AdapterView.OnItemClickListener()
+    {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+        {
+            Intent x = new Intent(EditNameActivity.this, ChooseTypeActivity.class);
+            Project.place = i;
+            x.putExtra("Project", Project);
+            startActivityForResult(x, TypesResult);
+        }
+    };
+
+    private class MyListAdapter extends ArrayAdapter
+    {
+        public MyListAdapter() {
+            super(EditNameActivity.this, R.layout.listlayout, RoomList);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View item = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
+
+            TextView mTextName = (TextView) item.findViewById(R.id.text);
+            TextView mTextPrice = (TextView) item.findViewById(R.id.price);
+
+            mTextName.setText(RoomList.get(position));
+            mTextPrice.setText(String.format("%.2f", fileManager.getPrice(Project, position)));
+            return item;
+        }
     }
 }

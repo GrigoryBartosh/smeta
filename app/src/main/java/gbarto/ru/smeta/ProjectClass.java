@@ -2,7 +2,6 @@ package gbarto.ru.smeta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -11,32 +10,31 @@ import java.util.TreeMap;
 //This is never stored in Database, so it shouldn't extend DBObject
 public class ProjectClass implements Serializable
 {
-    public TreeMap<WorkTypeClass, ArrayList<WorkClass>> works;
-    String place;
+    public ArrayList<Pair <String, TreeMap<WorkTypeClass, ArrayList<WorkClass> > > > works;
+    int place;
     String name;
 
     public ProjectClass()
     {
-        works = new TreeMap<>();
+        works = new ArrayList<>();
     }
 
     public ProjectClass(String name)
     {
-        works = new TreeMap<>();
+        works = new ArrayList<>();
         this.name = new String(name);
-        place = null;
     }
 
     public boolean contains(WorkTypeClass Key)
     {
-        return works.containsKey(Key);
+        return works.get(place).second.containsKey(Key);
     }
 
     public ArrayList<WorkClass> get(WorkTypeClass Key)
     {
-        if (!works.containsKey(Key))
+        if (!works.get(place).second.containsKey(Key))
             return null;
-        return works.get(Key);
+        return works.get(place).second.get(Key);
     }
 
     public void put(WorkTypeClass Key, ArrayList <WorkClass> Value)
@@ -45,17 +43,6 @@ public class ProjectClass implements Serializable
         ArrayList <WorkClass> tmp = new ArrayList<>();
         for (WorkClass y : Value)
             tmp.add(new WorkClass(y));
-        this.works.put(x1, tmp);
-    }
-
-    public ProjectClass(TreeMap<WorkTypeClass, ArrayList<WorkClass>> works)
-    {
-        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : works.entrySet()) {
-            WorkTypeClass x1 = new WorkTypeClass(x.getKey());
-            ArrayList <WorkClass> tmp = new ArrayList<>();
-            for (WorkClass y : x.getValue())
-                tmp.add(new WorkClass(y));
-            this.works.put(x1, tmp);
-        }
+        this.works.get(place).second.put(x1, tmp);
     }
 }
