@@ -52,8 +52,8 @@
     </string-array>
 
     <string name="nav_new_project">Новый проект</string>
-    <string name="nav_price_work">Мои цены</string>
-    <string name="nav_price_material">материалы</string>
+    <string name="nav_price_work">Мои работы</string>
+    <string name="nav_price_material">Материалы</string>
     <string name="nav_menu_settings">Настройки</string>
     <string name="nav_menu_add">Дополнительно</string>
     <string name="nav_menu_abut">О программе</string>
@@ -96,10 +96,10 @@
 
     <string name="title_activity_work">Новая работа</string>
     <string name="work_work_name">Название работы</string>
-    <string name="work_snipper">Цена за </string>
-    <string name="work_price">Равна </string>
-    <string name="work_text_size">Объем работы </string>
-    <string name="work_necessary_materials">Необходимые материалы\nна единицу</string>
+    <string name="work_price">Стоимость работ:</string>
+    <string name="work_ruble_slash">руб/</string>
+    <string name="work_list_material">Материалы</string>
+    <string name="work_list_instruments">Инсрументы</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_about_text">
         Чтобы удалить материал из списка
@@ -177,11 +177,6 @@
 
     <string name="ruble_short">руб</string>
 
-    <string-array name="measurements_work">
-        <item>Метр</item>
-        <item>Квадратный метр</item>
-        <item>Штука</item>
-    </string-array>
     <string name="pdf_total_cost">Итого:</string>
     <string name="pdf_room_cost">Итого за помещение:</string>
     <string name="pdf_work_summary">Всего за работы:</string>
@@ -189,10 +184,20 @@
     <string name="pdf_total_invoice">Итого по смете:</string>
     <string name="pdf_page_number">Страница</string>
 
+    <string-array name="measurements_work">
+        <item>Метр</item>
+        <item>Квадратный метр</item>
+        <item>Штука</item>
+    </string-array>
     <string-array name="measurements_work_short">
         <item>м</item>
-        <item>кв.м</item>
+        <item>м2</item>
         <item>шт</item>
+    </string-array>
+    <string-array name="measurements_work_word">
+        <item>Длинна</item>
+        <item>Площадь</item>
+        <item>Количество</item>
     </string-array>
 
     <string-array name="measurements_material">

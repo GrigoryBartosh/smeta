@@ -5,8 +5,10 @@
     <color name="green">#7fba00</color>
     <color name="yellow">#ffb900</color>
     <color name="gray">#eeeeee</color>
+    <color name="dark_gray">#c8c8c8</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="empty">#00ffffff</color>
 
     <color name="colorPrimary">#ffb900</color>
     <color name="colorPrimaryDark">#7fba00</color>

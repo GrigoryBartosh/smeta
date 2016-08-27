@@ -11,20 +11,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,14 +43,20 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText mEditName;
     private Spinner mSpinner;
     private EditText mEditSum;
-    private Button mButtonNew;
+    private ImageView mImageNew;
     private TextView mTextListEmpty;
-    private TextView mTextList;
+    private LinearLayout mLinearLayout;
     private TextView mTextSize;
     private EditText mEditSize;
+    private TextView mTextMaterial;
+    private TextView mTextInstruments;
+    private View mViewUnderlineMaterial;
+    private View mViewUnderlineInstruments;
     ArrayAdapter<CharSequence> spinner_adapter;
 
-    private ListView mListView;
+    private ViewFlipper mViewFlipper;
+    private ListView mListViewMaterial;
+    private ListView mListViewInstrument;
     static final private int CHOOSE_MATERIAL_TYPE = 0;
     static final private int CHOOSE_MATERIAL = 1;
     int material_line;
@@ -59,10 +69,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private String[] bad_strings;
     private String bad_strings_to_toast = "";
 
-    DBAdapter dbAdapter = new DBAdapter(this);
+    private Boolean selected_first_window =  true;
 
-    //================================================================================================================
-    //распарсить строку (нет &)
+    DBAdapter dbAdapter = new DBAdapter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +81,24 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mEditName = (EditText) findViewById(R.id.work_editText_name);
         mSpinner = (Spinner) findViewById(R.id.work_spinner);
         mEditSum = (EditText) findViewById(R.id.work_editText_sum);
-        mButtonNew = (Button) findViewById(R.id.work_button_new);
-        mTextList = (TextView) findViewById(R.id.work_text_list);
+        mImageNew = (ImageView) findViewById(R.id.work_imageView_new);
+        mLinearLayout = (LinearLayout) findViewById(R.id.work_linerLayout);
         mTextSize = (TextView) findViewById(R.id.work_text_size);
         mEditSize = (EditText) findViewById(R.id.work_editText_size);
-        mTextListEmpty = (TextView) findViewById(R.id.work_text_list_empty);
+        mTextMaterial = (TextView) findViewById(R.id.work_list_material);
+        mTextInstruments = (TextView) findViewById(R.id.work_list_instruments);
+        mViewUnderlineMaterial = findViewById(R.id.work_list_underline_material);
+        mViewUnderlineInstruments = findViewById(R.id.work_list_underline_instruments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
 
         dbAdapter.open();
 
-        spinner_adapter = ArrayAdapter.createFromResource(this, R.array.measurements_work, android.R.layout.simple_spinner_item);
+        spinner_adapter = ArrayAdapter.createFromResource(this, R.array.measurements_work_short, android.R.layout.simple_spinner_item);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(spinner_adapter);
-        mButtonNew.setOnClickListener(btn_ocl);
+        mImageNew.setOnClickListener(btn_ocl);
+        mTextMaterial.setOnClickListener(list_ocl);
+        mTextInstruments.setOnClickListener(list_ocl);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -94,8 +108,17 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        mListView = (ListView) findViewById(R.id.work_listView);
-        mListView.setOnItemLongClickListener(WorkActivity.this);
+        mViewFlipper = (ViewFlipper) findViewById(R.id.work_viewFlipper);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(getApplicationContext().LAYOUT_INFLATER_SERVICE);
+        mViewFlipper.addView(inflater.inflate(R.layout.flipper_work_material, null));
+        mViewFlipper.addView(inflater.inflate(R.layout.flipper_work_instrument, null));
+
+        mListViewMaterial = (ListView) mViewFlipper.getChildAt(0).findViewById(R.id.work_listView_material);
+        mListViewInstrument = (ListView) mViewFlipper.getChildAt(1).findViewById(R.id.work_listView_instrument);
+        mListViewMaterial.setOnItemLongClickListener(WorkActivity.this);
+        mListViewInstrument.setOnItemLongClickListener(WorkActivity.this);
+
+        mTextListEmpty = (TextView) findViewById(R.id.work_text_list_empty);
 
         measurements_material = getResources().getStringArray(R.array.measurements_material_short);
         bad_strings = getResources().getStringArray(R.array.bad_strings);
@@ -126,9 +149,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mTextSize.setVisibility(View.INVISIBLE);
             mEditSize.setVisibility(View.INVISIBLE);
             RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
-            mTextList.setLayoutParams(relativeParams);
+            mLinearLayout.setLayoutParams(relativeParams);
         }
 
         int color = getResources().getColor(R.color.ic_menu);
@@ -217,6 +240,33 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         return  res;
     }
+
+    View.OnClickListener list_ocl = new View.OnClickListener(){
+        @Override
+        public void onClick(View view) {
+            setToWork();
+
+            int id = view.getId();
+            switch (id) {
+                case R.id.work_list_material:
+                    if (selected_first_window) return;
+                    mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.go_prev_in));
+                    mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.go_prev_out));
+                    mViewFlipper.showPrevious();
+                    selected_first_window = true;
+                    break;
+                case R.id.work_list_instruments:
+                    if (!selected_first_window) return;
+                    mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.go_next_in));
+                    mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.go_next_out));
+                    mViewFlipper.showNext();
+                    selected_first_window = false;
+                    break;
+            }
+
+            setList();
+        }
+    };
 
     View.OnClickListener btn_ocl = new View.OnClickListener(){
         @Override
@@ -383,7 +433,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 mCatList, R.layout.list_item_work,
                 new String[]{},
                 new int[]{});
-        mListView.setAdapter(adapter);
+        mListViewMaterial.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
         if (adapter.getCount() == 0)
@@ -391,6 +441,18 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mTextListEmpty.setText(getString(R.string.work_empty_list));
         } else {
             mTextListEmpty.setText("");
+        }
+
+        if (selected_first_window) {
+            mTextMaterial.setTextColor(getResources().getColor(R.color.black));
+            mTextInstruments.setTextColor(getResources().getColor(R.color.dark_gray));
+            mViewUnderlineMaterial.setBackgroundColor(getResources().getColor(R.color.blue));
+            mViewUnderlineInstruments.setBackgroundColor(getResources().getColor(R.color.empty));
+        } else {
+            mTextMaterial.setTextColor(getResources().getColor(R.color.dark_gray));
+            mTextInstruments.setTextColor(getResources().getColor(R.color.black));
+            mViewUnderlineMaterial.setBackgroundColor(getResources().getColor(R.color.empty));
+            mViewUnderlineInstruments.setBackgroundColor(getResources().getColor(R.color.blue));
         }
     }
 

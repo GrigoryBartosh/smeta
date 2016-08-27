@@ -195,14 +195,13 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
         for (int i = 0; i < type_work_list.size(); i++){
             hm = new HashMap<>();
             hm.put(TITLE, type_work_list.get(i).name);
-            hm.put(ICON, R.mipmap.ic_launcher);
             mCatList.add(hm);
         }
 
         SimpleAdapter adapter = new SimpleAdapter(  PriceWorkCategoryActivity.this,
                                                     mCatList, R.layout.list_item_price_work_category,
-                                                    new String[]{TITLE, ICON},
-                                                    new int[]{R.id.text, R.id.img});
+                                                    new String[]{TITLE},
+                                                    new int[]{R.id.text});
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mItemListener);
 

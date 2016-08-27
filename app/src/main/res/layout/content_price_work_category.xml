@@ -11,7 +11,8 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/price_work_category_listView" />
+        android:id="@+id/price_work_category_listView"
+        android:divider="@null"/>
 
     <TextView
         android:id="@+id/price_work_category_textView_empty"
