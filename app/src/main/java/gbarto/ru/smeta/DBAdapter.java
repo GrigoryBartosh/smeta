@@ -89,7 +89,7 @@ public class DBAdapter {
     public static final String INSTRUMENT_KEY_INSTRUMENT = "name";
     public static final String[] INSTRUMENT_ALL_KEYS = new String[] {KEY_ROWID, INSTRUMENT_KEY_INSTRUMENT};
     public static final String INSTRUMENT_TABLE = "instrumentTable";
-    private static final String INTSTRUMENT_CREATE_SQL  =
+    private static final String INSTRUMENT_CREATE_SQL  =
             "create table " + INSTRUMENT_TABLE + " ("
                     + KEY_ROWID + " integer primary key autoincrement, "
                     + INSTRUMENT_KEY_INSTRUMENT + " text not null"
@@ -660,6 +660,7 @@ public class DBAdapter {
 			_db.execSQL(WORKS_CREATE_SQL);
             _db.execSQL(TYPES_CREATE_SQL);
             _db.execSQL(MATERIAL_TYPES_CREATE_SQL);
+            _db.execSQL(INSTRUMENT_CREATE_SQL);
 
             WorkTypeClass t1 = new WorkTypeClass("Пол");
             add(_db, TYPES_TABLE, t1);
