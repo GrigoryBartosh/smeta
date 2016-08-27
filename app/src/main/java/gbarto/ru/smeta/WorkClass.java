@@ -96,6 +96,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public void removeMaterial(int index)
     {
         Materials.remove(index);
+        RealMaterials.remove(index);
     }
 
     public void addInstrument(long newInstrument)
