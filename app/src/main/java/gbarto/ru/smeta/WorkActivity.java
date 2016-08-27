@@ -41,37 +41,50 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private WorkClass work;
 
     private EditText mEditName;
-    private Spinner mSpinner;
     private EditText mEditSum;
-    private ImageView mImageNew;
-    private TextView mTextListEmpty;
-    private LinearLayout mLinearLayout;
+    private Spinner mSpinner;
     private TextView mTextSize;
     private EditText mEditSize;
+
+    private LinearLayout mLinearLayout;
     private TextView mTextMaterial;
     private TextView mTextInstruments;
     private View mViewUnderlineMaterial;
     private View mViewUnderlineInstruments;
-    ArrayAdapter<CharSequence> spinner_adapter;
+    private ImageView mImageNew;
 
     private ViewFlipper mViewFlipper;
     private ListView mListViewMaterial;
     private ListView mListViewInstrument;
-    static final private int CHOOSE_MATERIAL_TYPE = 0;
-    static final private int CHOOSE_MATERIAL = 1;
-    int material_line;
+
+    private TextView mTextListMaterialEmpty;
+    private TextView mTextListInstrumentEmpty;
+
+    private ArrayAdapter<CharSequence> spinner_adapter;
+    private Boolean selected_first_window =  true;
 
     private ArrayList<MaterialTypeClass> all_material_types;
+    private ArrayList<InstrumentClass> all_instrument;
     private HashMap<Long, MaterialTypeClass > material_types_info_from_id = new HashMap<Long, MaterialTypeClass >();
-    String[] measurements_material;
-    ArrayList<MaterialClass> new_material;
-    ArrayList<String> used_name;
+    private HashMap<Long, InstrumentClass > instrument_info_from_id = new HashMap<Long, InstrumentClass >();
+
+    private String[] measurements_work;
+    private String[] measurements_work_word;
+    private String[] measurements_material;
+    private String[] measurements_instrument;
+
+    private ArrayList<MaterialClass> new_material;
+
+    private ArrayList<String> used_name;
     private String[] bad_strings;
     private String bad_strings_to_toast = "";
 
-    private Boolean selected_first_window =  true;
+    private DBAdapter dbAdapter = new DBAdapter(this);
 
-    DBAdapter dbAdapter = new DBAdapter(this);
+    static final private int CHOOSE_MATERIAL_TYPE = 0;
+    static final private int CHOOSE_INSSTRUMENT = 1;
+    static final private int CHOOSE_MATERIAL = 2;
+    private int material_line;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,23 +92,48 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_work);
 
         mEditName = (EditText) findViewById(R.id.work_editText_name);
-        mSpinner = (Spinner) findViewById(R.id.work_spinner);
         mEditSum = (EditText) findViewById(R.id.work_editText_sum);
-        mImageNew = (ImageView) findViewById(R.id.work_imageView_new);
-        mLinearLayout = (LinearLayout) findViewById(R.id.work_linerLayout);
+        mSpinner = (Spinner) findViewById(R.id.work_spinner);
         mTextSize = (TextView) findViewById(R.id.work_text_size);
         mEditSize = (EditText) findViewById(R.id.work_editText_size);
+        mLinearLayout = (LinearLayout) findViewById(R.id.work_linerLayout);
         mTextMaterial = (TextView) findViewById(R.id.work_list_material);
         mTextInstruments = (TextView) findViewById(R.id.work_list_instruments);
         mViewUnderlineMaterial = findViewById(R.id.work_list_underline_material);
         mViewUnderlineInstruments = findViewById(R.id.work_list_underline_instruments);
+        mImageNew = (ImageView) findViewById(R.id.work_imageView_new);
         Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
+
+        mViewFlipper = (ViewFlipper) findViewById(R.id.work_viewFlipper);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(getApplicationContext().LAYOUT_INFLATER_SERVICE);
+        mViewFlipper.addView(inflater.inflate(R.layout.flipper_work_material, null));
+        mViewFlipper.addView(inflater.inflate(R.layout.flipper_work_instrument, null));
+
+        mListViewMaterial = (ListView) mViewFlipper.getChildAt(0).findViewById(R.id.work_listView_material);
+        mListViewInstrument = (ListView) mViewFlipper.getChildAt(1).findViewById(R.id.work_listView_instrument);
+        mListViewMaterial.setOnItemLongClickListener(WorkActivity.this);
+        mListViewInstrument.setOnItemLongClickListener(WorkActivity.this);
+
+        mTextListMaterialEmpty = (TextView) mViewFlipper.getChildAt(0).findViewById(R.id.work_text_list_material_empty);
+        mTextListInstrumentEmpty = (TextView) mViewFlipper.getChildAt(1).findViewById(R.id.work_text_list_instrument_empty);
 
         dbAdapter.open();
 
         spinner_adapter = ArrayAdapter.createFromResource(this, R.array.measurements_work_short, android.R.layout.simple_spinner_item);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(spinner_adapter);
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mTextSize.setText(measurements_work_word[i] + ":");
+                setList();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         mImageNew.setOnClickListener(btn_ocl);
         mTextMaterial.setOnClickListener(list_ocl);
         mTextInstruments.setOnClickListener(list_ocl);
@@ -108,19 +146,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        mViewFlipper = (ViewFlipper) findViewById(R.id.work_viewFlipper);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(getApplicationContext().LAYOUT_INFLATER_SERVICE);
-        mViewFlipper.addView(inflater.inflate(R.layout.flipper_work_material, null));
-        mViewFlipper.addView(inflater.inflate(R.layout.flipper_work_instrument, null));
-
-        mListViewMaterial = (ListView) mViewFlipper.getChildAt(0).findViewById(R.id.work_listView_material);
-        mListViewInstrument = (ListView) mViewFlipper.getChildAt(1).findViewById(R.id.work_listView_instrument);
-        mListViewMaterial.setOnItemLongClickListener(WorkActivity.this);
-        mListViewInstrument.setOnItemLongClickListener(WorkActivity.this);
-
-        mTextListEmpty = (TextView) findViewById(R.id.work_text_list_empty);
-
+        measurements_work = getResources().getStringArray(R.array.measurements_work_short);
+        measurements_work_word = getResources().getStringArray(R.array.measurements_work_word);
         measurements_material = getResources().getStringArray(R.array.measurements_material_short);
+        measurements_instrument = getResources().getStringArray(R.array.measurements_instrument_short);
         bad_strings = getResources().getStringArray(R.array.bad_strings);
         for (int i = 0; i < bad_strings.length; i++)
             bad_strings_to_toast += " " + bad_strings[i];
@@ -130,16 +159,23 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         work = (WorkClass) intent.getExtras().getSerializable("work");
         if (work_type != 2) used_name = intent.getExtras().getStringArrayList("used_name");
 
+        mTextSize.setText(measurements_work_word[work.measuring] + ":");
+
         all_material_types = getAllMaterialTypes();
         for (int i = 0; i < all_material_types.size(); i++)
             material_types_info_from_id.put(all_material_types.get(i).rowID,
                     all_material_types.get(i));
+        all_instrument = getAllInstrument();
+        for (int i = 0; i < all_instrument.size(); i++)
+            instrument_info_from_id.put(all_instrument.get(i).rowID,
+                    all_instrument.get(i));
 
         if (work_type != 0) {
             setTitle(work.name);
             setFromWork();
         } else {
-            mTextListEmpty.setText(getString(R.string.work_empty_list));
+            mTextListMaterialEmpty.setText(getString(R.string.work_empty_list_material));
+            mTextListInstrumentEmpty.setText(getString(R.string.work_empty_list_instrument));
         }
 
         if (work_type == 2) {
@@ -160,12 +196,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         d = getResources().getDrawable(android.R.drawable.ic_menu_help);
         d.setColorFilter(color, mMode);
         d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
     }
 
     @Override
@@ -183,7 +213,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 super.onBackPressed();
             } else {
                 if (ok_name()) {
-                    save(false);
+                    save(true);
                     super.onBackPressed();
                 }
             }
@@ -210,13 +240,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         switch (id)
         {
-            case R.id.menu_work_done:
-                if (ok_name()) {
-                    save(true);
-                    finish();
-                }
-                res = true;
-                break;
             case R.id.menu_work_help:
                 FragmentManager manager = getSupportFragmentManager();
                 MyDialogFragment myDialogFragment = new MyDialogFragment();
@@ -273,24 +296,45 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         public void onClick(View view) {
             setToWork();
 
-            HashSet<Long> used_material_types = new HashSet<Long>();
-            if (work.Materials != null)
-                for (int i = 0; i < work.Materials.size(); i++)
-                    used_material_types.add(work.Materials.get(i).first);
+            if (selected_first_window) {
+                HashSet<Long> used_material_types = new HashSet<Long>();
+                if (work.Materials != null)
+                    for (int i = 0; i < work.Materials.size(); i++)
+                        used_material_types.add(work.Materials.get(i).first);
 
-            ArrayList<MaterialTypeClass> new_material_types = new ArrayList<MaterialTypeClass>();
+                ArrayList<MaterialTypeClass> new_material_types = new ArrayList<MaterialTypeClass>();
 
-            for (int i = 0; i < all_material_types.size(); i++)
-            {
-                final Long num = all_material_types.get(i).rowID;
-                if (!used_material_types.contains(num))
-                    new_material_types.add(all_material_types.get(i));
+                for (int i = 0; i < all_material_types.size(); i++)
+                {
+                    final Long num = all_material_types.get(i).rowID;
+                    if (!used_material_types.contains(num))
+                        new_material_types.add(all_material_types.get(i));
+                }
+
+                Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
+                intent.putExtra("list", new_material_types);
+                intent.putExtra("check_list", true);
+                startActivityForResult(intent, CHOOSE_MATERIAL_TYPE);
+            } else {
+                HashSet<Long> used_instrument = new HashSet<Long>();
+                if (work.Instruments != null)
+                    for (int i = 0; i < work.Instruments.size(); i++)
+                        used_instrument.add(work.Instruments.get(i).first);
+
+                ArrayList<InstrumentClass> new_instrument = new ArrayList<InstrumentClass>();
+
+                for (int i = 0; i < all_instrument.size(); i++)
+                {
+                    final Long num = all_instrument.get(i).rowID;
+                    if (!used_instrument.contains(num))
+                        new_instrument.add(all_instrument.get(i));
+                }
+
+                Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
+                intent.putExtra("list", new_instrument);
+                intent.putExtra("check_list", true);
+                startActivityForResult(intent, CHOOSE_INSSTRUMENT);
             }
-
-            Intent intent = new Intent(WorkActivity.this, SearchActivity.class);
-            intent.putExtra("list", new_material_types);
-            intent.putExtra("check_list", true);
-            startActivityForResult(intent, CHOOSE_MATERIAL_TYPE);
         }
     };
 
@@ -308,6 +352,20 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 for (int i = 0; i < new_list.size(); i++) {
                     work.addMaterial((int)new_list.get(i).rowID);
+                }
+
+                setFromWork();
+            }
+        }
+        if (requestCode == CHOOSE_INSSTRUMENT)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                ArrayList<InstrumentClass> new_list = (ArrayList<InstrumentClass>)data.getSerializableExtra("result");
+                if (new_list == null) return;
+
+                for (int i = 0; i < new_list.size(); i++) {
+                    work.addInstrument((int)new_list.get(i).rowID);
                 }
 
                 setFromWork();
@@ -423,25 +481,32 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         ArrayList<HashMap<String,Object>> mCatList = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> hm;
-
         for (int i = 0; i < work.Materials.size(); i++){
             hm = new HashMap<>();
             mCatList.add(hm);
         }
-
-        Adapter adapter = new Adapter(  WorkActivity.this,
-                mCatList, R.layout.list_item_work,
+        AdapterMaterial adapter_material = new AdapterMaterial(  WorkActivity.this,
+                mCatList, R.layout.list_item_work_material,
                 new String[]{},
                 new int[]{});
-        mListViewMaterial.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        mListViewMaterial.setAdapter(adapter_material);
+        adapter_material.notifyDataSetChanged();
+        if (adapter_material.getCount() == 0)   mTextListMaterialEmpty.setText(getString(R.string.work_empty_list_material));
+        else                                    mTextListMaterialEmpty.setText("");
 
-        if (adapter.getCount() == 0)
-        {
-            mTextListEmpty.setText(getString(R.string.work_empty_list));
-        } else {
-            mTextListEmpty.setText("");
+        mCatList = new ArrayList<HashMap<String, Object>>();
+        for (int i = 0; i < work.Instruments.size(); i++){
+            hm = new HashMap<>();
+            mCatList.add(hm);
         }
+        AdapterInstrument adapter_instrument = new AdapterInstrument(  WorkActivity.this,
+                mCatList, R.layout.list_item_work_instrument,
+                new String[]{},
+                new int[]{});
+        mListViewInstrument.setAdapter(adapter_instrument);
+        adapter_instrument.notifyDataSetChanged();
+        /*if (adapter_instrument.getCount() == 0) */mTextListInstrumentEmpty.setText(getString(R.string.work_empty_list_instrument));
+        //else                                    mTextListInstrumentEmpty.setText("");
 
         if (selected_first_window) {
             mTextMaterial.setTextColor(getResources().getColor(R.color.black));
@@ -458,25 +523,44 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        setToWork();
+
         FragmentManager manager = getSupportFragmentManager();
         MyDialogFragment myDialogFragment = new MyDialogFragment();
         myDialogFragment.setTitle(getString(R.string.work_alert_delete_title));
-        myDialogFragment.setMessage(getString(R.string.work_alert_delete_summary));
         myDialogFragment.setPositiveButtonTitle(getString(R.string.yes));
         myDialogFragment.setNegativeButtonTitle(getString(R.string.no));
         final int tp = position;
-        myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Long rowID = work.Materials.get(tp).first;
-                MaterialTypeClass p = material_types_info_from_id.get(rowID);
-                Toast.makeText(getApplicationContext(), p.name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
-                work.removeMaterial(tp);
+        if (selected_first_window) {
+            myDialogFragment.setMessage(getString(R.string.work_alert_delete_summary_material));
+            myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Long rowID = work.Materials.get(tp).first;
+                    MaterialTypeClass p = material_types_info_from_id.get(rowID);
+                    Toast.makeText(getApplicationContext(), p.name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
 
-                setFromWork();
-                dialog.cancel();
-            }
-        });
+                    work.removeMaterial(tp);
+
+                    setFromWork();
+                    dialog.cancel();
+                }
+            });
+        } else {
+            myDialogFragment.setMessage(getString(R.string.work_alert_delete_summary_instrument));
+            myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Long rowID = work.Instruments.get(tp).first;
+                    InstrumentClass p = instrument_info_from_id.get(rowID);
+                    Toast.makeText(getApplicationContext(), p.name + " - " + getString(R.string.removed), Toast.LENGTH_SHORT).show();
+
+                    work.removeInstrument(tp);
+
+                    setFromWork();
+                    dialog.cancel();
+                }
+            });
+        }
         myDialogFragment.setNegativeClicked(new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
@@ -487,15 +571,15 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-    private class Adapter extends SimpleAdapter{
-        public Adapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
+    private class AdapterMaterial extends SimpleAdapter{
+        public AdapterMaterial(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
             super(context, data, resource, from, to);
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = null;
-            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_work, parent, false);
+            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_work_material, parent, false);
 
             TextView mTextName = (TextView) view.findViewById(R.id.text_name);
             EditText mEditSum = (EditText) view.findViewById(R.id.editText_sum);
@@ -504,7 +588,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             Long rowID = work.Materials.get(position).first;
             MaterialTypeClass p = material_types_info_from_id.get(rowID);
             mTextName.setText(p.name);
-            mTextMeasurement.setText(measurements_material[p.measurement]);
+            mTextMeasurement.setText(measurements_material[p.measurement] + "/" + measurements_work[spinner_adapter.getPosition(mSpinner.getSelectedItem().toString())]);
             if (Math.abs(work.Materials.get(position).second) < 1e-8)
                 mEditSum.setText("");
             else
@@ -587,6 +671,66 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    private class AdapterInstrument extends SimpleAdapter{
+        public AdapterInstrument(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
+            super(context, data, resource, from, to);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view = null;
+            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_work_material, parent, false);
+
+            TextView mTextName = (TextView) view.findViewById(R.id.text_name);
+            EditText mEditSum = (EditText) view.findViewById(R.id.editText_sum);
+            TextView mTextMeasurement = (TextView) view.findViewById(R.id.text_measurement);
+
+            Long rowID = work.Instruments.get(position).first;
+            InstrumentClass p = instrument_info_from_id.get(rowID);
+            mTextName.setText(p.name);
+            mTextMeasurement.setText(measurements_instrument[p.measuring]);
+            if (Math.abs(work.Materials.get(position).second) < 1e-8)
+                mEditSum.setText("");
+            else
+                mEditSum.setText(Float.toString(work.Materials.get(position).second));
+
+            final View v = view;
+            mEditSum.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    String cnt = charSequence.toString();
+                    if (cnt.equals("") || cnt.equals("-") || cnt.equals("-.") || cnt.equals(".")) {
+                        work.Instruments.get(position).second = 0f;
+                    } else {
+                        work.Instruments.get(position).second = Float.valueOf(cnt);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+            mTextName.setLongClickable(true);
+            mTextMeasurement.setLongClickable(true);
+            mTextName.setClickable(true);
+            mTextMeasurement.setClickable(true);
+
+            return view;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return true;
+        }
+    }
+
     private ArrayList<MaterialTypeClass> getAllMaterialTypes() {
         DBObject[] arr = dbAdapter.getAllRows(DBAdapter.MATERIAL_TYPES_TABLE);
         ArrayList<MaterialTypeClass> res = new ArrayList<MaterialTypeClass>();
@@ -601,6 +745,15 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         ArrayList<MaterialClass> res = new ArrayList<MaterialClass>();
         for (int i = 0; i < arr.length; i++){
             res.add((MaterialClass) arr[i]);
+        }
+        return res;
+    }
+
+    private ArrayList<InstrumentClass> getAllInstrument() {
+        DBObject[] arr = dbAdapter.getAllRows(DBAdapter.INSTRUMENT_TABLE);
+        ArrayList<InstrumentClass> res = new ArrayList<InstrumentClass>();
+        for (int i = 0; i < arr.length; i++){
+            res.add((InstrumentClass) arr[i]);
         }
         return res;
     }

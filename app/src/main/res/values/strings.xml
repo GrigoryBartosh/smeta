@@ -102,18 +102,19 @@
     <string name="work_list_instruments">Инсрументы</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_about_text">
-        Чтобы удалить материал из списка
-        необходимых материалов,
-        нажмите на материал и удерживайте.\n
+        Чтобы удалить элемент из списка
+        необходимых для работы,
+        нажмите на элемент и удерживайте.\n
         \n
-        Для добавления нового материала,
+        Для добавления нового элемента,
         в список необходимых
-        материалов, нажмите на кнопку
-        ДОБАВИТЬ.
+        для работы, нажмите на ПЛЮС.
     </string>
     <string name="work_alert_delete_title">Удаление</string>
-    <string name="work_alert_delete_summary">Вы уверены, что хотите удалить этот материал?</string>
-    <string name="work_empty_list">Список материалов пуст. Нажмите ДОБАВИТЬ, чтобы добавить новый материал.</string>
+    <string name="work_alert_delete_summary_material">Вы уверены, что хотите удалить этот материал?</string>
+    <string name="work_alert_delete_summary_instrument">Вы уверены, что хотите удалить этот инструмент?</string>
+    <string name="work_empty_list_material">Список материалов пуст. Нажмите на ПЛЮС, чтобы добавить новый материал.</string>
+    <string name="work_empty_list_instrument">Список инструментов пуст. Нажмите на ПЛЮС, чтобы добавить новый инструмент.</string>
     <string name="work_toast_need_name">Пожалуйста, введите название работы.</string>
     <string name="work_toast_bad_symbol">Название работы не должно содержать символов:</string>
     <string name="work_toast_equal_name">Такое название уже существует.</string>
@@ -217,6 +218,19 @@
         <item>кг</item>
         <item>л</item>
         <item>шт</item>
+    </string-array>
+
+    <string-array name="measurements_instrument">
+        <item>Штука</item>
+        <item>Метр</item>
+        <item>Погонный метр</item>
+        <item>Час</item>
+    </string-array>
+    <string-array name="measurements_instrument_short">
+        <item>шт</item>
+        <item>м</item>
+        <item>м.пог.</item>
+        <item>ч</item>
     </string-array>
 
     <string-array name="bad_strings">

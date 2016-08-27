@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:elevation="5dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_background">
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="This is Title"
+            android:textSize="18sp"
+            android:layout_weight="6"
+            android:layout_gravity="fill"
+            />
+
+        <EditText
+            android:id="@+id/editText_sum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="0"
+            android:inputType="numberSigned|numberDecimal"
+            android:layout_weight="3"
+            android:maxLength="9"
+            android:clickable="false"/>
+
+        <TextView
+            android:id="@+id/text_measurement"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="This is Measurement"
+            android:textSize="18sp"
+            android:layout_weight="2"/>
+    </LinearLayout>
+
+</LinearLayout>

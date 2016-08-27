@@ -145,7 +145,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/work_list_instruments"
-                        android:textColor="@color/black"
+                        android:textColor="@color/dark_gray"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:gravity="center"/>
 
@@ -153,7 +153,7 @@
                         android:id="@+id/work_list_underline_instruments"
                         android:layout_width="fill_parent"
                         android:layout_height="2dp"
-                        android:background="@color/blue" />
+                        android:background="@color/empty" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -165,12 +165,6 @@
             android:paddingTop="10dp"
             android:layout_below="@+id/work_linerLayout" />
 
-        <TextView
-            android:id="@+id/work_text_list_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_below="@+id/work_listView"/>
     </RelativeLayout>
 
 </LinearLayout>
