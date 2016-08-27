@@ -98,7 +98,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         Instruments.add(new Pair(newInstrument, 0.0f));
     }
 
-    public void removeInstruments(int index)
+    public void removeInstrument(int index)
     {
         Instruments.remove(index);
     }
