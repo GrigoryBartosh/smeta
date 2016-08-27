@@ -505,8 +505,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                 new int[]{});
         mListViewInstrument.setAdapter(adapter_instrument);
         adapter_instrument.notifyDataSetChanged();
-        /*if (adapter_instrument.getCount() == 0) */mTextListInstrumentEmpty.setText(getString(R.string.work_empty_list_instrument));
-        //else                                    mTextListInstrumentEmpty.setText("");
+        if (adapter_instrument.getCount() == 0) mTextListInstrumentEmpty.setText(getString(R.string.work_empty_list_instrument));
+        else                                    mTextListInstrumentEmpty.setText("");
 
         if (selected_first_window) {
             mTextMaterial.setTextColor(getResources().getColor(R.color.black));
