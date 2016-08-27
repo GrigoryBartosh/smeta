@@ -28,35 +28,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="25dp"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/work_snipper"
-            android:textSize="16sp"/>
-
-        <Spinner
-            android:id="@+id/work_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/measurements_work"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
         android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/work_price"
-            android:textSize="16sp"
-            android:paddingRight="15dp"/>
+            android:textSize="16sp"/>
 
         <EditText
             android:id="@+id/work_editText_sum"
@@ -70,9 +49,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ruble_short"
+            android:text="@string/work_ruble_slash"
             android:textSize="16sp"
-            android:paddingLeft="15dp"/>
+            android:paddingLeft="5dp"/>
+
+        <Spinner
+            android:id="@+id/work_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/measurements_work"/>
 
     </LinearLayout>
 
@@ -85,7 +70,7 @@
             android:id="@+id/work_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/work_text_size"
+            android:text=""
             android:textSize="16sp"
             android:paddingRight="15dp"/>
 
@@ -102,35 +87,83 @@
             android:layout_toRightOf="@+id/work_text_size"
             android:layout_toEndOf="@+id/work_text_size" />
 
-        <TextView
-            android:id="@+id/work_text_list"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/work_linerLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/work_necessary_materials"
-            android:textSize="16sp"
-            android:paddingTop="25dp"
-            android:layout_below="@+id/work_text_size"
-            android:layout_toLeftOf="@+id/work_button_new"
-            android:layout_toStartOf="@+id/work_button_new"
-            android:paddingRight="88dp" />
+            android:paddingTop="20dp">
 
-        <Button
-            android:id="@+id/work_button_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="добавить\nматериал"
-            android:layout_alignBottom="@+id/work_text_list"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/work_text_size"
+                android:gravity="center">
 
-        <ListView
-            android:id="@+id/work_listView"
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10">
+
+                    <TextView
+                        android:id="@+id/work_list_material"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/work_list_material"
+                        android:textColor="@color/black"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:gravity="center"/>
+
+                    <View
+                        android:id="@+id/work_list_underline_material"
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/blue" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/work_imageView_new"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/round_shape"
+                    android:src="@drawable/ic_plus"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:elevation="3dp"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10">
+
+                    <TextView
+                        android:id="@+id/work_list_instruments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/work_list_instruments"
+                        android:textColor="@color/black"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:gravity="center"/>
+
+                    <View
+                        android:id="@+id/work_list_underline_instruments"
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/blue" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ViewFlipper
+            android:id="@+id/work_viewFlipper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:longClickable="true"
-            android:clickable="true"
-            android:layout_below="@+id/work_text_list"/>
+            android:layout_below="@+id/work_linerLayout" />
 
         <TextView
             android:id="@+id/work_text_list_empty"
