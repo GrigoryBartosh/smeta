@@ -188,6 +188,13 @@ public class FileManager
         ans.size = Float.valueOf(temp[6]);
         ans.name = new String(temp[7]);
         ans.rowID = Long.valueOf(temp[8]);
+        temp2 = nospaces(temp[9]).split(",");
+        for (int i = 0; i < temp2.length; ++i) {
+            String[] lmao = temp2[i].split(";");
+            if (lmao.length == 2)
+                ans.Instruments.add(new Pair(Long.valueOf(lmao[0]), Float.valueOf(lmao[1])));
+        }
+
         return ans;
     }
 

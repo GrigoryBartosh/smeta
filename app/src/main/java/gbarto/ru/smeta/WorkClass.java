@@ -12,6 +12,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public long workType;
     public ArrayList<Pair <Long, Float> > Materials;
     public ArrayList<Long> RealMaterials;
+    public ArrayList<Pair <Long, Float> > Instruments;
     public float price;
     public int measuring;
     public float size;
@@ -27,6 +28,9 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.Materials = new ArrayList<>();
         for (Pair <Long, Float> x : a.Materials)
             this.Materials.add(new Pair<>(Long.valueOf(x.first), Float.valueOf(x.second)));
+        this.Instruments = new ArrayList<>();
+        for (Pair <Long, Float> x : a.Instruments)
+            this.Instruments.add(new Pair<>(Long.valueOf(x.first), Float.valueOf(x.second)));
         this.RealMaterials = new ArrayList<>();
         for (Long x : a.RealMaterials)
             this.RealMaterials.add(Long.valueOf(x));
@@ -99,6 +103,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     {
         this.state = state;
         this.Materials = new ArrayList<>();
+        this.Instruments = new ArrayList<>();
         this.measuring = -1;
         this.price = 0;
         this.name = name;
@@ -109,6 +114,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     {
         this.state = false;
         this.Materials = new ArrayList<>();
+        this.Instruments = new ArrayList<>();
         this.measuring = -1;
         this.price = 0;
         this.name = "";
@@ -127,6 +133,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
             RealMaterials.add(-1L);
         }
         Materials = new ArrayList<>(materials);
+        this.Instruments = new ArrayList<>();
         this.price = price;
         this.name = new String(name);
         this.measuring = measuring;
@@ -139,6 +146,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.state = state;
         Materials = new ArrayList<>();
         RealMaterials = new ArrayList<>();
+        this.Instruments = new ArrayList<>();
         for (Pair <Long, Float> x : materials) {
             Materials.add(new Pair(x.first, x.second));
         }
@@ -165,7 +173,8 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
                 "&" + measuring +
                 "&" + size +
                 "&" + name +
-                "&" + rowID;
+                "&" + rowID +
+                "&" + Instruments.toString();
     }
 
 

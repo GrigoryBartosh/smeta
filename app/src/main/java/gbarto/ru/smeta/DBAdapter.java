@@ -23,8 +23,7 @@ public class DBAdapter {
 
 	// DB Fields
 	public static final String KEY_ROWID = "_id";
-	public static final int DATABASE_VERSION = 1
-            ;
+	public static final int DATABASE_VERSION = 2;
 	public static final String DATABASE_NAME = "MyDb";
 
 	// BASE 1:
@@ -85,6 +84,17 @@ public class DBAdapter {
                     + MATERIAL_TYPES_KEY_MATERIALS + " text not null"
                     + ");";
 
+    // BASE 5:
+
+    public static final String INSTRUMENT_KEY_INSTRUMENT = "name";
+    public static final String[] INSTRUMENT_ALL_KEYS = new String[] {KEY_ROWID, INSTRUMENT_KEY_INSTRUMENT};
+    public static final String INSTRUMENT_TABLE = "instrumentTable";
+    private static final String INTSTRUMENT_CREATE_SQL  =
+            "create table " + INSTRUMENT_TABLE + " ("
+                    + KEY_ROWID + " integer primary key autoincrement, "
+                    + INSTRUMENT_KEY_INSTRUMENT + " text not null"
+                    + ");";
+
 	// Context of application who uses us.
 
 	protected final Context context;
@@ -137,6 +147,23 @@ public class DBAdapter {
             temp.put("measuring", material.getMeasuring());
             temp.put("iconID", material.getIconID());
             temp.put("per_object", material.getPer_object());
+            return temp;
+        }
+        catch (JSONException e) {
+            return null;
+        }
+    }
+
+    private JSONObject ToJSON(InstrumentClass instrumentClass)
+    {
+        JSONObject temp = new JSONObject();
+        try
+        {
+            temp.put("name", instrumentClass.getName());
+            temp.put("price", instrumentClass.getPrice());
+            temp.put("measuring", instrumentClass.getMeasuring());
+            temp.put("iconID", instrumentClass.getIconID());
+            temp.put("per_object", instrumentClass.getPer_object());
             return temp;
         }
         catch (JSONException e) {
@@ -209,6 +236,16 @@ public class DBAdapter {
         }
     }
 
+    private InstrumentClass JSONtoInstrumentClass (JSONObject x)
+    {
+        try {
+            return new InstrumentClass(x.getString("name"), (float)x.getDouble("price"), x.getInt("measuring"), x.getInt("iconID"), (float)x.getDouble("per_object"));
+        }
+        catch (JSONException e) {
+            return null;
+        }
+    }
+
     private MaterialTypeClass JSONtoMaterialTypeClass(JSONObject x)
     {
         try {
@@ -233,6 +270,8 @@ public class DBAdapter {
             return add((MaterialClass)x);
         if (x instanceof MaterialTypeClass)
             return add((MaterialTypeClass)x);
+        if (x instanceof InstrumentClass)
+            return add((InstrumentClass)x);
         return -1;
     }
 
@@ -246,6 +285,8 @@ public class DBAdapter {
             return update((MaterialClass)x);
         if (x instanceof MaterialTypeClass)
             return update((MaterialTypeClass)x);
+        if (x instanceof InstrumentClass)
+            return update((InstrumentClass)x);
         return false;
     }
 
@@ -283,6 +324,22 @@ public class DBAdapter {
         ContentValues newValues = new ContentValues();
         newValues.put(MATERIAL_KEY_MATERIAL,  ToJSON(material).toString());
         return db.update(MATERIAL_TABLE, newValues, where, null) != 0;
+    }
+
+    // Adds new instrument to DB and returns you row_id
+    public long add(InstrumentClass instrumentClass) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(INSTRUMENT_KEY_INSTRUMENT, ToJSON(instrumentClass).toString());
+        instrumentClass.rowID = db.insert(INSTRUMENT_TABLE, null, initialValues);
+        return instrumentClass.rowID;
+    }
+
+    public boolean update(InstrumentClass instrumentClass)
+    {
+        String where = KEY_ROWID + "=" + instrumentClass.rowID;
+        ContentValues newValues = new ContentValues();
+        newValues.put(INSTRUMENT_KEY_INSTRUMENT,  ToJSON(instrumentClass).toString());
+        return db.update(INSTRUMENT_TABLE, newValues, where, null) != 0;
     }
 
     // Adds new work to DB and returns you row_id
@@ -378,6 +435,11 @@ public class DBAdapter {
             case MATERIAL_TYPES_TABLE:
                 c = db.query(true, tablename, MATERIAL_TYPES_ALL_KEYS,
                         where, null, null, null, null, null);
+                break;
+            case INSTRUMENT_KEY_INSTRUMENT:
+                c = db.query(true, tablename, INSTRUMENT_ALL_KEYS,
+                        where, null, null, null, null, null);
+                break;
         }
         if (c != null)
             if (c.moveToFirst())
@@ -419,6 +481,14 @@ public class DBAdapter {
                             MaterialTypeClass tmp = JSONtoMaterialTypeClass(FromString(structure));
                             tmp.setName(c.getString(1));
                             tmp.setMeasurement(c.getInt(2));
+                            tmp.setRowID(c.getLong(0));
+                            temp.add(tmp);
+                            break;
+                        }
+                        case INSTRUMENT_TABLE:
+                        {
+                            String structure = c.getString(1);
+                            InstrumentClass tmp = JSONtoInstrumentClass(FromString(structure));
                             tmp.setRowID(c.getLong(0));
                             temp.add(tmp);
                             break;
@@ -500,6 +570,10 @@ public class DBAdapter {
                     initialValues.put(MATERIAL_TYPES_KEY_MEASUREMENT, s.getMeasurement());
                     break;
                 }
+                case INSTRUMENT_TABLE: {
+                    initialValues.put(INSTRUMENT_KEY_INSTRUMENT, ToJSON((InstrumentClass) t).toString());
+                    break;
+                }
             }
             _db.insert(tablename, null, initialValues);
 
@@ -562,6 +636,23 @@ public class DBAdapter {
             }
         }
 
+        private JSONObject ToJSON(InstrumentClass instrumentClass)
+        {
+            JSONObject temp = new JSONObject();
+            try
+            {
+                temp.put("name", instrumentClass.getName());
+                temp.put("price", instrumentClass.getPrice());
+                temp.put("measuring", instrumentClass.getMeasuring());
+                temp.put("iconID", instrumentClass.getIconID());
+                temp.put("per_object", instrumentClass.getPer_object());
+                return temp;
+            }
+            catch (JSONException e) {
+                return null;
+            }
+        }
+
 		@Override
 		public void onCreate(SQLiteDatabase _db)
 		{
@@ -610,6 +701,12 @@ public class DBAdapter {
             materials.add(4L);
             t4 = new MaterialTypeClass("Краска", materials, 5);
             add(_db, MATERIAL_TYPES_TABLE, t4);
+
+            //public InstrumentClass(String name, float price, int measuring, int iconID, float per_object)
+            InstrumentClass i1 = new InstrumentClass("Молоток", 150, 6, 0, -1);
+            add(_db, INSTRUMENT_TABLE, i1);
+            i1 = new InstrumentClass("Валик", 236, 6, 0, -1);
+            add(_db, INSTRUMENT_TABLE, i1);
 		}
 
 		@Override
@@ -623,6 +720,7 @@ public class DBAdapter {
             _db.execSQL("DROP TABLE IF EXISTS " + WORKS_TABLE);
             _db.execSQL("DROP TABLE IF EXISTS " + TYPES_TABLE);
             _db.execSQL("DROP TABLE IF EXISTS " + MATERIAL_TYPES_TABLE);
+            _db.execSQL("DROP TABLE IF EXISTS " + INSTRUMENT_TABLE);
 
             // Recreate new database:
             onCreate(_db);
@@ -639,6 +737,7 @@ public class DBAdapter {
             _db.execSQL("DROP TABLE IF EXISTS " + WORKS_TABLE);
             _db.execSQL("DROP TABLE IF EXISTS " + TYPES_TABLE);
             _db.execSQL("DROP TABLE IF EXISTS " + MATERIAL_TYPES_TABLE);
+            _db.execSQL("DROP TABLE IF EXISTS " + INSTRUMENT_TABLE);
 
             // Recreate new database:
             onCreate(_db);
