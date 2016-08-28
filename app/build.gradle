@@ -8,7 +8,7 @@ android {
         applicationId "gbarto.ru.smeta"
         minSdkVersion 16
         versionCode 1
-        versionName "1.1.1"
+        versionName "1.1.0"
     }
     buildTypes {
         release {
