@@ -189,6 +189,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                     RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
             mLinearLayout.setLayoutParams(relativeParams);
+            mLinearLayout.setPadding(0,20,0,0);
         }
 
         int color = getResources().getColor(R.color.ic_menu);
@@ -588,7 +589,17 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Long rowID = work.Materials.get(position).first;
             MaterialTypeClass p = material_types_info_from_id.get(rowID);
-            mTextName.setText(p.name);
+            if (work_type == 2) {
+                if (work.RealMaterials.get(position) == -1L)
+                    mTextName.setText(p.name + " (" + getString(R.string.work_material_not_choose) + ")");
+                else {
+                    DBObject m = dbAdapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(position));
+                    mTextName.setText(m.name);
+                }
+            } else {
+                mTextName.setText(p.name);
+            }
+
             mTextMeasurement.setText(measurements_material[p.measurement] + "/" + measurements_work[spinner_adapter.getPosition(mSpinner.getSelectedItem().toString())]);
             if (Math.abs(work.Materials.get(position).second) < 1e-8)
                 mEditSum.setText("");
@@ -622,13 +633,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mTextMeasurement.setLongClickable(true);
             mTextName.setClickable(true);
             mTextMeasurement.setClickable(true);
-
-            if (work_type == 2){
-                if (work.RealMaterials.get(position) == -1L)
-                    view.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
-                else
-                    view.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
-            }
 
             if (work_type == 2) {
                 View.OnClickListener ocl = new View.OnClickListener() {

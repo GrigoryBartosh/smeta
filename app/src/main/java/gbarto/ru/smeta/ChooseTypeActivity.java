@@ -255,7 +255,8 @@ public class ChooseTypeActivity extends AppCompatActivity {
                             bad = true;
             }
             if (bad) {
-                item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
+                //item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
+                //вот этой пдсветко больше быть не должно
                 incompleteTypes.add(w1);
             }
             else

@@ -188,24 +188,31 @@ public class SearchActivity extends AppCompatActivity {
             View view = convertView;
             if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_search, parent, false);
 
-            CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+            final CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+            TextView text = (TextView) view.findViewById(R.id.text_name);
+
             if (!check_list){
                 checkBox.setVisibility(View.INVISIBLE);
             } else {
                 if (used.contains(j)) checkBox.setChecked(true);
-                checkBox.setOnClickListener(new CheckBox.OnClickListener(){
+                View.OnClickListener ocl = new View.OnClickListener(){
                     @Override
                     public void onClick(View view) {
                         if (used.contains(j)){
                             used.remove(j);
+                            checkBox.setChecked(false);
                         } else {
                             used.add(j);
+                            checkBox.setChecked(true);
                         }
                     }
-                });
+                };
+
+                checkBox.setOnClickListener(ocl);
+                text.setOnClickListener(ocl);
+                view.setOnClickListener(ocl);
             }
 
-            TextView text = (TextView) view.findViewById(R.id.text_name);
             text.setText(list.get(j).name);
 
             if (!check_list && is_first && first_in_list && position == 0)

@@ -117,6 +117,7 @@
     <string name="work_alert_delete_summary_instrument">Вы уверены, что хотите удалить этот инструмент?</string>
     <string name="work_empty_list_material">Список материалов пуст. Нажмите на ПЛЮС, чтобы добавить новый материал.</string>
     <string name="work_empty_list_instrument">Список инструментов пуст. Нажмите на ПЛЮС, чтобы добавить новый инструмент.</string>
+    <string name="work_material_not_choose">не выбрано</string>
     <string name="work_toast_need_name">Пожалуйста, введите название работы.</string>
     <string name="work_toast_bad_symbol">Название работы не должно содержать символов:</string>
     <string name="work_toast_equal_name">Такое название уже существует.</string>

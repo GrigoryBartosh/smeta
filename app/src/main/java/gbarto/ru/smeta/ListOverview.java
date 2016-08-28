@@ -210,10 +210,13 @@ public class ListOverview extends AppCompatActivity
                     lmao = true;
                     break;
                 }
-            if (lmao)
-                item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
-            else
-                item.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
+            if (lmao) {
+                //item.setBackgroundColor(getResources().getColor(R.color.work_material_not_choose));
+                //вот этой пдсветко больше быть не должно
+            } else {
+                //item.setBackgroundColor(getResources().getColor(R.color.work_material_choose));
+                //вот этой пдсветко больше быть не должно
+            }
             return item;
         }
     }
