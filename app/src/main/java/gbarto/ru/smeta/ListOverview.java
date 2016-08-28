@@ -14,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -199,13 +197,29 @@ public class ListOverview extends AppCompatActivity
         public View getView(final int position, View convertView, ViewGroup parent) {
             View item = getLayoutInflater().inflate(R.layout.listlayout_works, parent, false);
 
-            WorkClass w1 = WorkSet.get(position);
+            WorkClass work = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
-            t1.setText(w1.name);
+            t1.setText(work.name);
+            {
+                TextView t2 = (TextView)item.findViewById(R.id.price);
+                double sum = 0;
+                if (work.RealMaterials != null)
+                    for (int i = 0; i < work.RealMaterials.size(); ++i)
+                        if (work.RealMaterials.get(i) != -1L) {
+                            MaterialClass material = (MaterialClass)adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                            sum += work.size * material.price * work.Materials.get(i).second;
+                        }
+                if (work.Instruments != null)
+                    for (int i = 0; i < work.Instruments.size(); ++i) {
+                        InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
+                        sum += tool.price * work.Instruments.get(i).second;
+                    }
+                t2.setText(String.format("%.2f", sum));
+            }
 
             boolean lmao = false;
-            for (int i = 0; !lmao && i < w1.Materials.size(); ++i)
-                if (w1.RealMaterials.get(i) == -1L)
+            for (int i = 0; !lmao && i < work.Materials.size(); ++i)
+                if (work.RealMaterials.get(i) == -1L)
                 {
                     lmao = true;
                     break;

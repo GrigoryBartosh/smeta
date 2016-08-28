@@ -187,6 +187,26 @@ public class ChooseTypeActivity extends AppCompatActivity {
                 item.setBackgroundColor(getResources().getColor(R.color.place_chosen));
             WorkTypeClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
+            {
+                TextView t2 = (TextView)item.findViewById(R.id.price);
+                double sum = 0;
+                ArrayList<WorkClass> temp = Project.get(w1);
+                if (temp != null) {
+                    for (WorkClass work : temp) {
+                        for (int i = 0; i < work.RealMaterials.size(); ++i)
+                            if (work.RealMaterials.get(i) != -1L) {
+                                MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                                sum += work.size * material.price * work.Materials.get(i).second;
+                            }
+                        for (int i = 0; i < work.Instruments.size(); ++i) {
+                            InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
+                            sum += tool.price * work.Instruments.get(i).second;
+                        }
+                    }
+                }
+                t2.setText(String.format("%.2f", sum));
+            }
+
             t1.setText(w1.name);
             boolean bad = false;
             if (Project.contains(w1))
