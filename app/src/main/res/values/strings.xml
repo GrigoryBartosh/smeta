@@ -8,6 +8,7 @@
         <item>Итог, руб.</item>
     </string-array>
     <string name="app_has_no_permission_to_write">У приложения нет прав на запись в память.</string>
+    <string name="app_has_no_permission_to_read">У приложения нет прав на чтение из памяти.</string>
     <string name="materials">Материалы</string>
     <string name="tools">Инструменты</string>
     <string name="email">Email</string>

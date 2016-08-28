@@ -1,11 +1,14 @@
 package gbarto.ru.smeta;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.itextpdf.text.BaseColor;
@@ -81,6 +84,13 @@ public class FileManager
     public void Save(ProjectClass Project)
     {
         try {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
+                return;
+            }
             File path = new File(context.getFilesDir(), Project.name + extension);
             path.createNewFile();
             FileWriter fileWriter = new FileWriter(path);
@@ -110,6 +120,13 @@ public class FileManager
     public ArrayList <String> Load()
     {
         try {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_read), Toast.LENGTH_SHORT).show();
+                return new ArrayList<>();
+            }
             File[] AllNames = context.getFilesDir().listFiles();
             ArrayList <String> tmp = new ArrayList<>();
             for (int i = 0; i < AllNames.length; ++i) {
@@ -120,7 +137,7 @@ public class FileManager
             return tmp;
         }
         catch (Exception e) {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -491,7 +508,15 @@ public class FileManager
 
     public File createPDF(ProjectClass Project)
     {
-        try {
+        try {// Assume thisActivity is the current activity
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
             pagenumber = 1;
             if (!Environment.getExternalStorageDirectory().canWrite())
             {
@@ -858,6 +883,13 @@ public class FileManager
     {
         try
         {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(context, context.getString(R.string.app_has_no_permission_to_write), Toast.LENGTH_SHORT).show();
+                return null;
+            }
             lefted_styles.clear();
             centered_styles.clear();
             righted_styles.clear();
