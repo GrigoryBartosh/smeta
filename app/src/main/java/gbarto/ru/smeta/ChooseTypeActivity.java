@@ -243,8 +243,6 @@ public class ChooseTypeActivity extends AppCompatActivity {
             WorkTypeClass w1 = WorkSet.get(position);
             TextView t1 = (TextView)item.findViewById(R.id.work_name);
             t1.setText(w1.name);
-            ImageView img = (ImageView) item.findViewById(R.id.icon_right);
-            img.setImageResource(R.drawable.ic_button_next);
             boolean bad = false;
             if (Project.contains(w1))
             {

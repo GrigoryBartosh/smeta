@@ -2,31 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
-
-    <ImageView
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/icon_left"
-        android:src="@drawable/empty"
-        android:layout_weight="2" />
+        android:background="@drawable/layout_background"
+        android:elevation="5dp">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/Sample_Text"
-        android:id="@+id/work_name"
-        android:layout_gravity="center"
-        android:layout_weight="10"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/Sample_Text"
+            android:id="@+id/work_name"
+            android:layout_gravity="center"/>
 
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/icon_right"
-        android:layout_weight="1"
-        android:src="@drawable/empty"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total"
+            android:layout_below="@+id/work_name"
+            android:layout_toLeftOf="@+id/price"/>
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="price"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/work_name"/>
+
+
+    </RelativeLayout>
 
 </LinearLayout>
