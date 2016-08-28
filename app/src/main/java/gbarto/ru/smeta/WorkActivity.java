@@ -74,6 +74,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private String[] measurements_instrument;
 
     private ArrayList<MaterialClass> new_material;
+    private ArrayList<InstrumentClass> new_instrument;
 
     private ArrayList<String> used_name;
     private String[] bad_strings;
@@ -679,7 +680,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = null;
-            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_work_material, parent, false);
+            if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_work_instrument, parent, false);
 
             TextView mTextName = (TextView) view.findViewById(R.id.text_name);
             EditText mEditSum = (EditText) view.findViewById(R.id.editText_sum);
@@ -689,10 +690,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             InstrumentClass p = instrument_info_from_id.get(rowID);
             mTextName.setText(p.name);
             mTextMeasurement.setText(measurements_instrument[p.measuring]);
-            if (Math.abs(work.Materials.get(position).second) < 1e-8)
+            if (Math.abs(work.Instruments.get(position).second) < 1e-8)
                 mEditSum.setText("");
             else
-                mEditSum.setText(Float.toString(work.Materials.get(position).second));
+                mEditSum.setText(Float.toString(work.Instruments.get(position).second));
 
             final View v = view;
             mEditSum.addTextChangedListener(new TextWatcher() {
