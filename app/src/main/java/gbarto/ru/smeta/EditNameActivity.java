@@ -266,7 +266,6 @@ public class EditNameActivity extends AppCompatActivity {
             FileManager fileManager = new FileManager(EditNameActivity.this);
             fileManager.Save(Project);
             countreturned = 0;
-            Toast.makeText(getApplicationContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
             return true;
         }
         else
