@@ -10,6 +10,11 @@
     <string name="app_has_no_permission_to_write">У приложения нет прав на запись в память.</string>
     <string name="materials">Материалы</string>
     <string name="tools">Инструменты</string>
+    <string name="email">Email</string>
+    <string name="phone">Тел.</string>
+    <string name="address">Адрес.</string>
+    <string name="company">Адрес.</string>
+    <string name="name">Имя</string>
     <string name="title_activity_edit_name">Введите имя</string>
     <string name="add_materials">Материалы</string>
     <string name="share">Поделиться</string>

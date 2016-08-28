@@ -8,14 +8,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -117,58 +113,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
         d.setAlpha(255);
     }
 
-
     private final ArrayList<View> mMenuItems = new ArrayList<>();
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_choose_types, menu);
-        // Adjust the text color based on the connection
-            final View decor = getWindow().getDecorView();
-            decor.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-            {
-                @Override
-                public void onGlobalLayout()
-                {
-                    decor.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    decor.findViewsWithText(mMenuItems, getString(R.string.done),
-                            View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
-                    final TextView connected = !mMenuItems.isEmpty() ? (TextView) mMenuItems.get(0) : null;
-                    if (connected != null) {
-                        connected.setTextColor(getResources().getColor(R.color.ic_menu));
-                    }
-                }
-            });
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == R.id.menu_choose_types_done) {
-            Intent x = new Intent();
-            x.putExtra("Project", Project);
-            x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            setResult(RESULT_OK, x);
-            finish();
-            return super.onOptionsItemSelected(item);
-        } else if (item.getItemId() == R.id.menu_choose_types_coeff) {
-            if (userIsEditingNow) {
-                linearLayout.removeView(seekBar);
-                linearLayout.removeView(seekBartitle);
-                item.setIcon(getResources().getDrawable(R.drawable.pencil));
-            } else {
-                linearLayout.addView(seekBar, 0);
-                linearLayout.addView(seekBartitle, 0);
-                seekBar.setProgress((int)Math.round(WorkSet.get(editingid).coeff * 10));
-                item.setIcon(getResources().getDrawable(R.drawable.pencil_blue));
-            }
-            userIsEditingNow = !userIsEditingNow;
-            adapt.notifyDataSetChanged();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onDestroy()

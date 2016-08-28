@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,10 +43,10 @@ public class EditNameActivity extends AppCompatActivity {
     private int TypesResult = 1488;
     private int CompletedResult = 239;
     String projectname = "";
+    boolean gaveproject = false;
     DBAdapter adapter;
-    ImageButton imageButton;
     ProjectClass Project;
-    String keeper;
+    String keeper = "";
 
 
     @Override
@@ -62,17 +61,21 @@ public class EditNameActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
-                if (Save())
-                    onBackPressed();
+                onBackPressed();
             }
         });
 
         mText = (EditText)findViewById(R.id.Project_name_field);
         if (getIntent().getSerializableExtra("Project") != null) {
+            gaveproject = true;
             Project = (ProjectClass) getIntent().getSerializableExtra("Project");
             projectname = Project.name;
             lastProjectname = projectname;
             mText.setText(Project.name);
+            if (keeper.isEmpty())
+                setTitle(getString(R.string.title_activity_edit_name));
+            else
+                setTitle(keeper);
         }
         else
         {
@@ -80,6 +83,7 @@ public class EditNameActivity extends AppCompatActivity {
                 Project = new ProjectClass();
             }
         }
+
 
         fab = (FloatingActionButton) findViewById(R.id.main_fab);
         fab.setOnClickListener(new View.OnClickListener()
@@ -117,6 +121,8 @@ public class EditNameActivity extends AppCompatActivity {
             }
         });*/
         Summary = (TextView)findViewById(R.id.project_summary);
+        mText.clearFocus();
+        Summary.requestFocus();
         Refresh();
         keeper = mText.getText().toString();
 
@@ -156,7 +162,6 @@ public class EditNameActivity extends AppCompatActivity {
                 }
                 else
                     keeper = charSequence.toString();
-
             }});
 
         int color = getResources().getColor(R.color.ic_menu);
@@ -323,36 +328,46 @@ public class EditNameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        if (countreturned > 0) {
-            FragmentManager manager = getSupportFragmentManager();
-            MyDialogFragment myDialogFragment = new MyDialogFragment();
-            myDialogFragment.Message = getString(R.string.want_to_discard_changes);
-            myDialogFragment.Title = getString(R.string.want_to_go_back);
-            myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
-            myDialogFragment.NegativeButtonTitle = getString(R.string.no);
-            myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    Intent temp = new Intent();
-                    setResult(RESULT_CANCELED, temp);
-                    finish();
-                }
-            };
-            myDialogFragment.show(manager, "dialog");
-        }
-        else
+        if (!gaveproject && Project.works.isEmpty())
         {
             Intent temp = new Intent();
             setResult(RESULT_CANCELED, temp);
             finish();
+        }
+        if (Save()) {
+            if (countreturned > 0) {
+                FragmentManager manager = getSupportFragmentManager();
+                MyDialogFragment myDialogFragment = new MyDialogFragment();
+                myDialogFragment.Message = getString(R.string.want_to_discard_changes);
+                myDialogFragment.Title = getString(R.string.want_to_go_back);
+                myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
+                myDialogFragment.NegativeButtonTitle = getString(R.string.no);
+                myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        Intent temp = new Intent();
+                        setResult(RESULT_CANCELED, temp);
+                        finish();
+                    }
+                };
+                myDialogFragment.show(manager, "dialog");
+            } else {
+                Intent temp = new Intent();
+                setResult(RESULT_CANCELED, temp);
+                finish();
+            }
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        if (keeper.isEmpty())
+            setTitle(getString(R.string.title_activity_edit_name));
+        else
+            setTitle(keeper);
         if (requestCode == RoomResult) {
             if (resultCode == RESULT_OK) {
                 ++countreturned;
@@ -419,7 +434,8 @@ public class EditNameActivity extends AppCompatActivity {
             TextView mTextName = (TextView) item.findViewById(R.id.text);
             TextView mTextPrice = (TextView) item.findViewById(R.id.price);
 
-            mTextName.setText(RoomList.get(position));
+            String name = (position + 1) + ": " + RoomList.get(position);
+            mTextName.setText(name);
             mTextPrice.setText(String.format("%.2f", fileManager.getPrice(Project, position)));
             return item;
         }
