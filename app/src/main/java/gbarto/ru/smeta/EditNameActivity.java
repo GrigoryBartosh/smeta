@@ -213,41 +213,46 @@ public class EditNameActivity extends AppCompatActivity {
     }
 
     public void ProjectShare(){
-        FragmentManager manager = getSupportFragmentManager();
-        MyDialogFragment myDialogFragment = new MyDialogFragment();
-        myDialogFragment.setTitle(getString(R.string.main_share_alert_choose));
-        myDialogFragment.setUseMessage(false);
-        myDialogFragment.setUsePositiveButton(false);
-        myDialogFragment.setUseNegativeButton(false);
-        myDialogFragment.setUseList(true);
-        myDialogFragment.setList(getResources().getStringArray(R.array.main_list));
+        if (Save()) {
+            FragmentManager manager = getSupportFragmentManager();
+            MyDialogFragment myDialogFragment = new MyDialogFragment();
+            myDialogFragment.setTitle(getString(R.string.main_share_alert_choose));
+            myDialogFragment.setUseMessage(false);
+            myDialogFragment.setUsePositiveButton(false);
+            myDialogFragment.setUseNegativeButton(false);
+            myDialogFragment.setUseList(true);
+            myDialogFragment.setList(getResources().getStringArray(R.array.main_list));
 
-        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
-            File file;
-            Intent intent = new Intent();
-            public void onClick(DialogInterface dialog, int id) {
-                switch (id){
-                    case 0:
-                        file = fileManager.createPDF(Project);
-                        if (file == null) break;
-                        intent.setAction(Intent.ACTION_SEND);
-                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                        intent.setType("application/pdf");
-                        startActivity(intent);
-                        break;
-                    case 1:
-                        file = fileManager.createXLS(Project);
-                        if (file == null) break;
-                        intent.setAction(Intent.ACTION_SEND);
-                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                        intent.setType("application/vnd.ms-excel");
-                        startActivity(intent);
-                        break;
+            myDialogFragment.setListClicked(new DialogInterface.OnClickListener()
+            {
+                File file;
+                Intent intent = new Intent();
+
+                public void onClick(DialogInterface dialog, int id)
+                {
+                    switch (id) {
+                        case 0:
+                            file = fileManager.createPDF(Project);
+                            if (file == null) break;
+                            intent.setAction(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                            intent.setType("application/pdf");
+                            startActivity(intent);
+                            break;
+                        case 1:
+                            file = fileManager.createXLS(Project);
+                            if (file == null) break;
+                            intent.setAction(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                            intent.setType("application/vnd.ms-excel");
+                            startActivity(intent);
+                            break;
+                    }
+                    dialog.cancel();
                 }
-                dialog.cancel();
-            }
-        });
-        myDialogFragment.show(manager, "dialog");
+            });
+            myDialogFragment.show(manager, "dialog");
+        }
     }
 
     boolean Save()
@@ -294,29 +299,34 @@ public class EditNameActivity extends AppCompatActivity {
     }
 
     private void ProjectView(){
-        FragmentManager manager = getSupportFragmentManager();
-        MyDialogFragment myDialogFragment = new MyDialogFragment();
-        myDialogFragment.setTitle(getString(R.string.main_view_alert_choose));
-        myDialogFragment.setUseMessage(false);
-        myDialogFragment.setUsePositiveButton(false);
-        myDialogFragment.setUseNegativeButton(false);
-        myDialogFragment.setUseList(true);
-        myDialogFragment.setList(getResources().getStringArray(R.array.main_list));
-        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
-            Intent intent = new Intent();
-            public void onClick(DialogInterface dialog, int id) {
-                switch (id){
-                    case 0:
-                        fileManager.openPDF(Project);
-                        break;
-                    case 1:
-                        fileManager.openXLS(Project);
-                        break;
+        if (Save()) {
+            FragmentManager manager = getSupportFragmentManager();
+            MyDialogFragment myDialogFragment = new MyDialogFragment();
+            myDialogFragment.setTitle(getString(R.string.main_view_alert_choose));
+            myDialogFragment.setUseMessage(false);
+            myDialogFragment.setUsePositiveButton(false);
+            myDialogFragment.setUseNegativeButton(false);
+            myDialogFragment.setUseList(true);
+            myDialogFragment.setList(getResources().getStringArray(R.array.main_list));
+            myDialogFragment.setListClicked(new DialogInterface.OnClickListener()
+            {
+                Intent intent = new Intent();
+
+                public void onClick(DialogInterface dialog, int id)
+                {
+                    switch (id) {
+                        case 0:
+                            fileManager.openPDF(Project);
+                            break;
+                        case 1:
+                            fileManager.openXLS(Project);
+                            break;
+                    }
+                    dialog.cancel();
                 }
-                dialog.cancel();
-            }
-        });
-        myDialogFragment.show(manager, "dialog");
+            });
+            myDialogFragment.show(manager, "dialog");
+        }
     }
 
     @Override

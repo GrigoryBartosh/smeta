@@ -199,7 +199,7 @@ public class ListOverview extends AppCompatActivity
             t1.setText(work.name);
             {
                 TextView t2 = (TextView)item.findViewById(R.id.price);
-                double sum = 0;
+                double sum = work.price * work.size;
                 if (work.RealMaterials != null)
                     for (int i = 0; i < work.RealMaterials.size(); ++i)
                         if (work.RealMaterials.get(i) != -1L) {

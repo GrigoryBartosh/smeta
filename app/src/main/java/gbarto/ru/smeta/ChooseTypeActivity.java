@@ -175,6 +175,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
                 ArrayList<WorkClass> temp = Project.get(w1);
                 if (temp != null) {
                     for (WorkClass work : temp) {
+                        sum += work.size * work.price;
                         for (int i = 0; i < work.RealMaterials.size(); ++i)
                             if (work.RealMaterials.get(i) != -1L) {
                                 MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
