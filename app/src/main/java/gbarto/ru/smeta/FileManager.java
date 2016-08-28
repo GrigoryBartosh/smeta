@@ -449,6 +449,11 @@ public class FileManager
                     else
                         ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
                 }
+
+                for (int i = 0; i < work.Instruments.size(); ++i) {
+                    InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
+                    ans += work.Instruments.get(i).second * tool.price * x.getKey().coeff;
+                }
             }
         return ans;
     }
@@ -472,6 +477,11 @@ public class FileManager
                             ans += work.size * work.Materials.get(i).second * material.price * x.getKey().coeff;
                         else
                             ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
+                    }
+
+                    for (int i = 0; i < work.Instruments.size(); ++i) {
+                        InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
+                        ans += work.Instruments.get(i).second * tool.price * x.getKey().coeff;
                     }
                 }
         return ans;
@@ -592,36 +602,76 @@ public class FileManager
                         table.addCell(RightedText(String.format("%.2f", work.price * work.size)));
                         double work_total = work.price * work.size;
                         work_cost += work_total * x.getKey().coeff;
-                        for (int i = 0; i < work.Materials.size(); ++i) {
-                            MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
-                            MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
-                            table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
-                            table.addCell(LeftPadded(LeftedText(material.name)));
-                            table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
-                            if (material.per_object < (1e-8)) {
-                                table.addCell(CenteredText(String.format("%.2f", work.size * work.Materials.get(i).second)));
-                                table.addCell(CenteredText(String.format("%.2f", material.price)));
-                                double wasted = work.size * work.Materials.get(i).second * material.price;
-                                table.addCell(RightedText(String.format("%.2f", wasted)));
-                                work_total += wasted;
-                                material_cost += wasted * x.getKey().coeff;
-                            } else {
-                                int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
-                                table.addCell(CenteredText(Integer.toString(amount)));
-                                table.addCell(CenteredText(String.format("%.2f", material.price)));
-                                double wasted = amount * material.price;
+
+                        if (work.Materials.size() > 0) {
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(CenteredBold(context.getString(R.string.materials))));
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(Empty()));
+                            for (int i = 0; i < work.Materials.size(); ++i) {
+                                MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
+                                MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                                table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
+                                table.addCell(LeftPadded(LeftedText(material.name)));
+                                table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
+                                if (material.per_object < (1e-8)) {
+                                    table.addCell(CenteredText(String.format("%.2f", work.size * work.Materials.get(i).second)));
+                                    table.addCell(CenteredText(String.format("%.2f", material.price)));
+                                    double wasted = work.size * work.Materials.get(i).second * material.price;
+                                    table.addCell(RightedText(String.format("%.2f", wasted)));
+                                    work_total += wasted;
+                                    material_cost += wasted * x.getKey().coeff;
+                                } else {
+                                    int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
+                                    table.addCell(CenteredText(Integer.toString(amount)));
+                                    table.addCell(CenteredText(String.format("%.2f", material.price)));
+                                    double wasted = amount * material.price;
+                                    table.addCell(RightedText(String.format("%.2f", wasted)));
+                                    work_total += wasted;
+                                    material_cost += wasted * x.getKey().coeff;
+                                }
+                            }
+
+                            table.addCell(Empty());
+                            table.addCell(LeftedText(context.getString(R.string.pdf_total_cost)));
+                            table.addCell(Empty());
+                            table.addCell(Empty());
+                            table.addCell(Empty());
+                            table.addCell(RightedText(String.format("%.2f", work_total)));
+                            work_type_total += work_total;
+                        }
+
+                        if (work.Instruments.size() > 0) {
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(CenteredBold(context.getString(R.string.tools))));
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(Empty()));
+                            table.addCell(ColoredBegin(Empty()));
+                            for (int i = 0; i < work.Instruments.size(); ++i) {
+                                InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
+                                table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
+                                table.addCell(LeftPadded(LeftedText(tool.name)));
+                                table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_instrument_short)[tool.measuring]));
+                                table.addCell(CenteredText(String.format("%.2f", work.Instruments.get(i).second)));
+                                table.addCell(CenteredText(String.format("%.2f", tool.price)));
+                                double wasted = work.Instruments.get(i).second * tool.price;
                                 table.addCell(RightedText(String.format("%.2f", wasted)));
                                 work_total += wasted;
                                 material_cost += wasted * x.getKey().coeff;
                             }
+
+                            table.addCell(Empty());
+                            table.addCell(LeftedText(context.getString(R.string.pdf_total_cost)));
+                            table.addCell(Empty());
+                            table.addCell(Empty());
+                            table.addCell(Empty());
+                            table.addCell(RightedText(String.format("%.2f", work_total)));
+                            work_type_total += work_total;
                         }
-                        table.addCell(Empty());
-                        table.addCell(LeftedText(context.getString(R.string.pdf_total_cost)));
-                        table.addCell(Empty());
-                        table.addCell(Empty());
-                        table.addCell(Empty());
-                        table.addCell(RightedText(String.format("%.2f", work_total)));
-                        work_type_total += work_total;
+
                     }
 
                     table.addCell(ColoredEnd(Empty()));

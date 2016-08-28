@@ -436,7 +436,7 @@ public class DBAdapter {
                 c = db.query(true, tablename, MATERIAL_TYPES_ALL_KEYS,
                         where, null, null, null, null, null);
                 break;
-            case INSTRUMENT_KEY_INSTRUMENT:
+            case INSTRUMENT_TABLE:
                 c = db.query(true, tablename, INSTRUMENT_ALL_KEYS,
                         where, null, null, null, null, null);
                 break;
@@ -704,9 +704,9 @@ public class DBAdapter {
             add(_db, MATERIAL_TYPES_TABLE, t4);
 
             //public InstrumentClass(String name, float price, int measuring, int iconID, float per_object)
-            InstrumentClass i1 = new InstrumentClass("Молоток", 150, 6, 0, -1);
+            InstrumentClass i1 = new InstrumentClass("Молоток", 150, 0, 0, -1);
             add(_db, INSTRUMENT_TABLE, i1);
-            i1 = new InstrumentClass("Валик", 236, 6, 0, -1);
+            i1 = new InstrumentClass("Валик", 236, 0, 0, -1);
             add(_db, INSTRUMENT_TABLE, i1);
 		}
 
