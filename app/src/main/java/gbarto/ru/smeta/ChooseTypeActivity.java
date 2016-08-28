@@ -1,11 +1,9 @@
 package gbarto.ru.smeta;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -85,11 +83,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
-                Intent x = new Intent();
-                x.putExtra("Project", Project);
-                x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                setResult(RESULT_OK, x);
-                finish();
+                onBackPressed();
             }
         });
         adapter.open();
@@ -125,23 +119,11 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        FragmentManager manager = getSupportFragmentManager();
-        MyDialogFragment myDialogFragment = new MyDialogFragment();
-        myDialogFragment.Message = getString(R.string.want_to_discard_changes);
-        myDialogFragment.Title = getString(R.string.want_to_go_back);
-        myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
-        myDialogFragment.NegativeButtonTitle = getString(R.string.no);
-        myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
-                Intent temp = new Intent();
-                setResult(RESULT_CANCELED, temp);
-                finish();
-            }
-        };
-        myDialogFragment.show(manager, "dialog");
+        Intent x = new Intent();
+        x.putExtra("Project", Project);
+        x.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        setResult(RESULT_OK, x);
+        finish();
     }
 
     private void default_values()

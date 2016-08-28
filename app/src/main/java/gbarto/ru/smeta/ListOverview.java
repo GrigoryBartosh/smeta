@@ -50,10 +50,7 @@ public class ListOverview extends AppCompatActivity
         {
             @Override
             public void onClick(View view) {
-                Intent temp = new Intent();
-                temp.putExtra("WorkSet", WorkSet);
-                setResult(RESULT_CANCELED, temp);
-                finish();
+                onBackPressed();
             }
         });
         adapter.open();
@@ -108,7 +105,7 @@ public class ListOverview extends AppCompatActivity
     {
         Intent temp = new Intent();
         temp.putExtra("WorkSet", WorkSet);
-        setResult(RESULT_CANCELED, temp);
+        setResult(RESULT_OK, temp);
         finish();
     }
 
