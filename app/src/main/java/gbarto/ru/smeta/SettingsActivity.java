@@ -184,7 +184,7 @@ public class SettingsActivity extends AppCompatActivity {
                         switch (id){
                             case 0:
                                 settingsManager.deletePhoto();
-                                mImageView.setPadding(60,60,60,60);
+                                mImageView.setPadding(40,40,40,40);
                                 mImageView.setImageResource(R.drawable.ic_add_photo);
                                 break;
                             case 1:
