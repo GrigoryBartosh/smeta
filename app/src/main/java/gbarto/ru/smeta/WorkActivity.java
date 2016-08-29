@@ -159,6 +159,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         work_type = intent.getExtras().getInt("work_type");
         work = (WorkClass) intent.getExtras().getSerializable("work");
         if (work_type != 2) used_name = intent.getExtras().getStringArrayList("used_name");
+        if (work_type == 0) work.measuring = 0;
 
         mTextSize.setText(measurements_work_word[work.measuring] + ":");
 
