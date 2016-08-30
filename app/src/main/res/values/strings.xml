@@ -63,10 +63,12 @@
         <item>XLS таблица</item>
     </string-array>
 
-    <string name="nav_new_project">Новый проект</string>
-    <string name="nav_price_work">Мои работы</string>
+    <string name="nav_projects">Текущие проекты</string>
+    <string name="nav_price_work">Расценки на работы</string>
     <string name="nav_price_material">Материалы</string>
-    <string name="nav_menu_settings">Настройки</string>
+    <string name="nav_menu_settings">Контактные данные</string>
+    <string name="nav_menu_contacts">Мои подрядчики</string>
+    <string name="nav_menu_archive">Архив</string>
     <string name="nav_menu_add">Дополнительно</string>
     <string name="nav_menu_abut">О программе</string>
 

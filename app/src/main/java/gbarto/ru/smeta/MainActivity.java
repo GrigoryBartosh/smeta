@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.PopupMenu;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -157,8 +155,7 @@ public class MainActivity   extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.nav_new_project:
-                NewProject();
+            case R.id.nav_projects:
                 break;
 
             case R.id.nav_price_work:
@@ -175,6 +172,14 @@ public class MainActivity   extends AppCompatActivity
 
             case R.id.nav_menu_abut:
                 AboutProgram();
+                break;
+
+            case R.id.nav_menu_contacts:
+                Contacts();
+                break;
+
+            case R.id.nav_menu_archive:
+                Archive();
                 break;
         }
 
@@ -284,6 +289,14 @@ public class MainActivity   extends AppCompatActivity
     private void Settings(){
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    private void Contacts(){
+
+    }
+
+    private void Archive(){
+
     }
 
     private void AboutProgram(){

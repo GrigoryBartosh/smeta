@@ -4,9 +4,9 @@
 
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_new_project"
-            android:icon="@drawable/ic_new_project"
-            android:title="@string/nav_new_project" />
+            android:id="@+id/nav_projects"
+            android:icon="@drawable/ic_projects"
+            android:title="@string/nav_projects" />
         <item
             android:id="@+id/nav_price_work"
             android:icon="@drawable/ic_price_work"
@@ -18,7 +18,15 @@
         <item
             android:id="@+id/nav_menu_settings"
             android:icon="@drawable/ic_settings"
+            android:title="@string/nav_menu_contacts" />
+        <item
+            android:id="@+id/nav_menu_contacts"
+            android:icon="@drawable/ic_contacts"
             android:title="@string/nav_menu_settings" />
+        <item
+            android:id="@+id/nav_menu_archive"
+            android:icon="@drawable/ic_archive"
+            android:title="@string/nav_menu_archive" />
     </group>
 
     <item android:title="@string/nav_menu_add">
