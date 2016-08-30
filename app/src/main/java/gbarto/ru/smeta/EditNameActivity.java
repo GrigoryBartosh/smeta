@@ -31,6 +31,7 @@ public class EditNameActivity extends AppCompatActivity {
 
     ArrayList <String> RoomList = new ArrayList<>();
     ArrayAdapter<String> adapt;
+    ArrayList <Integer> Before = new ArrayList<>();
     FloatingActionButton fab;
     FileManager fileManager;
     String lastProjectname = "";
@@ -47,7 +48,21 @@ public class EditNameActivity extends AppCompatActivity {
     DBAdapter adapter;
     ProjectClass Project;
     String keeper = "";
+    TreeMap <String, Integer> countrooms;
 
+    void Recalc()
+    {
+        countrooms = new TreeMap<>();
+        Before.clear();
+        for (String x : RoomList)
+        {
+            if (countrooms.containsKey(x))
+                countrooms.put(x, countrooms.get(x) + 1);
+            else
+                countrooms.put(x, 1);
+            Before.add(countrooms.get(x));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -380,8 +395,9 @@ public class EditNameActivity extends AppCompatActivity {
         if (requestCode == RoomResult) {
             if (resultCode == RESULT_OK) {
                 ++countreturned;
-                Project.works.add(new Pair(data.getStringExtra("new_room"), new TreeMap<>()));
+                Project.works.add(new Pair(new RoomClass(data.getStringExtra("new_room")), new TreeMap<>()));
                 RoomList.add(data.getStringExtra("new_room"));
+                Recalc();
                 adapt.notifyDataSetChanged();
             }
         } else if (requestCode == TypesResult) {
@@ -390,6 +406,7 @@ public class EditNameActivity extends AppCompatActivity {
                 ++countreturned;
                 Project.works.get(Project.place).second = ((ProjectClass) data.getSerializableExtra("Project")).works.get(Project.place).second;
                 Refresh();
+                Recalc();
                 adapt.notifyDataSetChanged();
             }
         }
@@ -406,8 +423,9 @@ public class EditNameActivity extends AppCompatActivity {
 
     private void default_values()
     {
-        for (Pair <String, TreeMap<WorkTypeClass, ArrayList<WorkClass> > > x : Project.works)
-            RoomList.add(x.first);
+        for (Pair <RoomClass, TreeMap<WorkTypeClass, ArrayList<WorkClass> > > x : Project.works)
+            RoomList.add(x.first.visible_name);
+        Recalc();
     }
 
     private void AddAdapter()
@@ -415,6 +433,33 @@ public class EditNameActivity extends AppCompatActivity {
         adapt = new MyListAdapter();
         ListView l = (ListView)findViewById(R.id.edit_name_roomlist);
         l.setOnItemClickListener(mItemListener);
+        l.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                FragmentManager manager = getSupportFragmentManager();
+                MyDialogFragment myDialogFragment = new MyDialogFragment();
+                myDialogFragment.Message = getString(R.string.edit_name_delete_room_text);
+                myDialogFragment.Title = getString(R.string.edit_name_delete_room_title);
+                myDialogFragment.PositiveButtonTitle = getString(R.string.yes);
+                myDialogFragment.NegativeButtonTitle = getString(R.string.no);
+                final int position = i;
+                myDialogFragment.PositiveClicked = new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        RoomList.remove(position);
+                        Project.works.remove(position);
+                        Recalc();
+                        adapt.notifyDataSetChanged();
+                    }
+                };
+                myDialogFragment.show(manager, "dialog");
+                return true;
+            }
+        });
         l.setAdapter(adapt);
     }
 
@@ -443,7 +488,9 @@ public class EditNameActivity extends AppCompatActivity {
             TextView mTextName = (TextView) item.findViewById(R.id.text);
             TextView mTextPrice = (TextView) item.findViewById(R.id.price);
 
-            String name = (position + 1) + ": " + RoomList.get(position);
+            String name = RoomList.get(position);
+            if (Before.get(position) > 1 || countrooms.get(name) > 1)
+                name += " " + Before.get(position);
             mTextName.setText(name);
             mTextPrice.setText(String.format("%.2f", fileManager.getPrice(Project, position)));
             return item;

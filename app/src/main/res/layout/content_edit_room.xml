@@ -12,7 +12,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center">
@@ -20,8 +20,8 @@
             <ImageButton
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:id="@+id/bedroom_button"
-                android:src="@drawable/bedroom"
+                android:id="@+id/room_room_button"
+                android:src="@drawable/dining_room"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"
                 android:padding="9dp"
@@ -31,14 +31,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/room_bedroom"
+                android:text="@string/room_room"
                 android:id="@+id/bedroom_text"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center">
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/room_bathroom"
+                android:text="@string/room_bath_toilet"
                 android:id="@+id/bathroom_text"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
@@ -70,7 +70,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             >
@@ -78,8 +78,8 @@
             <ImageButton
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:id="@+id/dining_room_button"
-                android:src="@drawable/dining_room"
+                android:id="@+id/kitchen_button"
+                android:src="@drawable/kitchen"
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
                 android:padding="9dp"/>
@@ -88,22 +88,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/room_dining_room"
+                android:text="@string/room_kitchen"
                 android:id="@+id/dining_room_text"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <ImageButton
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:id="@+id/kitchen_button"
-                android:src="@drawable/kitchen"
+                android:id="@+id/corridor_button"
+                android:src="@drawable/corridor"
                 android:layout_gravity="center_horizontal"
                 android:scaleType="fitXY"
                 android:padding="9dp"/>
@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/room_kitchen"
+                android:text="@string/room_corridor"
                 android:id="@+id/kitchen_text"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
@@ -127,7 +127,8 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             >
@@ -135,8 +136,8 @@
             <ImageButton
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:id="@+id/other_room_button"
-                android:src="@drawable/ic_menu_help"
+                android:id="@+id/balcony_button"
+                android:src="@drawable/balcony"
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
                 android:padding="9dp"/>
@@ -145,7 +146,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/room_other_room"
+                android:text="@string/room_balcony"
+                android:id="@+id/balcony_room_text"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            >
+
+            <ImageButton
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:id="@+id/other_button"
+            android:src="@drawable/ic_menu_help"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:padding="9dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/room_other"
                 android:id="@+id/other_room_text"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>

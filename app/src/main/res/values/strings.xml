@@ -9,6 +9,10 @@
     </string-array>
     <string name="app_has_no_permission_to_write">У приложения нет прав на запись в память.</string>
     <string name="app_has_no_permission_to_read">У приложения нет прав на чтение из памяти.</string>
+    <string name="edit_name_delete_room_title">Удаление</string>
+    <string name="edit_name_delete_room_text">
+        Вы уверены, что хотите удалить эту комнату? Все работы, которые в ней содержатся, будут также удалены.\n
+    </string>
     <string name="materials">Материалы</string>
     <string name="tools">Инструменты</string>
     <string name="email">Email</string>
@@ -179,11 +183,12 @@
     <string name="no">Нет</string>
     <string name="makeSureAllTypesAreComplete">Один из типов работ заполнен неправильно, убедитесь, что все данные введены верно.</string>
 
+    <string name="room_room">Комната</string>
+    <string name="room_bath_toilet">Ванная/Туалет</string>
     <string name="room_kitchen">Кухня</string>
-    <string name="room_bathroom">Ванная</string>
-    <string name="room_dining_room">Гостиная</string>
-    <string name="room_bedroom">Спальня</string>
-    <string name="room_other_room">Другое</string>
+    <string name="room_corridor">Коридор</string>
+    <string name="room_balcony">Балкон</string>
+    <string name="room_other">Другое</string>
 
     <string name="ruble_short">руб</string>
 
