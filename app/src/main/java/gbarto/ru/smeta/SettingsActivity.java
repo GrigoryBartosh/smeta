@@ -2,33 +2,31 @@ package gbarto.ru.smeta;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.icu.text.UnicodeSetSpanner;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.io.File;
 import java.io.IOException;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+    private DrawerLayout mDrawer;
     private ImageView mImageView;
     private EditText mEditFirstName;
     private EditText mEditSurname;
@@ -40,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText mEditCompanyAddress;
 
     static final int CAMERA = 1;
-    static final int GALERY = 2;
+    static final int GALLERY = 2;
 
     private SettingsManager settingsManager;
     private String[] list_no_photo;
@@ -61,6 +59,8 @@ public class SettingsActivity extends AppCompatActivity {
         mEditCompanyPhone   = (EditText) findViewById(R.id.settings_editText_company_phone);
         mEditCompanyEmail   = (EditText) findViewById(R.id.settings_editText_company_email);
         mEditCompanyAddress = (EditText) findViewById(R.id.settings_editText_company_address);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mDrawer = (DrawerLayout) findViewById(R.id.settings_drawer);
 
         settingsManager = new SettingsManager(SettingsActivity.this);
         mEditFirstName.     setText(settingsManager.getFirstName());
@@ -80,13 +80,13 @@ public class SettingsActivity extends AppCompatActivity {
         list_photo = getResources().getStringArray(R.array.settings_photo);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
         mImageView.setOnClickListener(imageView_ocl);
         int color = getResources().getColor(R.color.ic_menu);
         PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
@@ -94,23 +94,10 @@ public class SettingsActivity extends AppCompatActivity {
         d = getResources().getDrawable(android.R.drawable.ic_menu_help);
         d.setColorFilter(color, mMode);
         d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-
     }
 
     @Override
     protected void onDestroy() {
-        settingsManager.close();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
         settingsManager.setFirstName        (normalize(mEditFirstName       .getText().toString()));
         settingsManager.setSurname          (normalize(mEditSurname         .getText().toString()));
         settingsManager.setPhone            (normalize(mEditPhone           .getText().toString()));
@@ -120,7 +107,56 @@ public class SettingsActivity extends AppCompatActivity {
         settingsManager.setCompany_Email    (normalize(mEditCompanyEmail    .getText().toString()));
         settingsManager.setCompanyAddress   (normalize(mEditCompanyAddress  .getText().toString()));
 
-        super.onBackPressed();
+        settingsManager.close();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.nav_projects:
+                Projects();
+                break;
+
+            case R.id.nav_price_work:
+                PriceWork();
+                break;
+
+            case R.id.nav_price_material:
+                Material();
+                break;
+
+            case R.id.nav_menu_settings:
+                break;
+
+            case R.id.nav_menu_contacts:
+                Contacts();
+                break;
+
+            case R.id.nav_menu_archive:
+                Archive();
+                break;
+
+            case R.id.nav_menu_abut:
+                AboutProgram();
+                break;
+        }
+
+        mDrawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private String normalize(String s)
@@ -197,7 +233,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 Intent intent = new Intent();
                                 intent.setType("image/*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, "Select File"), GALERY);
+                                startActivityForResult(Intent.createChooser(intent, "Select File"), GALLERY);
                                 break;
                         }
                         dialog.cancel();
@@ -218,7 +254,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 Intent intent = new Intent();
                                 intent.setType("image/*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);//
-                                startActivityForResult(Intent.createChooser(intent, "Select File"), GALERY);
+                                startActivityForResult(Intent.createChooser(intent, "Select File"), GALLERY);
                                 break;
                         }
                         dialog.cancel();
@@ -226,7 +262,6 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
 
-            //Toast.makeText(getApplicationContext(), "!!!!!!!!!", Toast.LENGTH_SHORT).show();
             myDialogFragment.show(manager, "dialog");
         }
     };
@@ -245,7 +280,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         }
-        if (requestCode == GALERY) {
+        if (requestCode == GALLERY) {
             Bitmap bm=null;
             if (data != null) {
                 try {
@@ -288,5 +323,35 @@ public class SettingsActivity extends AppCompatActivity {
                 settingsManager.setPhoto(bm);
             }
         }
+    }
+
+    private void Projects(){
+        Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void PriceWork(){
+        Intent intent = new Intent(SettingsActivity.this, PriceWorkCategoryActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void Material(){
+        //finish();
+    }
+
+    private void Contacts(){
+        //finish();
+    }
+
+    private void Archive(){
+        //finish();
+    }
+
+    private void AboutProgram(){
+        Intent intent = new Intent(SettingsActivity.this, AboutActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

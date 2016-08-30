@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <!-- фон для шторки layout/nav_header_main-->
+    <!-- фон для шторки layout/nav_header-->
     <gradient
         android:angle="135"
         android:startColor="#efe9b0"
