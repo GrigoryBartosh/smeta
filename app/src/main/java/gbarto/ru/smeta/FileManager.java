@@ -62,6 +62,7 @@ public class FileManager
     Font[] arial = new Font[MAXSIZE];
     Font[] arial_bold = new Font[MAXSIZE];
     Font[] arial_underlined = new Font[MAXSIZE];
+    Font[] red_arial = new Font[MAXSIZE];
     private int pagenumber = 1;
     public FileManager(Context t)
     {
@@ -72,7 +73,8 @@ public class FileManager
             for (int i = 1; i < MAXSIZE; ++i) {
                 arial[i] = new Font(base_arial, i);
                 arial_bold[i] = new Font(base_arial_bold, i);
-                arial_underlined[i] = new Font(base_arial, i,Font.UNDERLINE);
+                arial_underlined[i] = new Font(base_arial, i, Font.UNDERLINE);
+                red_arial[i] = new Font(base_arial_bold, i, Font.NORMAL,  BaseColor.RED);
             }
         }
         catch (Exception e)
@@ -98,7 +100,7 @@ public class FileManager
             printer.append("//This is automatically generated file, do not edit on your own.\n");
             for (int room = 0; room < Project.works.size(); ++room)
             {
-                printer.append("place&" + Project.works.get(room).first + '\n');
+                printer.append("place&" + Project.works.get(room).first.getVisible_name() + '&' + Project.works.get(room).first.getName() + '\n');
                 for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet()) {
                     WorkTypeClass x1 = new WorkTypeClass(x.getKey());
                     printer.append("Object&" + x1.toString() + '\n');
@@ -236,7 +238,11 @@ public class FileManager
                 String tmp[] = s.split("&", 2);
                 if (tmp[0].equals("place")) {
                     Project.place = Project.works.size();
-                    Project.works.add(new Pair(tmp[1], new TreeMap<>()));
+                    String[] crap = tmp[1].split("&", -1);
+                    if (crap.length == 1)
+                        Project.works.add(new Pair(new RoomClass(crap[0]), new TreeMap<>()));
+                    else
+                        Project.works.add(new Pair(new RoomClass(crap[0], crap[1]), new TreeMap<>()));
                 } else {
                     if (tmp[0].equals("Object")) //then this is new KEY, otherwise whole string is VALUE
                     {
@@ -311,6 +317,30 @@ public class FileManager
         return cell;
     }
 
+    private PdfPCell LeftedRed(String text)
+    {
+        PdfPCell cell = new PdfPCell(new Phrase(text, red_arial[12]));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        return cell;
+    }
+
+    private PdfPCell CenteredRed(String text)
+    {
+        PdfPCell cell = new PdfPCell(new Phrase(text, red_arial[12]));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        return cell;
+    }
+
+    private PdfPCell RightedRed(String text)
+    {
+        PdfPCell cell = new PdfPCell(new Phrase(text, red_arial[12]));
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        return cell;
+    }
+
     private PdfPCell RightedText(String text)
     {
         PdfPCell cell = new PdfPCell(new Phrase(text, arial[12]));
@@ -372,7 +402,7 @@ public class FileManager
         String companyAddress = settingsManager.getCompanyAddress();
         final int size = 7;
         float keep = padding;
-        float padfromtop = 0;
+        float padfromtop = 20;
         if (!companyName.equals(""))
         {
             ++result;
@@ -413,7 +443,7 @@ public class FileManager
         }
 
         padding = keep;
-        padfromtop = 0;
+        padfromtop = 20;
         String name = settingsManager.getFirstName();
         String surname = settingsManager.getSurname();
         String naming = name;
@@ -508,7 +538,7 @@ public class FileManager
 
     public File createPDF(ProjectClass Project)
     {
-        try {// Assume thisActivity is the current activity
+        try {
             int permissionCheck = ContextCompat.checkSelfPermission(context,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permissionCheck != PackageManager.PERMISSION_GRANTED)
@@ -571,7 +601,9 @@ public class FileManager
                 pad = document.left() - 10 + image.getScaledWidth() * 0.9f;
             }
             header = Math.max(header, MakeHeader(writer, document, settingsManager, pad));
-            table.setSpacingBefore(header * 20);
+            PdfContentByte cb = writer.getDirectContent();
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase(Project.name, arial_bold[20]), document.left(), document.top(), 0);
+            table.setSpacingBefore(20 + header * 20);
             PdfContentByte canvas = writer.getDirectContentUnder();
             {
                 InputStream ims = context.getAssets().open("logo_text_left.png");
@@ -600,7 +632,7 @@ public class FileManager
 
             for (int room = 0; room < Project.works.size(); ++room) {
                 table.addCell(Empty());
-                table.addCell(CenteredBold(Project.works.get(room).first));
+                table.addCell(CenteredBold(Project.works.get(room).first.visible_name));
                 table.addCell(Empty());
                 table.addCell(Empty());
                 table.addCell(Empty());
@@ -639,30 +671,49 @@ public class FileManager
                             table.addCell(Empty());
                             for (int i = 0; i < work.Materials.size(); ++i) {
                                 MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
-                                MaterialClass material;
-                                if (work.RealMaterials.get(i) != -1)
-                                    material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
-                                else
-                                    material = new MaterialClass(materialTypeClass.name + " (" + context.getString(R.string.work_material_not_choose) + ")", 0, materialTypeClass.measurement, 0, 0);
-                                table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
-                                table.addCell(LeftPadded(LeftedText(material.name)));
-                                table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
-                                if (material.per_object < (1e-8)) {
-                                    table.addCell(CenteredText(String.format("%.2f", work.size * work.Materials.get(i).second)));
-                                    table.addCell(CenteredText(String.format("%.2f", material.price)));
-                                    double wasted = work.size * work.Materials.get(i).second * material.price;
-                                    table.addCell(RightedText(String.format("%.2f", wasted)));
-                                    work_total += wasted;
-                                    material_cost += wasted * x.getKey().coeff;
-                                } else {
-                                    int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
-                                    table.addCell(CenteredText(Integer.toString(amount)));
-                                    table.addCell(CenteredText(String.format("%.2f", material.price)));
-                                    double wasted = amount * material.price;
-                                    table.addCell(RightedText(String.format("%.2f", wasted)));
-                                    work_total += wasted;
-                                    material_cost += wasted * x.getKey().coeff;
+                                if (work.RealMaterials.get(i) != -1) {
+                                    MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));                                table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
+                                    table.addCell(LeftPadded(LeftedText(material.name)));
+                                    table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
+                                    if (material.per_object < (1e-8)) {
+                                        table.addCell(CenteredText(String.format("%.2f", work.size * work.Materials.get(i).second)));
+                                        table.addCell(CenteredText(String.format("%.2f", material.price)));
+                                        double wasted = work.size * work.Materials.get(i).second * material.price;
+                                        table.addCell(RightedText(String.format("%.2f", wasted)));
+                                        work_total += wasted;
+                                        material_cost += wasted * x.getKey().coeff;
+                                    } else {
+                                        int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
+                                        table.addCell(CenteredText(Integer.toString(amount)));
+                                        table.addCell(CenteredText(String.format("%.2f", material.price)));
+                                        double wasted = amount * material.price;
+                                        table.addCell(RightedText(String.format("%.2f", wasted)));
+                                        work_total += wasted;
+                                        material_cost += wasted * x.getKey().coeff;
+                                    }
                                 }
+                                else {
+                                    MaterialClass material = new MaterialClass(materialTypeClass.name + " (" + context.getString(R.string.work_material_not_choose) + ")", 0, materialTypeClass.measurement, 0, 0);                                table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
+                                    table.addCell(LeftPadded(LeftedRed(material.name)));
+                                    table.addCell(CenteredRed(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
+                                    if (material.per_object < (1e-8)) {
+                                        table.addCell(CenteredRed(String.format("%.2f", work.size * work.Materials.get(i).second)));
+                                        table.addCell(CenteredRed(String.format("%.2f", material.price)));
+                                        double wasted = work.size * work.Materials.get(i).second * material.price;
+                                        table.addCell(RightedRed(String.format("%.2f", wasted)));
+                                        work_total += wasted;
+                                        material_cost += wasted * x.getKey().coeff;
+                                    } else {
+                                        int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
+                                        table.addCell(CenteredRed(Integer.toString(amount)));
+                                        table.addCell(CenteredRed(String.format("%.2f", material.price)));
+                                        double wasted = amount * material.price;
+                                        table.addCell(RightedRed(String.format("%.2f", wasted)));
+                                        work_total += wasted;
+                                        material_cost += wasted * x.getKey().coeff;
+                                    }
+                                }
+
                             }
 
                             table.addCell(Empty());
@@ -945,10 +996,10 @@ public class FileManager
             for (int room = 0; room < Project.works.size(); ++room) {
 
                 row = sheet.createRow(rowcount++);
-                newCell(row, 1, Project.works.get(room).first, Centered(simple));
+                newCell(row, 1, Project.works.get(room).first.visible_name, Centered(simple));
 
                 row = sheet.createRow(rowcount++);
-                newCell(row, 1, Project.works.get(room).first, simple);
+                newCell(row, 1, Project.works.get(room).first.visible_name, simple);
                 double room_sum = 0;
                 for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet()) {
                     if (x.getValue().isEmpty())

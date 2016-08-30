@@ -10,7 +10,7 @@ import java.util.TreeMap;
 //This is never stored in Database, so it shouldn't extend DBObject
 public class ProjectClass implements Serializable
 {
-    public ArrayList<Pair <String, TreeMap<WorkTypeClass, ArrayList<WorkClass> > > > works;
+    public ArrayList<Pair <RoomClass, TreeMap<WorkTypeClass, ArrayList<WorkClass> > > > works;
     int place;
     String name;
 

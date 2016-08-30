@@ -11,6 +11,15 @@ import android.widget.ImageButton;
 
 public class EditRoomActivity extends AppCompatActivity {
 
+    private void returning(int room)
+    {
+        Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
+        go.putExtras(getIntent());
+        go.putExtra("new_room", getString(room));
+        setResult(RESULT_OK, go);
+        finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,84 +28,58 @@ public class EditRoomActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.edit_room_toolbar);
 
-        ImageButton kitchenButton = (ImageButton)this.findViewById(R.id.kitchen_button);
-        ImageButton bathroomButton = (ImageButton)this.findViewById(R.id.bathroom_button);
-        ImageButton diningRoomButton = (ImageButton)this.findViewById(R.id.dining_room_button);
-        ImageButton bedroomButton = (ImageButton)this.findViewById(R.id.bedroom_button);
-        ImageButton otherroomButton = (ImageButton)this.findViewById(R.id.other_room_button);
-        /*if (Project.place != null)
-        {
-            if (Project.place.equals(getString(R.string.room_kitchen)))
-                kitchenButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
-            else if (Project.place.equals(getString(R.string.room_dining_room)))
-                diningRoomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
-            else if (Project.place.equals(getString(R.string.room_bathroom)))
-                bathroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
-            else if (Project.place.equals(getString(R.string.room_bedroom)))
-                bedroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
-            else if (Project.place.equals(getString(R.string.room_other_room)))
-                otherroomButton.setBackgroundColor(getResources().getColor(R.color.place_chosen));
-        }*/
-
-        kitchenButton.setOnClickListener(new View.OnClickListener()
+        ImageButton roomButton = (ImageButton)this.findViewById(R.id.room_room_button);
+        roomButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-
-                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtras(getIntent());
-                go.putExtra("new_room", getString(R.string.room_kitchen));
-                setResult(RESULT_OK, go);
-                finish();
+                returning(R.string.room_room);
             }
         });
+        ImageButton bathroomButton = (ImageButton)this.findViewById(R.id.bathroom_button);
         bathroomButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-
-                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("new_room", getString(R.string.room_bathroom));
-                setResult(RESULT_OK, go);
-                finish();
+                returning(R.string.room_bath_toilet);
             }
         });
-        diningRoomButton.setOnClickListener(new View.OnClickListener()
+        ImageButton kitchenButton = (ImageButton)this.findViewById(R.id.kitchen_button);
+        kitchenButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-
-                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("new_room", getString(R.string.room_dining_room));
-                setResult(RESULT_OK, go);
-                finish();
+                returning(R.string.room_kitchen);
             }
         });
-        bedroomButton.setOnClickListener(new View.OnClickListener()
+        ImageButton corridorButton = (ImageButton)this.findViewById(R.id.corridor_button);
+        corridorButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-
-                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("new_room", getString(R.string.room_bedroom));
-                setResult(RESULT_OK, go);
-                finish();
+                returning(R.string.room_corridor);
             }
         });
+        ImageButton balconyButton = (ImageButton)this.findViewById(R.id.balcony_button);
+        balconyButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                returning(R.string.room_balcony);
+            }
+        });
+        ImageButton otherroomButton = (ImageButton)this.findViewById(R.id.other_button);
         otherroomButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-
-                Intent go = new Intent(EditRoomActivity.this, ChooseTypeActivity.class);
-                go.putExtra("new_room", getString(R.string.room_other_room));
-                setResult(RESULT_OK, go);
-                finish();
+                returning(R.string.room_other);
             }
         });
 
@@ -107,6 +90,7 @@ public class EditRoomActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View view) {
+                setResult(RESULT_CANCELED, new Intent());
                 finish();
             }
         });
