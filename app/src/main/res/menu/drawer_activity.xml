@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- шторка layout/activity_main-->
 
     <group android:checkableBehavior="none">
         <item
@@ -27,14 +26,11 @@
             android:id="@+id/nav_menu_archive"
             android:icon="@drawable/ic_archive"
             android:title="@string/nav_menu_archive" />
-    </group>
 
-    <item android:title="@string/nav_menu_add">
-        <menu>
-            <item
-                android:id="@+id/nav_menu_abut"
-                android:title="@string/nav_menu_abut" />
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_menu_abut"
+            android:icon="@drawable/ic_about"
+            android:title="@string/nav_menu_abut" />
+    </group>
 
 </menu>

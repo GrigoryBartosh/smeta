@@ -4,9 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -22,7 +27,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PriceWorkCategoryActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener {
+public class PriceWorkCategoryActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, NavigationView.OnNavigationItemSelectedListener {
+    private DrawerLayout mDrawer;
     private ArrayList<WorkTypeClass> type_work_list;
 
     DBAdapter dbAdapter = new DBAdapter(PriceWorkCategoryActivity.this);
@@ -44,19 +50,21 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
 
         dbAdapter.open();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mDrawer = (DrawerLayout) findViewById(R.id.price_work_category_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.price_work_category_toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.price_work_category_fab);
         mListView = (ListView)findViewById(R.id.price_work_category_listView);
         mTextEmpty = (TextView) findViewById(R.id.price_work_category_textView_empty);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
         fab.setOnClickListener(fab_ocl);
 
         type_work_list = getAllWorkType();
@@ -70,12 +78,6 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
         d = getResources().getDrawable(android.R.drawable.ic_menu_help);
         d.setColorFilter(color, mMode);
         d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
     }
 
     @Override
@@ -86,7 +88,11 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -98,6 +104,45 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
         getWindow().setAttributes(wm);
 
         setList();
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.nav_projects:
+                Projects();
+                break;
+
+            case R.id.nav_price_work:
+                break;
+
+            case R.id.nav_price_material:
+                Material();
+                break;
+
+            case R.id.nav_menu_settings:
+                Settings();
+                break;
+
+            case R.id.nav_menu_contacts:
+                Contacts();
+                break;
+
+            case R.id.nav_menu_archive:
+                Archive();
+                break;
+
+            case R.id.nav_menu_abut:
+                AboutProgram();
+                break;
+        }
+
+        mDrawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
@@ -265,5 +310,35 @@ public class PriceWorkCategoryActivity extends AppCompatActivity implements Adap
             res.add((WorkTypeClass) arr[i]);
         }
         return res;
+    }
+
+    private void Projects(){
+        Intent intent = new Intent(PriceWorkCategoryActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void Material(){
+        //finish();
+    }
+
+    private void Settings(){
+        Intent intent = new Intent(PriceWorkCategoryActivity.this, SettingsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void Contacts(){
+        //finish();
+    }
+
+    private void Archive(){
+        //finish();
+    }
+
+    private void AboutProgram(){
+        Intent intent = new Intent(PriceWorkCategoryActivity.this, AboutActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

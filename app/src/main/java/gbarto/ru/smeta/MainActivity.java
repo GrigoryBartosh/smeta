@@ -26,6 +26,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +54,7 @@ public class MainActivity   extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         fab = (FloatingActionButton) findViewById(R.id.main_fab);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         mListView = (ListView) findViewById(R.id.main_listView);
         mTextEmpty = (TextView) findViewById(R.id.main_textView_empty);
@@ -107,7 +109,7 @@ public class MainActivity   extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -170,10 +172,6 @@ public class MainActivity   extends AppCompatActivity
                 Settings();
                 break;
 
-            case R.id.nav_menu_abut:
-                AboutProgram();
-                break;
-
             case R.id.nav_menu_contacts:
                 Contacts();
                 break;
@@ -181,9 +179,13 @@ public class MainActivity   extends AppCompatActivity
             case R.id.nav_menu_archive:
                 Archive();
                 break;
+
+            case R.id.nav_menu_abut:
+                AboutProgram();
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -280,99 +282,37 @@ public class MainActivity   extends AppCompatActivity
     private void PriceWork(){
         Intent intent = new Intent(MainActivity.this, PriceWorkCategoryActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void Material(){
-
+        //finish();
     }
 
     private void Settings(){
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void Contacts(){
-
+        //finish();
     }
 
     private void Archive(){
-
+        //finish();
     }
 
     private void AboutProgram(){
         Intent intent = new Intent(MainActivity.this, AboutActivity.class);
         startActivity(intent);
-    }
-
-    private void ProjectView(final int position){
-        FragmentManager manager = getSupportFragmentManager();
-        MyDialogFragment myDialogFragment = new MyDialogFragment();
-        myDialogFragment.setTitle(getString(R.string.main_view_alert_choose));
-        myDialogFragment.setUseMessage(false);
-        myDialogFragment.setUsePositiveButton(false);
-        myDialogFragment.setUseNegativeButton(false);
-        myDialogFragment.setUseList(true);
-        myDialogFragment.setList(list_alert);
-        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
-            File file;
-            Intent intent = new Intent();
-            public void onClick(DialogInterface dialog, int id) {
-                switch (id){
-                    case 0:
-                        fileManager.openPDF(list_project.get(position));
-                        break;
-                    case 1:
-                        fileManager.openXLS(list_project.get(position));
-                        break;
-                }
-                dialog.cancel();
-            }
-        });
-        myDialogFragment.show(manager, "dialog");
+        finish();
     }
 
     private void ProjectEdit(final int position){
         Intent intent = new Intent(MainActivity.this, EditNameActivity.class);
         intent.putExtra("Project", list_project.get(position));
         startActivity(intent);
-    }
-
-    private void ProjectShare(final int position){
-        FragmentManager manager = getSupportFragmentManager();
-        MyDialogFragment myDialogFragment = new MyDialogFragment();
-        myDialogFragment.setTitle(getString(R.string.main_share_alert_choose));
-        myDialogFragment.setUseMessage(false);
-        myDialogFragment.setUsePositiveButton(false);
-        myDialogFragment.setUseNegativeButton(false);
-        myDialogFragment.setUseList(true);
-        myDialogFragment.setList(list_alert);
-
-        myDialogFragment.setListClicked(new DialogInterface.OnClickListener(){
-            File file;
-            Intent intent = new Intent();
-            public void onClick(DialogInterface dialog, int id) {
-                switch (id){
-                    case 0:
-                        file = fileManager.createPDF(list_project.get(position));
-                        if (file == null) break;
-                        intent.setAction(Intent.ACTION_SEND);
-                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                        intent.setType("application/pdf");
-                        startActivity(intent);
-                        break;
-                    case 1:
-                        file = fileManager.createXLS(list_project.get(position));
-                        if (file == null) break;
-                        intent.setAction(Intent.ACTION_SEND);
-                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                        intent.setType("application/vnd.ms-excel");
-                        startActivity(intent);
-                        break;
-                }
-                dialog.cancel();
-            }
-        });
-        myDialogFragment.show(manager, "dialog");
     }
 
     private void ProjectDelete(final int position){
