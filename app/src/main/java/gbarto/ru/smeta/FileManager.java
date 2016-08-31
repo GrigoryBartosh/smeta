@@ -191,7 +191,7 @@ public class FileManager
 
     private WorkClass WorkFromString(String s)
     {
-        String[] temp = s.split("&", -1);
+        String[] temp = s.split(delimeter, -1);
         WorkClass ans = new WorkClass();
         ans.state = Boolean.valueOf(temp[0]);
         ans.workType = Long.valueOf(temp[1]);

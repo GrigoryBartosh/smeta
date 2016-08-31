@@ -1,10 +1,12 @@
 package gbarto.ru.smeta;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -41,6 +43,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_type);
+        setTitle(Project.works.get(Project.place).first.getVisible_name() + " : " + getString(R.string.work_types));
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.choose_works_toolbar);
         Project = (ProjectClass) getIntent().getSerializableExtra("Project");
 
@@ -172,7 +175,9 @@ public class ChooseTypeActivity extends AppCompatActivity {
     {
         for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(Project.place).second.entrySet())
         {
-
+            if (x.getValue() == null)
+                continue;
+            WorkSet.add(x.getKey());
         }
     }
 
@@ -181,6 +186,27 @@ public class ChooseTypeActivity extends AppCompatActivity {
         adapt = new MyListAdapter();
         ListView l = (ListView)findViewById(R.id.works_listView);
         l.setOnItemClickListener(mItemListener);
+        l.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
+        {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l)
+            {
+                FragmentManager manager = getSupportFragmentManager();
+                MyDialogFragment myDialogFragment = new MyDialogFragment();
+                myDialogFragment.setTitle(getString(R.string.choose_type_delete_title));
+                myDialogFragment.setMessage(getString(R.string.choose_type_delete_summary));
+                myDialogFragment.setPositiveButtonTitle(getString(R.string.ok));
+                myDialogFragment.setPositiveClicked(new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Project.works.get(Project.place).second.remove(WorkSet.get(i));
+                        WorkSet.remove(i);
+                    }
+                });
+                myDialogFragment.setUseNegativeButton(false);
+                myDialogFragment.show(manager, "dialog");
+                return true;
+            }
+        });
         l.setAdapter(adapt);
     }
 
@@ -270,8 +296,10 @@ public class ChooseTypeActivity extends AppCompatActivity {
             adapt.notifyDataSetChanged();
         } else if (requestCode == GETTING_NEW_TYPE) {
             ArrayList <WorkTypeClass> tmp = (ArrayList <WorkTypeClass>) data.getSerializableExtra("result");
-            for (WorkTypeClass x : tmp)
+            for (WorkTypeClass x : tmp) {
                 WorkSet.add(x);
+                Project.works.get(Project.place).second.put(x, new ArrayList<WorkClass>());
+            }
             adapt.notifyDataSetChanged();
         }
         super.onActivityResult(requestCode, resultCode, data);

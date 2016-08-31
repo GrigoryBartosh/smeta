@@ -21,10 +21,12 @@ public class WorkTypeClass extends DBObject implements Comparable<WorkTypeClass>
         coeff = 1;
     }
 
+    final String delimeter = "&12";
+
     @Override
     public String toString()
     {
-        return name + "&" + rowID + "&" + coeff;
+        return name + delimeter + rowID + delimeter + coeff;
     }
 
     @Override

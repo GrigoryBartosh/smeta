@@ -9,6 +9,9 @@
     </string-array>
     <string name="app_has_no_permission_to_write">У приложения нет прав на запись в память.</string>
     <string name="app_has_no_permission_to_read">У приложения нет прав на чтение из памяти.</string>
+    <string name="choose_type_delete_title">Удаление</string>
+    <string name="work_types">типы работ</string>
+    <string name="choose_type_delete_summary">Вы уверены, что хотите удалить этот тип работ? Вся его информация будет удалена.</string>
     <string name="edit_name_delete_room_title">Удаление</string>
     <string name="edit_name_delete_room_text">
         Вы уверены, что хотите удалить эту комнату? Все работы, которые в ней содержатся, будут также удалены.\n
