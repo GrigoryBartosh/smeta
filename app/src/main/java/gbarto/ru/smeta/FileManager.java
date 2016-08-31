@@ -83,6 +83,9 @@ public class FileManager
         }
     }
 
+    final String delimeter = "&12";
+
+
     public void Save(ProjectClass Project)
     {
         try {
@@ -100,13 +103,13 @@ public class FileManager
             printer.append("//This is automatically generated file, do not edit on your own.\n");
             for (int room = 0; room < Project.works.size(); ++room)
             {
-                printer.append("place&" + Project.works.get(room).first.getVisible_name() + '&' + Project.works.get(room).first.getName() + '\n');
+                printer.append("place" + delimeter + Project.works.get(room).first.getVisible_name() + delimeter + Project.works.get(room).first.getName() + '\n');
                 for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet()) {
                     WorkTypeClass x1 = new WorkTypeClass(x.getKey());
-                    printer.append("Object&" + x1.toString() + '\n');
+                    printer.append("Object" + delimeter + x1.toString() + '\n');
                     ArrayList<WorkClass> tmp = new ArrayList<>();
                     for (WorkClass y : x.getValue())
-                        printer.append("Thing&" + y.toString() + '\n');
+                        printer.append("Thing" + delimeter + y.toString() + '\n');
                 }
             }
             printer.append("_END_OF_FILE_");
@@ -235,10 +238,10 @@ public class FileManager
                     return Project;
                 if (s.substring(0, 2).equals("//"))
                     continue;
-                String tmp[] = s.split("&", 2);
+                String tmp[] = s.split(delimeter, 2);
                 if (tmp[0].equals("place")) {
                     Project.place = Project.works.size();
-                    String[] crap = tmp[1].split("&", -1);
+                    String[] crap = tmp[1].split(delimeter, -1);
                     if (crap.length == 1)
                         Project.works.add(new Pair(new RoomClass(crap[0]), new TreeMap<>()));
                     else
@@ -246,7 +249,7 @@ public class FileManager
                 } else {
                     if (tmp[0].equals("Object")) //then this is new KEY, otherwise whole string is VALUE
                     {
-                        String[] crap = tmp[1].split("&");
+                        String[] crap = tmp[1].split(delimeter);
                         String name = crap[0];
                         Long rowID = Long.valueOf(crap[1]);
                         temp = new WorkTypeClass(name);
@@ -632,7 +635,7 @@ public class FileManager
 
             for (int room = 0; room < Project.works.size(); ++room) {
                 table.addCell(Empty());
-                table.addCell(CenteredBold(Project.works.get(room).first.visible_name));
+                table.addCell(CenteredBold(Project.works.get(room).first.name));
                 table.addCell(Empty());
                 table.addCell(Empty());
                 table.addCell(Empty());
@@ -996,10 +999,10 @@ public class FileManager
             for (int room = 0; room < Project.works.size(); ++room) {
 
                 row = sheet.createRow(rowcount++);
-                newCell(row, 1, Project.works.get(room).first.visible_name, Centered(simple));
+                newCell(row, 1, Project.works.get(room).first.name, Centered(simple));
 
                 row = sheet.createRow(rowcount++);
-                newCell(row, 1, Project.works.get(room).first.visible_name, simple);
+                newCell(row, 1, Project.works.get(room).first.name, simple);
                 double room_sum = 0;
                 for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet()) {
                     if (x.getValue().isEmpty())

@@ -171,20 +171,21 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         size = 0f;
     }
 
-
+    final String delimeter = "&12";
+    
     @Override
     public String toString()
     {
         return  state +
-                "&" + workType +
-                "&" + Materials.toString() +
-                "&" + RealMaterials.toString() +
-                "&" + price +
-                "&" + measuring +
-                "&" + size +
-                "&" + name +
-                "&" + rowID +
-                "&" + Instruments.toString();
+                delimeter + workType +
+                delimeter + Materials.toString() +
+                delimeter + RealMaterials.toString() +
+                delimeter + price +
+                delimeter + measuring +
+                delimeter + size +
+                delimeter + name +
+                delimeter + rowID +
+                delimeter + Instruments.toString();
     }
 
 

@@ -5,6 +5,13 @@
       tools:context=".EditNameActivity">
     <item
         android:title=""
+        android:id="@+id/menu_edit_name_edit"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_edit"
+        app:showAsAction="always"
+        />
+    <item
+        android:title=""
         android:id="@+id/menu_edit_name_view"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_view"

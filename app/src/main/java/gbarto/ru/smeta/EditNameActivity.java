@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +34,11 @@ public class EditNameActivity extends AppCompatActivity {
     ArrayAdapter<String> adapt;
     ArrayList <Integer> Before = new ArrayList<>();
     FloatingActionButton fab;
+    boolean [] lastinflation;
     FileManager fileManager;
     String lastProjectname = "";
     EditText mText;
+    boolean editing = false;
     int countreturned = 0;
     TextView Summary;
 
@@ -62,6 +65,7 @@ public class EditNameActivity extends AppCompatActivity {
                 countrooms.put(x, 1);
             Before.add(countrooms.get(x));
         }
+        lastinflation = new boolean[RoomList.size()];
     }
 
     @Override
@@ -114,6 +118,7 @@ public class EditNameActivity extends AppCompatActivity {
         adapter = new DBAdapter(this);
         adapter.open();
         default_values();
+        lastinflation = new boolean[RoomList.size()];
         AddAdapter();
 
 
@@ -297,6 +302,11 @@ public class EditNameActivity extends AppCompatActivity {
             ProjectView();
         else if (item.getItemId() == R.id.menu_edit_name_share)
             ProjectShare();
+        else if (item.getItemId() == R.id.menu_edit_name_edit)
+        {
+            editing = !editing;
+            adapt.notifyDataSetChanged();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -324,8 +334,6 @@ public class EditNameActivity extends AppCompatActivity {
             myDialogFragment.setList(getResources().getStringArray(R.array.main_list));
             myDialogFragment.setListClicked(new DialogInterface.OnClickListener()
             {
-                Intent intent = new Intent();
-
                 public void onClick(DialogInterface dialog, int id)
                 {
                     switch (id) {
@@ -483,16 +491,22 @@ public class EditNameActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View item = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
-
-            TextView mTextName = (TextView) item.findViewById(R.id.text);
+            LinearLayout item = (LinearLayout) convertView;
+            if (item == null)
+                item = (LinearLayout)getLayoutInflater().inflate(editing ? R.layout.list_item_main_editing : R.layout.list_item_main, parent, false);
             TextView mTextPrice = (TextView) item.findViewById(R.id.price);
-
-            String name = RoomList.get(position);
-            if (Before.get(position) > 1 || countrooms.get(name) > 1)
-                name += " " + Before.get(position);
-            mTextName.setText(name);
             mTextPrice.setText(String.format("%.2f", fileManager.getPrice(Project, position)));
+            if (!editing) {
+                TextView mTextName = (TextView) item.findViewById(R.id.text);
+                String name = RoomList.get(position);
+                if (Before.get(position) > 1 || countrooms.get(name) > 1)
+                    name += " " + Before.get(position);
+                Project.works.get(position).first.setName(name);
+                mTextName.setText(name);
+            } else {
+                EditText mEditText = (EditText) item.findViewById(R.id.text);
+                mEditText.setText(RoomList.get(position));
+            }
             return item;
         }
     }
