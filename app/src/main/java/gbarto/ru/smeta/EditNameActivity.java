@@ -1,5 +1,6 @@
 package gbarto.ru.smeta;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ public class EditNameActivity extends AppCompatActivity {
     ArrayList <String> RoomList = new ArrayList<>();
     ArrayAdapter<String> adapt;
     ArrayList <Integer> Before = new ArrayList<>();
+    ListView l;
     FloatingActionButton fab;
     boolean [] lastinflation;
     FileManager fileManager;
@@ -305,6 +308,12 @@ public class EditNameActivity extends AppCompatActivity {
         else if (item.getItemId() == R.id.menu_edit_name_edit)
         {
             editing = !editing;
+            Recalc();
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
             adapt.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
@@ -439,7 +448,7 @@ public class EditNameActivity extends AppCompatActivity {
     private void AddAdapter()
     {
         adapt = new MyListAdapter();
-        ListView l = (ListView)findViewById(R.id.edit_name_roomlist);
+        l = (ListView)findViewById(R.id.edit_name_roomlist);
         l.setOnItemClickListener(mItemListener);
         l.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
@@ -490,22 +499,55 @@ public class EditNameActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             LinearLayout item = (LinearLayout) convertView;
             if (item == null)
-                item = (LinearLayout)getLayoutInflater().inflate(editing ? R.layout.list_item_main_editing : R.layout.list_item_main, parent, false);
+                item = (LinearLayout)getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
             TextView mTextPrice = (TextView) item.findViewById(R.id.price);
             mTextPrice.setText(String.format("%.2f", fileManager.getPrice(Project, position)));
+            TextView mTextName = (TextView) item.findViewById(R.id.edit_name_text);
+            final EditText mEditText = (EditText) item.findViewById(R.id.edit_name_edit_text);
             if (!editing) {
-                TextView mTextName = (TextView) item.findViewById(R.id.text);
+                mEditText.setVisibility(View.INVISIBLE);
+                mTextName.setVisibility(View.VISIBLE);
                 String name = RoomList.get(position);
                 if (Before.get(position) > 1 || countrooms.get(name) > 1)
                     name += " " + Before.get(position);
                 Project.works.get(position).first.setName(name);
                 mTextName.setText(name);
-            } else {
-                EditText mEditText = (EditText) item.findViewById(R.id.text);
                 mEditText.setText(RoomList.get(position));
+            } else {
+                mEditText.setVisibility(View.VISIBLE);
+                mTextName.setVisibility(View.INVISIBLE);
+                mEditText.addTextChangedListener(new TextWatcher()
+                {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                    {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+                    {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable)
+                    {
+                        if (!editable.toString().equals(RoomList.get(position)))
+                        {
+                            if (editable.toString().length() == 0)
+                                mEditText.setText(RoomList.get(position));
+                            else {
+                                RoomList.set(position, editable.toString());
+                                Project.works.get(position).first.setVisible_name(editable.toString());
+                                Project.works.get(position).first.setName(editable.toString());
+                            }
+                        }
+                    }
+                });
             }
             return item;
         }

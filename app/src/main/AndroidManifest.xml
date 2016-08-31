@@ -50,7 +50,8 @@
             android:name=".EditNameActivity"
             android:label="@string/title_activity_edit_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".EditRoomActivity"
             android:label="@string/edit_room"

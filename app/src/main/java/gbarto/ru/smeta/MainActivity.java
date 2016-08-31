@@ -5,20 +5,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
-import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,9 +25,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.poi.ss.formula.functions.T;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -244,7 +240,7 @@ public class MainActivity   extends AppCompatActivity
             View view = null;
             if (view == null) view = getLayoutInflater().inflate(R.layout.list_item_main, parent, false);
 
-            TextView mTextName = (TextView) view.findViewById(R.id.text);
+            TextView mTextName = (TextView) view.findViewById(R.id.edit_name_text);
             TextView mTextPrice = (TextView) view.findViewById(R.id.price);
 
             mTextName.setText(list_project.get(position).name);

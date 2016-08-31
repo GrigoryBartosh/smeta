@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -16,8 +17,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class ChooseTypeActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
     int editingid;
     ArrayAdapter<WorkClass> adapt;
     private static final int NAMING = 228;
-    private static final int GETTING_NEW_MATERIAL = 1488;
+    private static final int GETTING_NEW_TYPE = 1488;
     ProjectClass Project;
     WorkTypeClass tmp2;
     TreeSet<WorkTypeClass> incompleteTypes = new TreeSet<>();
@@ -42,6 +43,47 @@ public class ChooseTypeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_type);
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.choose_works_toolbar);
         Project = (ProjectClass) getIntent().getSerializableExtra("Project");
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
+        fab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(ChooseTypeActivity.this, SearchActivity.class);
+                intent.putExtra("check_list", true);
+                DBObject[] temp = adapter.getAllRows(DBAdapter.TYPES_TABLE);
+                ArrayList<WorkTypeClass> tmp3 = new ArrayList <>();
+                for (WorkTypeClass x : WorkSet)
+                    tmp3.add(x);
+                WorkTypeClass[] tmp2 = new WorkTypeClass[tmp3.size()];
+                tmp2 = tmp3.toArray(tmp2);
+                tmp3.clear();
+                Arrays.sort(tmp2);
+                for (DBObject x : temp) {
+                    WorkTypeClass y = (WorkTypeClass) x;
+                    int l = 0, r = tmp2.length;
+                    while (l < r - 1)
+                    {
+                        int mid = (l + r) >> 1;
+                        if (tmp2[mid].compareTo(y) > 0)
+                            r = mid;
+                        else
+                            l = mid;
+                    }
+                    if (tmp2.length == 0)
+                        tmp3.add(y);
+                    else {
+                        boolean bool = tmp2[l].rowID != x.rowID;
+                        bool |= !tmp2[l].name.equals(x.name);
+                        if (bool)
+                            tmp3.add(y);
+                    }
+                }
+                intent.putExtra("list", tmp3);
+                startActivityForResult(intent, GETTING_NEW_TYPE);
+            }
+        });
         seekBar = new SeekBar(this);
         seekBar.setMax(50);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
@@ -128,23 +170,10 @@ public class ChooseTypeActivity extends AppCompatActivity {
 
     private void default_values()
     {
-        DBObject[] temp = adapter.getAllRows(DBAdapter.TYPES_TABLE);
-        Set<WorkTypeClass> all = new TreeSet<>();
-        for (int i = 0; i < temp.length; ++i)
-            all.add((WorkTypeClass)temp[i]);
-        ArrayList <WorkTypeClass> deleting = new ArrayList<>();
-        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(Project.place).second.entrySet()) {
-            WorkTypeClass x1 = new WorkTypeClass(x.getKey());
-            if (!all.contains(x1))
-                deleting.add(x1);
-            WorkSet.add(x1);
+        for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(Project.place).second.entrySet())
+        {
+
         }
-        for (WorkTypeClass x : deleting)
-                Project.works.get(Project.place).second.remove(x);
-        //Arrays.sort(temp);
-        for (DBObject x : temp)
-            if (!Project.contains((WorkTypeClass)x))
-                WorkSet.add((WorkTypeClass) x);
     }
 
     private void AddAdapter()
@@ -235,9 +264,16 @@ public class ChooseTypeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        ArrayList<WorkClass> tmp = (ArrayList<WorkClass>)data.getSerializableExtra("WorkSet");
-        Project.put(tmp2, tmp);
-        adapt.notifyDataSetChanged();
+        if (requestCode == NAMING) {
+            ArrayList<WorkClass> tmp = (ArrayList<WorkClass>) data.getSerializableExtra("WorkSet");
+            Project.put(tmp2, tmp);
+            adapt.notifyDataSetChanged();
+        } else if (requestCode == GETTING_NEW_TYPE) {
+            ArrayList <WorkTypeClass> tmp = (ArrayList <WorkTypeClass>) data.getSerializableExtra("result");
+            for (WorkTypeClass x : tmp)
+                WorkSet.add(x);
+            adapt.notifyDataSetChanged();
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

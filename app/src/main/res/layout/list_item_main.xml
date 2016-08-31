@@ -10,17 +10,27 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/layout_background"
-        android:elevation="5dp">
+        android:background="@drawable/layout_background">
 
         <TextView
-            android:id="@+id/text"
+            android:id="@+id/edit_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Title"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"/>
+
+        <EditText
+            android:id="@+id/edit_name_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Title"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:visibility="invisible"
+            android:inputType="textNoSuggestions"/>
 
         <TextView
             android:layout_width="wrap_content"
