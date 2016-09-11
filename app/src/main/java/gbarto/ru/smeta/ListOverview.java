@@ -202,8 +202,8 @@ public class ListOverview extends AppCompatActivity
                 double sum = work.price * work.size;
                 if (work.RealMaterials != null)
                     for (int i = 0; i < work.RealMaterials.size(); ++i)
-                        if (work.RealMaterials.get(i) != -1L) {
-                            MaterialClass material = (MaterialClass)adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                        if (work.RealMaterials.get(i) != null) {
+                            MaterialClass material = work.RealMaterials.get(i);
                             sum += work.size * material.price * work.Materials.get(i).second;
                         }
                 if (work.Instruments != null)
@@ -216,7 +216,7 @@ public class ListOverview extends AppCompatActivity
 
             boolean lmao = false;
             for (int i = 0; !lmao && i < work.Materials.size(); ++i)
-                if (work.RealMaterials.get(i) == -1L)
+                if (work.RealMaterials.get(i) == null)
                 {
                     lmao = true;
                     break;

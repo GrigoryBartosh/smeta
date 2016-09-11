@@ -30,11 +30,13 @@ public class MaterialClass extends DBObject implements Comparable <MaterialClass
         this.iconID = iconID;
     }
 
-    public float getPrice() {
+    public float getPrice()
+    {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(float price)
+    {
         this.price = price;
     }
 
@@ -55,6 +57,15 @@ public class MaterialClass extends DBObject implements Comparable <MaterialClass
         this.measuring = measuring;
         this.iconID = iconID;
         this.per_object = per_object;
+    }
+
+    public MaterialClass(MaterialClass materialClass)
+    {
+        this.name = new String(materialClass.name);
+        this.price = materialClass.price;
+        this.measuring = materialClass.measuring;
+        this.iconID = materialClass.iconID;
+        this.per_object = materialClass.per_object;
     }
 
     public int compareTo(MaterialClass a)

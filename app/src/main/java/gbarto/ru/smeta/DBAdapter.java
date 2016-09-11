@@ -186,8 +186,6 @@ public class DBAdapter {
             temp.put("materials", tmp);
             temp.put("requirements", tmp2);
             JSONArray tmp3 = new JSONArray();
-            for (Long x : work.RealMaterials)
-                tmp3.put(x);
             temp.put("realMaterials", tmp3);
             return temp;
         }
@@ -212,13 +210,10 @@ public class DBAdapter {
             JSONArray tmp = x.getJSONArray("materials");
             JSONArray tmp2 = x.getJSONArray("requirements");
             ArrayList <Pair <Long, Float> > temp = new ArrayList<>();
-            ArrayList <Long> temp2 = new ArrayList<>();
-            JSONArray tmp3 = x.getJSONArray("realMaterials");
             for (int i = 0; i < tmp.length(); ++i){
                 temp.add(new Pair(tmp.getLong(i), (float)tmp2.getDouble(i)));
-                temp2.add(tmp3.getLong(i));
             }
-            WorkClass x1 = new WorkClass(false, "", temp, temp2, 0, 0, 0);
+            WorkClass x1 = new WorkClass(false, "", temp, 0, 0, 0);
             return x1;
         }
         catch (JSONException e) {

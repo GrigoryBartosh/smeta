@@ -1,5 +1,7 @@
 package gbarto.ru.smeta;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -10,8 +12,9 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
 
     public boolean state;
     public long workType;
+
     public ArrayList<Pair <Long, Float> > Materials;
-    public ArrayList<Long> RealMaterials;
+    public ArrayList<MaterialClass> RealMaterials;
     public ArrayList<Pair <Long, Float> > Instruments;
     public float price;
     public int measuring;
@@ -32,8 +35,8 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         for (Pair <Long, Float> x : a.Instruments)
             this.Instruments.add(new Pair<>(Long.valueOf(x.first), Float.valueOf(x.second)));
         this.RealMaterials = new ArrayList<>();
-        for (Long x : a.RealMaterials)
-            this.RealMaterials.add(Long.valueOf(x));
+        for (MaterialClass x : a.RealMaterials)
+            this.RealMaterials.add(x);
         size = a.size;
     }
 
@@ -90,7 +93,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public void addMaterial(long newMaterial)
     {
         Materials.add(new Pair(newMaterial, 0.0f));
-        RealMaterials.add(-1L);
+        RealMaterials.add(null);
     }
 
     public void removeMaterial(int index)
@@ -140,7 +143,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         RealMaterials = new ArrayList<>();
         for (Pair <Long, Float> x : materials) {
             Materials.add(new Pair(x.first, x.second));
-            RealMaterials.add(-1L);
+            RealMaterials.add(null);
         }
         Materials = new ArrayList<>(materials);
         this.Instruments = new ArrayList<>();
@@ -151,7 +154,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         size = 0f;
     }
 
-    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, ArrayList<Long> realMaterials,  float price, int measuring, long workType)
+    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, ArrayList<MaterialClass> realMaterials,  float price, int measuring, long workType)
     {
         this.state = state;
         Materials = new ArrayList<>();
@@ -160,7 +163,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         for (Pair <Long, Float> x : materials) {
             Materials.add(new Pair(x.first, x.second));
         }
-        for (Long x : realMaterials) {
+        for (MaterialClass x : realMaterials) {
             RealMaterials.add(x);
         }
         Materials = new ArrayList<>(materials);
@@ -176,16 +179,38 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     @Override
     public String toString()
     {
-        return  state +
+        String s1 = state +
                 delimeter + workType +
                 delimeter + Materials.toString() +
-                delimeter + RealMaterials.toString() +
-                delimeter + price +
-                delimeter + measuring +
-                delimeter + size +
-                delimeter + name +
-                delimeter + rowID +
-                delimeter + Instruments.toString();
+                delimeter;
+
+        String temp = "";
+        for (int i = 0; i < RealMaterials.size(); ++i) {
+            try {
+                MaterialClass materialClass = RealMaterials.get(i);
+                JSONObject object = new JSONObject();
+                object.put("name", materialClass.name);
+                object.put("price", materialClass.price);
+                object.put("measuring", materialClass.measuring);
+                object.put("iconID", materialClass.iconID);
+                object.put("per_object", materialClass.per_object);
+                temp += object.toString();
+                if (i != RealMaterials.size() - 1)
+                    temp += "321&";
+            }
+            catch (Exception e) {
+                temp += "null";
+                if (i != RealMaterials.size() - 1)
+                    temp += "321&";
+            }
+        }
+        String s2 = delimeter + price +
+        delimeter + measuring +
+        delimeter + size +
+        delimeter + name +
+        delimeter + rowID +
+        delimeter + Instruments.toString();
+        return s1 + temp + s2;
     }
 
 

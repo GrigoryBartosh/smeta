@@ -380,7 +380,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             {
                 Integer pos = data.getExtras().getInt("material_id");
                 Long rowID = new_material.get(pos).rowID;
-                work.RealMaterials.set(material_line, rowID);
+                work.RealMaterials.set(material_line, (MaterialClass) dbAdapter.getRow(DBAdapter.MATERIAL_TABLE, rowID));
 
                 setFromWork();
             }
@@ -591,10 +591,10 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             Long rowID = work.Materials.get(position).first;
             MaterialTypeClass p = material_types_info_from_id.get(rowID);
             if (work_type == 2) {
-                if (work.RealMaterials.get(position) == -1L)
+                if (work.RealMaterials.get(position) == null)
                     mTextName.setText(p.name + " (" + getString(R.string.work_material_not_choose) + ")");
                 else {
-                    DBObject m = dbAdapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(position));
+                    DBObject m = work.RealMaterials.get(position);
                     mTextName.setText(m.name);
                 }
             } else {
@@ -647,14 +647,15 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                         new_material = getAllMaterial(material_types_info_from_id.get(work.Materials.get(position).first));
 
                         Boolean flag = false;
-                        for (int i = 0; i < new_material.size(); i++)
-                            if (work.RealMaterials.get(position) == new_material.get(i).rowID) {
-                                MaterialClass t = new_material.get(0);
-                                new_material.set(0, new_material.get(i));
-                                new_material.set(i, t);
-                                flag = true;
-                                break;
-                            }
+                        if (work.RealMaterials.get(position) != null)
+                            for (int i = 0; i < new_material.size(); i++)
+                                if (work.RealMaterials.get(position).rowID == new_material.get(i).rowID) {
+                                    MaterialClass t = new_material.get(0);
+                                    new_material.set(0, new_material.get(i));
+                                    new_material.set(i, t);
+                                    flag = true;
+                                    break;
+                                }
 
                         intent.putExtra("list", new_material);
                         intent.putExtra("check_list", false);

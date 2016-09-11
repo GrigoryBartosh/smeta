@@ -43,9 +43,9 @@ public class ChooseTypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_type);
-        setTitle(Project.works.get(Project.place).first.getVisible_name() + " : " + getString(R.string.work_types));
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.choose_works_toolbar);
         Project = (ProjectClass) getIntent().getSerializableExtra("Project");
+        setTitle(Project.works.get(Project.place).first.getVisible_name() + " : " + getString(R.string.work_types));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
         fab.setOnClickListener(new View.OnClickListener()
@@ -232,8 +232,8 @@ public class ChooseTypeActivity extends AppCompatActivity {
                     for (WorkClass work : temp) {
                         sum += work.size * work.price;
                         for (int i = 0; i < work.RealMaterials.size(); ++i)
-                            if (work.RealMaterials.get(i) != -1L) {
-                                MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                            if (work.RealMaterials.get(i) != null) {
+                                MaterialClass material = work.RealMaterials.get(i);
                                 sum += work.size * material.price * work.Materials.get(i).second;
                             }
                         for (int i = 0; i < work.Instruments.size(); ++i) {
@@ -252,7 +252,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
                 ArrayList<WorkClass> temp = Project.get(w1);
                 for (WorkClass work : temp)
                     for (int i = 0; !bad && i < work.RealMaterials.size(); ++i)
-                        if (work.RealMaterials.get(i) == -1L)
+                        if (work.RealMaterials.get(i) == null)
                             bad = true;
             }
             if (bad) {

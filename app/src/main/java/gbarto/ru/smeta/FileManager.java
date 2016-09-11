@@ -201,10 +201,23 @@ public class FileManager
             if (lmao.length == 2)
                 ans.Materials.add(new Pair(Long.valueOf(lmao[0]), Float.valueOf(lmao[1])));
         }
-        temp2 = nospaces(temp[3]).split(",");
+        temp2 = temp[3].split("321&");
         for (int i = 0; i < temp2.length; ++i)
-            if (temp2[i].length() > 0)
-                ans.RealMaterials.add(Long.valueOf(temp2[i]));
+            if (temp2[i].length() > 0) {
+                JSONObject object = FromString(temp2[i]);
+                try {
+                    ans.RealMaterials.add(new MaterialClass(object.getString("name"),
+                                                            (float)object.getDouble("price"),
+                                                            object.getInt("measuring"),
+                                                            object.getInt("iconID"),
+                                                            (float)object.getDouble("per_object")
+                             ));
+                }
+                catch (Exception e)
+                {
+                    ans.RealMaterials.add(null);
+                }
+            }
         ans.price = Float.valueOf(temp[4]);
         ans.measuring = Integer.valueOf(temp[5]);
         ans.size = Float.valueOf(temp[6]);
@@ -493,9 +506,9 @@ public class FileManager
                 WorkClass work = x.getValue().get(count_works);
                 ans += work.size * work.price * x.getKey().coeff;
                 for (int i = 0; i < work.Materials.size(); ++i) {
-                    if (work.RealMaterials.get(i) == -1)
+                    if (work.RealMaterials.get(i) == null)
                         continue;
-                    MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                    MaterialClass material = work.RealMaterials.get(i);
                     if (material.per_object < (1e-8))
                         ans += work.size * work.Materials.get(i).second * material.price * x.getKey().coeff;
                     else
@@ -522,9 +535,9 @@ public class FileManager
                     WorkClass work = x.getValue().get(count_works);
                     ans += work.size * work.price * x.getKey().coeff;
                     for (int i = 0; i < work.Materials.size(); ++i) {
-                        if (work.RealMaterials.get(i) == -1)
+                        if (work.RealMaterials.get(i) == null)
                             continue;
-                        MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                        MaterialClass material = work.RealMaterials.get(i);
                         if (material.per_object < (1e-8))
                             ans += work.size * work.Materials.get(i).second * material.price * x.getKey().coeff;
                         else
@@ -674,8 +687,9 @@ public class FileManager
                             table.addCell(Empty());
                             for (int i = 0; i < work.Materials.size(); ++i) {
                                 MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
-                                if (work.RealMaterials.get(i) != -1) {
-                                    MaterialClass material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));                                table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
+                                if (work.RealMaterials.get(i) != null) {
+                                    MaterialClass material = work.RealMaterials.get(i);
+                                    table.addCell(LeftedText(Integer.toString(count_works) + "." + Integer.toString(i + 1)));
                                     table.addCell(LeftPadded(LeftedText(material.name)));
                                     table.addCell(CenteredText(context.getResources().getStringArray(R.array.measurements_material_short)[materialTypeClass.measurement]));
                                     if (material.per_object < (1e-8)) {
@@ -1036,8 +1050,8 @@ public class FileManager
                             for (int i = 0; i < work.Materials.size(); ++i) {
                                 MaterialTypeClass materialTypeClass = (MaterialTypeClass) adapter.getRow(DBAdapter.MATERIAL_TYPES_TABLE, work.Materials.get(i).first);
                                 MaterialClass material;
-                                if (work.RealMaterials.get(i) != -1)
-                                    material = (MaterialClass) adapter.getRow(DBAdapter.MATERIAL_TABLE, work.RealMaterials.get(i));
+                                if (work.RealMaterials.get(i) != null)
+                                    material = work.RealMaterials.get(i);
                                 else
                                     material = new MaterialClass(materialTypeClass.name + " (" + context.getString(R.string.work_material_not_choose) + ")", 0, materialTypeClass.measurement, 0, 0);
                                 row = sheet.createRow(rowcount++);
