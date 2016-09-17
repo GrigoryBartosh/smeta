@@ -234,12 +234,20 @@ public class ChooseTypeActivity extends AppCompatActivity {
                         for (int i = 0; i < work.RealMaterials.size(); ++i)
                             if (work.RealMaterials.get(i) != null) {
                                 MaterialClass material = work.RealMaterials.get(i);
-                                sum += work.size * material.price * work.Materials.get(i).second;
+                                if (material.per_object < (1e-8)) {
+                                    double wasted = work.size * work.Materials.get(i).second * material.price;
+                                    sum += wasted;
+                                } else {
+                                    int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
+                                    double wasted = amount * material.price;
+                                    sum += wasted;
+                                }
                             }
                         for (int i = 0; i < work.Instruments.size(); ++i) {
                             InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
                             sum += tool.price * work.Instruments.get(i).second;
                         }
+                        sum *= work.coefficient;
                     }
                 }
                 t2.setText(String.format("%.2f", sum));

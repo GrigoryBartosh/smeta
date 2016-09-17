@@ -48,6 +48,8 @@ public class EditNameActivity extends AppCompatActivity {
     private TextView ChooseRoomText;
     private int RoomResult = 1337;
     private int TypesResult = 1488;
+    Drawable default_pencil;
+    Drawable blue_pencil;
     private int CompletedResult = 239;
     String projectname = "";
     boolean gaveproject = false;
@@ -94,14 +96,18 @@ public class EditNameActivity extends AppCompatActivity {
             projectname = Project.name;
             lastProjectname = projectname;
             mText.setText(Project.name);
-            if (keeper.isEmpty())
-                setTitle(getString(R.string.title_activity_edit_name));
-            else
-                setTitle(keeper);
+            setTitle(Project.name);
+            EditText view = (EditText)this.findViewById(R.id.Project_name_field);
+            view.setVisibility(View.INVISIBLE);
+            view.setText(Project.name);
+            TextView textView = (TextView)this.findViewById(R.id.Project_name_uneditable);
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(view.getText());
         }
         else
         {
             if (Project == null) {
+                setTitle(getString(R.string.title_activity_edit_name));
                 Project = new ProjectClass();
             }
         }
@@ -123,6 +129,14 @@ public class EditNameActivity extends AppCompatActivity {
         default_values();
         lastinflation = new boolean[RoomList.size()];
         AddAdapter();
+        default_pencil = getResources().getDrawable(R.drawable.pencil);
+        blue_pencil = getResources().getDrawable(R.drawable.pencil_blue);
+        int color = getResources().getColor(R.color.ic_menu);
+        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
+        Drawable d;
+        d = getResources().getDrawable(R.drawable.pencil_blue);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
 
 
         /*LinearLayout View_Button = (LinearLayout)findViewById(R.id.button_view);
@@ -186,25 +200,6 @@ public class EditNameActivity extends AppCompatActivity {
                 else
                     keeper = charSequence.toString();
             }});
-
-        int color = getResources().getColor(R.color.ic_menu);
-        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
-        Drawable d;
-        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_view);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
-        d = getResources().getDrawable(android.R.drawable.ic_menu_share);
-        d.setColorFilter(color, mMode);
-        d.setAlpha(255);
     }
 
     private String check(String s)
@@ -307,7 +302,25 @@ public class EditNameActivity extends AppCompatActivity {
             ProjectShare();
         else if (item.getItemId() == R.id.menu_edit_name_edit)
         {
+            l.setLongClickable(editing);
             editing = !editing;
+            if (editing)
+            {
+                EditText view = (EditText)this.findViewById(R.id.Project_name_field);
+                view.setVisibility(View.VISIBLE);
+                TextView textView = (TextView)this.findViewById(R.id.Project_name_uneditable);
+                textView.setVisibility(View.INVISIBLE);
+                item.setIcon(blue_pencil);
+            }
+            else
+            {
+                EditText view = (EditText)this.findViewById(R.id.Project_name_field);
+                view.setVisibility(View.INVISIBLE);
+                TextView textView = (TextView)this.findViewById(R.id.Project_name_uneditable);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(view.getText());
+                item.setIcon(default_pencil);
+            }
             Recalc();
             View view = this.getCurrentFocus();
             if (view != null) {
@@ -374,6 +387,7 @@ public class EditNameActivity extends AppCompatActivity {
             Intent temp = new Intent();
             setResult(RESULT_CANCELED, temp);
             finish();
+            return;
         }
         if (Save()) {
             if (countreturned > 0) {

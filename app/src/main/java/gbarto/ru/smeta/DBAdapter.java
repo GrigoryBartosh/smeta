@@ -213,7 +213,7 @@ public class DBAdapter {
             for (int i = 0; i < tmp.length(); ++i){
                 temp.add(new Pair(tmp.getLong(i), (float)tmp2.getDouble(i)));
             }
-            WorkClass x1 = new WorkClass(false, "", temp, 0, 0, 0);
+            WorkClass x1 = new WorkClass(false, "", temp, 0, 0, 0, 1);
             return x1;
         }
         catch (JSONException e) {
@@ -664,16 +664,16 @@ public class DBAdapter {
             t1 = new WorkTypeClass("Потолок");
             add(_db, TYPES_TABLE, t1);
 
-            WorkClass t2 = new WorkClass(false, "Покрасить пол", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);
+            WorkClass t2 = new WorkClass(false, "Покрасить пол", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1, 1);
             t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
-            t2 = new WorkClass(false, "Покрасить стены", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 2);
+            t2 = new WorkClass(false, "Покрасить стены", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 2, 1);
             t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
-            t2 = new WorkClass(false, "Покрасить потолок", new ArrayList<Pair <Long, Float>>(), 1.15f, 1,3);
+            t2 = new WorkClass(false, "Покрасить потолок", new ArrayList<Pair <Long, Float>>(), 1.15f, 1,3, 1);
             t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
-            t2 = new WorkClass(false, "Покрыть фундамент известково-песчаной смесью", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1);
+            t2 = new WorkClass(false, "Покрыть фундамент известково-песчаной смесью", new ArrayList<Pair <Long, Float>>(), 1.15f, 1, 1, 1);
             t2.addMaterial(2L);
             add(_db, WORKS_TABLE, t2);
 

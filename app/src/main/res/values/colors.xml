@@ -15,6 +15,7 @@
     <color name="colorAccent">#00a4ef</color>
 
     <color name="ic_menu">#0000ff</color>
+    <color name="ic_menu_default">#C6C6C6</color>
 
     <color name="place_chosen">#5ae65f2a</color>
     <color name="pdf_table_worktype_begin">#b4843b</color>

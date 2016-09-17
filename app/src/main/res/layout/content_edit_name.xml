@@ -12,7 +12,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,18 +30,31 @@
             android:isScrollContainer="true"
             android:minHeight="20dp"
             android:inputType="textMultiLine"
+            android:layout_centerHorizontal="true"
             android:singleLine="true"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Project_name_uneditable"
+            android:minHeight="20dp"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:singleLine="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_below="@+id/Project_name_field"
+            android:layout_centerHorizontal="true"
             android:text="@string/project_name"
             android:id="@+id/Project_name_text"
             android:layout_gravity="center"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"

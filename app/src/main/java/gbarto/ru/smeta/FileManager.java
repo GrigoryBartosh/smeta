@@ -504,20 +504,20 @@ public class FileManager
             for (int count_works = 0; count_works < x.getValue().size(); ++count_works)
             {
                 WorkClass work = x.getValue().get(count_works);
-                ans += work.size * work.price * x.getKey().coeff;
+                ans += work.size * work.price * work.coefficient;
                 for (int i = 0; i < work.Materials.size(); ++i) {
                     if (work.RealMaterials.get(i) == null)
                         continue;
                     MaterialClass material = work.RealMaterials.get(i);
                     if (material.per_object < (1e-8))
-                        ans += work.size * work.Materials.get(i).second * material.price * x.getKey().coeff;
+                        ans += work.size * work.Materials.get(i).second * material.price * work.coefficient;
                     else
                         ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
                 }
 
                 for (int i = 0; i < work.Instruments.size(); ++i) {
                     InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
-                    ans += work.Instruments.get(i).second * tool.price * x.getKey().coeff;
+                    ans += work.Instruments.get(i).second * tool.price * work.coefficient;
                 }
             }
         return ans;
@@ -674,11 +674,10 @@ public class FileManager
                         table.addCell(CenteredText(String.format("%.2f", work.size)));
                         table.addCell(CenteredText(String.format("%.2f", work.price)));
                         table.addCell(RightedText(String.format("%.2f", work.price * work.size)));
-                        work_type_total += work.price * work.size;
                         work_cost += work.price * work.size * x.getKey().coeff;
 
+                        double work_total = 0;
                         if (work.Materials.size() > 0) {
-                            double work_total = 0;
                             table.addCell(Empty());
                             table.addCell(CenteredBold(context.getString(R.string.materials)));
                             table.addCell(Empty());
@@ -739,11 +738,12 @@ public class FileManager
                             table.addCell(Empty());
                             table.addCell(Empty());
                             table.addCell(RightedText(String.format("%.2f", work_total)));
-                            work_type_total += work_total;
                         }
 
+
+                        double remember = work_total;
+
                         if (work.Instruments.size() > 0) {
-                            double work_total = 0;
 
                             table.addCell(Empty());
                             table.addCell(CenteredBold(context.getString(R.string.tools)));
@@ -769,10 +769,28 @@ public class FileManager
                             table.addCell(Empty());
                             table.addCell(Empty());
                             table.addCell(Empty());
-                            table.addCell(RightedText(String.format("%.2f", work_total)));
-                            work_type_total += work_total;
+                            table.addCell(RightedText(String.format("%.2f", work_total - remember)));
                         }
 
+                        if (work.coefficient != 1) {
+                            table.addCell(Empty());
+                            table.addCell(LeftedText(context.getString(R.string.coefficient)));
+                            table.addCell(Empty());
+                            table.addCell(Empty());
+                            table.addCell(Empty());
+                            table.addCell(RightedText(String.format("x%d", work.coefficient)));
+                        }
+
+                        work_total += work.price * work.size;
+                        work_total *= work.coefficient;
+                        work_type_total += work_total;
+
+                        table.addCell(Empty());
+                        table.addCell(LeftedText(context.getString(R.string.work_summary)));
+                        table.addCell(Empty());
+                        table.addCell(Empty());
+                        table.addCell(Empty());
+                        table.addCell(RightedText(String.format("%.2f", work_total)));
                     }
 
                     table.addCell(ColoredEnd(Empty()));
@@ -1041,10 +1059,9 @@ public class FileManager
                         newCell(row, 3, work.size, Centered(simple));
                         newCell(row, 4, work.price, Centered(simple));
                         newCell(row, 5, work.size * work.price, Righted(simple));
-                        type_total += work.size * work.price;
                         works_total += work.size * work.price * x.getKey().coeff;
+                        double work_total = 0;
                         if (!work.Materials.isEmpty()) {
-                            double work_total = 0;
                             row = sheet.createRow(rowcount++);
                             newCell(row, 1, context.getString(R.string.materials), simple);
                             for (int i = 0; i < work.Materials.size(); ++i) {
@@ -1077,11 +1094,11 @@ public class FileManager
                             row = sheet.createRow(rowcount++);
                             newCell(row, 1, context.getString(R.string.pdf_total_cost), simple);
                             newCell(row, 5, work_total, Righted(simple));
-                            type_total += work_total;
                         }
 
+                        double remember = work_total;
+
                         if (work.Instruments.size() > 0) {
-                            double work_total = 0;
 
                             row = sheet.createRow(rowcount++);
                             newCell(row, 1, context.getString(R.string.tools), simple);
@@ -1098,13 +1115,26 @@ public class FileManager
                                 work_total += wasted;
                                 material_total += wasted * x.getKey().coeff;
                             }
-                            type_total += work_total;
 
                             row = sheet.createRow(rowcount++);
                             newCell(row, 1, context.getString(R.string.pdf_total_cost), Lefted(simple));
-                            newCell(row, 5, String.format("%.2f", work_total), Righted(simple));
+                            newCell(row, 5, String.format("%.2f", work_total - remember), Righted(simple));
                         }
 
+                        if (work.coefficient != 1) {
+                            row = sheet.createRow(rowcount++);
+                            newCell(row, 1, context.getString(R.string.coefficient), Lefted(simple));
+                            newCell(row, 5, String.format("x%d", work.coefficient), Righted(simple));
+                        }
+
+                        work_total += work.price * work.size;
+                        work_total *= work.coefficient;
+                        type_total += work_total;
+
+                        row = sheet.createRow(rowcount++);
+
+                        newCell(row, 1, context.getString(R.string.work_summary), Lefted(simple));
+                        newCell(row, 5, String.format("%.2f", work_total), Righted(simple));
 
                     }
 

@@ -16,6 +16,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     public ArrayList<Pair <Long, Float> > Materials;
     public ArrayList<MaterialClass> RealMaterials;
     public ArrayList<Pair <Long, Float> > Instruments;
+    public int coefficient;
     public float price;
     public int measuring;
     public float size;
@@ -28,6 +29,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.workType = a.workType;
         this.measuring = a.measuring;
         this.price = a.price;
+        this.coefficient = 1;
         this.Materials = new ArrayList<>();
         for (Pair <Long, Float> x : a.Materials)
             this.Materials.add(new Pair<>(Long.valueOf(x.first), Float.valueOf(x.second)));
@@ -120,6 +122,7 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.measuring = -1;
         this.price = 0;
         this.name = name;
+        this.coefficient = 1;
         this.workType = -1;
     }
 
@@ -131,14 +134,30 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         this.measuring = -1;
         this.price = 0;
         this.name = "";
+        this.coefficient = 1;
         this.RealMaterials = new ArrayList<>();
         this.workType = -1;
         size = 0f;
     }
 
-    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, float price, int measuring, long workType)
+    public WorkClass (String name)
+    {
+        this.state = false;
+        this.Materials = new ArrayList<>();
+        this.Instruments = new ArrayList<>();
+        this.measuring = -1;
+        this.price = 0;
+        this.coefficient = 1;
+        this.name = name;
+        this.RealMaterials = new ArrayList<>();
+        this.workType = -1;
+        size = 0f;
+    }
+
+    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, float price, int measuring, long workType, int coefficient)
     {
         this.state = state;
+        this.coefficient = 1;
         Materials = new ArrayList<>();
         RealMaterials = new ArrayList<>();
         for (Pair <Long, Float> x : materials) {
@@ -154,9 +173,10 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
         size = 0f;
     }
 
-    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, ArrayList<MaterialClass> realMaterials,  float price, int measuring, long workType)
+    public WorkClass(boolean state, String name, ArrayList<Pair <Long, Float>> materials, ArrayList<MaterialClass> realMaterials,  float price, int measuring, long workType, int coefficient)
     {
         this.state = state;
+        this.coefficient = 1;
         Materials = new ArrayList<>();
         RealMaterials = new ArrayList<>();
         this.Instruments = new ArrayList<>();
@@ -175,14 +195,32 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
     }
 
     final String delimeter = "&12";
+
+    public double getAmount()
+    {
+        double work_total = this.size * this.price;
+        for (int i = 0; i < RealMaterials.size(); ++i)
+            if (RealMaterials.get(i) != null) {
+                MaterialClass material = RealMaterials.get(i);
+                if (RealMaterials.get(i).per_object < (1e-8)) {
+                    double wasted = this.size * this.Materials.get(i).second * material.price;
+                    work_total += wasted;
+                } else {
+                    int amount = (int) Math.ceil((double) this.size * this.Materials.get(i).second / material.per_object);
+                    double wasted = amount * material.price;
+                    work_total += wasted;
+                }
+            }
+        return work_total * coefficient;
+    }
     
     @Override
     public String toString()
     {
         String s1 = state +
-                delimeter + workType +
-                delimeter + Materials.toString() +
-                delimeter;
+            delimeter + workType +
+            delimeter + Materials.toString() +
+            delimeter;
 
         String temp = "";
         for (int i = 0; i < RealMaterials.size(); ++i) {
@@ -205,11 +243,12 @@ public class WorkClass extends DBObject implements Comparable<WorkClass>
             }
         }
         String s2 = delimeter + price +
-        delimeter + measuring +
-        delimeter + size +
-        delimeter + name +
-        delimeter + rowID +
-        delimeter + Instruments.toString();
+            delimeter + measuring +
+            delimeter + size +
+            delimeter + name +
+            delimeter + rowID +
+            delimeter + coefficient +
+            delimeter + Instruments.toString();
         return s1 + temp + s2;
     }
 

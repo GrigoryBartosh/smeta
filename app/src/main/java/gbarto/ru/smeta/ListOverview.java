@@ -94,6 +94,7 @@ public class ListOverview extends AppCompatActivity
                             tmp3.add(y);
                     }
                 }
+                tmp3.add(new WorkClass(getString(R.string.unique_work)));
                 intent.putExtra("list", tmp3);
                 startActivityForResult(intent, SOSU_PENISI_ZA_2000_RUBLEY);
             }
@@ -130,7 +131,6 @@ public class ListOverview extends AppCompatActivity
                 }
             }
         }
-
     }
 
     private void AddAdapter()
@@ -199,18 +199,7 @@ public class ListOverview extends AppCompatActivity
             t1.setText(work.name);
             {
                 TextView t2 = (TextView)item.findViewById(R.id.price);
-                double sum = work.price * work.size;
-                if (work.RealMaterials != null)
-                    for (int i = 0; i < work.RealMaterials.size(); ++i)
-                        if (work.RealMaterials.get(i) != null) {
-                            MaterialClass material = work.RealMaterials.get(i);
-                            sum += work.size * material.price * work.Materials.get(i).second;
-                        }
-                if (work.Instruments != null)
-                    for (int i = 0; i < work.Instruments.size(); ++i) {
-                        InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
-                        sum += tool.price * work.Instruments.get(i).second;
-                    }
+                double sum = work.getAmount();
                 t2.setText(String.format("%.2f", sum));
             }
 

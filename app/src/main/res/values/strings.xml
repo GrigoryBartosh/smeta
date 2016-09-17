@@ -166,6 +166,10 @@
         <item>Загрузить из галереи</item>
     </string-array>
 
+    <string name="unique_work">Уникальная работа</string>
+    <string name="coefficient">Множитель работы</string>
+    <string name="work_summary">Итого за работу</string>
+
     <string name="title_activity_about">О приложении</string>
     <string name="about_version">Версия программы:</string>
 
