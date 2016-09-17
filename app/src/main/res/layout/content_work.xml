@@ -53,18 +53,30 @@
             android:textSize="16sp"
             android:paddingLeft="5dp"/>
 
-        <Spinner
-            android:id="@+id/work_spinner"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/measurements_work"/>
+            android:layout_height="wrap_content">
 
+            <Spinner
+                android:id="@+id/work_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/measurements_work"/>
+
+            <TextView
+                android:id="@+id/work_spinner_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text=""
+                />
+        </RelativeLayout>
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/work_relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/work_text_size"
@@ -86,6 +98,45 @@
             android:layout_alignBottom="@+id/work_text_size"
             android:layout_toRightOf="@+id/work_text_size"
             android:layout_toEndOf="@+id/work_text_size" />
+
+        <TextView
+            android:id="@+id/work_text_multiplication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="x"
+            android:textSize="16sp"
+            android:paddingLeft="5dp"
+            android:textColor="@color/black"
+            android:layout_alignBaseline="@+id/work_editText_size"
+            android:layout_alignBottom="@+id/work_editText_size"
+            android:layout_toRightOf="@+id/work_editText_size"
+            android:layout_toEndOf="@+id/work_editText_size"/>
+
+        <EditText
+            android:id="@+id/work_editText_coefficient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:hint="1"
+            android:inputType="numberSigned|numberDecimal"
+            android:maxLength="7"
+            android:layout_alignBaseline="@+id/work_text_multiplication"
+            android:layout_alignBottom="@+id/work_text_multiplication"
+            android:layout_toRightOf="@+id/work_text_multiplication"
+            android:layout_toEndOf="@+id/work_text_multiplication" />
+
+        <TextView
+            android:id="@+id/work_text_coefficient_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/work_coefficient"
+            android:textSize="16sp"
+            android:paddingLeft="5dp"
+            android:textColor="@color/black"
+            android:layout_alignBaseline="@+id/work_editText_coefficient"
+            android:layout_alignBottom="@+id/work_editText_coefficient"
+            android:layout_toRightOf="@+id/work_editText_coefficient"
+            android:layout_toEndOf="@+id/work_editText_coefficient"/>
 
         <LinearLayout
             android:id="@+id/work_linerLayout"
@@ -158,12 +209,71 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/work_linerLayout_hint"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/work_linerLayout"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/work_list_hint_name"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/work_list_hint_sum"
+                android:textColor="@color/black"
+                android:gravity="right"/>
+        </LinearLayout>
+
         <ViewFlipper
             android:id="@+id/work_viewFlipper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:layout_below="@+id/work_linerLayout" />
+            android:layout_below="@+id/work_linerLayout_hint" />
+
+        <View
+            android:id="@+id/work_view_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_alignTop="@+id/work_text_sum_hint"/>
+
+        <TextView
+            android:id="@+id/work_text_sum_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/total"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"/>
+
+        <TextView
+            android:id="@+id/work_text_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0"
+            android:paddingRight="5dp"
+            android:layout_toLeftOf="@+id/work_text_sum_rub"
+            android:layout_alignParentBottom="true"/>
+
+        <TextView
+            android:id="@+id/work_text_sum_rub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/ruble_short"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 

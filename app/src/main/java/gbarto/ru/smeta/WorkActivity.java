@@ -43,8 +43,12 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText mEditName;
     private EditText mEditSum;
     private Spinner mSpinner;
+    private TextView mSpinnerText;
     private TextView mTextSize;
     private EditText mEditSize;
+    private TextView mTextMultiplication;
+    private EditText mEditCoefficient;
+    private TextView mTextCoefficientHint;
 
     private LinearLayout mLinearLayout;
     private TextView mTextMaterial;
@@ -59,6 +63,11 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private TextView mTextListMaterialEmpty;
     private TextView mTextListInstrumentEmpty;
+
+    private View mViewUpLine;
+    private TextView mTextSumHint;
+    private TextView mTextSum;
+    private TextView mTextSumRub;
 
     private ArrayAdapter<CharSequence> spinner_adapter;
     private Boolean selected_first_window =  true;
@@ -95,14 +104,22 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         mEditName = (EditText) findViewById(R.id.work_editText_name);
         mEditSum = (EditText) findViewById(R.id.work_editText_sum);
         mSpinner = (Spinner) findViewById(R.id.work_spinner);
+        mSpinnerText = (TextView) findViewById(R.id.work_spinner_text);
         mTextSize = (TextView) findViewById(R.id.work_text_size);
         mEditSize = (EditText) findViewById(R.id.work_editText_size);
+        mTextMultiplication = (TextView) findViewById(R.id.work_text_multiplication);
+        mEditCoefficient = (EditText) findViewById(R.id.work_editText_coefficient);
+        mTextCoefficientHint = (TextView) findViewById(R.id.work_text_coefficient_hint);
         mLinearLayout = (LinearLayout) findViewById(R.id.work_linerLayout);
         mTextMaterial = (TextView) findViewById(R.id.work_list_material);
         mTextInstruments = (TextView) findViewById(R.id.work_list_instruments);
         mViewUnderlineMaterial = findViewById(R.id.work_list_underline_material);
         mViewUnderlineInstruments = findViewById(R.id.work_list_underline_instruments);
         mImageNew = (ImageView) findViewById(R.id.work_imageView_new);
+        mViewUpLine = (View) findViewById(R.id.work_view_line);
+        mTextSumHint = (TextView) findViewById(R.id.work_text_sum_hint);
+        mTextSum = (TextView) findViewById(R.id.work_text_sum);
+        mTextSumRub = (TextView) findViewById(R.id.work_text_sum_rub);
         Toolbar toolbar = (Toolbar) findViewById(R.id.work_toolbar);
 
         mViewFlipper = (ViewFlipper) findViewById(R.id.work_viewFlipper);
@@ -127,7 +144,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mTextSize.setText(measurements_work_word[i] + ":");
-                setList();
             }
 
             @Override
@@ -135,6 +151,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
+        //mEditSize.addTextChangedListener(txt_wtch);
+        //mEditCoefficient.addTextChangedListener(txt_wtch);
         mImageNew.setOnClickListener(btn_ocl);
         mTextMaterial.setOnClickListener(list_ocl);
         mTextInstruments.setOnClickListener(list_ocl);
@@ -183,9 +201,20 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         if (work_type == 2) {
             mEditName.setEnabled(false);
             mSpinner.setEnabled(false);
+            mSpinner.setVisibility(View.INVISIBLE);
+            mSpinnerText.setText(measurements_work[work.measuring]);
         } else {
+            mSpinnerText.setVisibility(View.INVISIBLE);
             mTextSize.setVisibility(View.INVISIBLE);
             mEditSize.setVisibility(View.INVISIBLE);
+            mTextMultiplication.setVisibility(View.INVISIBLE);
+            mEditCoefficient.setVisibility(View.INVISIBLE);
+            mTextCoefficientHint.setVisibility(View.INVISIBLE);
+            mViewUpLine.setVisibility(View.INVISIBLE);
+            mTextSumHint.setVisibility(View.INVISIBLE);
+            mTextSum.setVisibility(View.INVISIBLE);
+            mTextSumRub.setVisibility(View.INVISIBLE);
+
             RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             relativeParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
@@ -266,6 +295,38 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         return  res;
     }
+
+    TextWatcher txt_wtch = new TextWatcher(){
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String s = mEditSize.getText().toString();
+            if (s.equals("") || s.equals("-") || s.equals("-.") || s.equals(".")) {
+                work.size = 0;
+            } else {
+                work.size = Float.parseFloat(s);
+            }
+
+            s = mEditCoefficient.getText().toString();
+            if (s.equals("") || s.equals("-") || s.equals("-.") || s.equals(".")) {
+                work.coefficient = 0;
+            } else {
+                Float f = Float.parseFloat(s);
+                work.coefficient = f.intValue();
+            }
+
+            mTextSum.setText(String.format("%.2f", work.getAmount()));
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 
     View.OnClickListener list_ocl = new View.OnClickListener(){
         @Override
@@ -441,6 +502,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         work.name = mEditName.getText().toString().replaceAll("[\\s]{2,}", " ").trim();
         work.measuring = spinner_adapter.getPosition(mSpinner.getSelectedItem().toString());
+        work.coefficient = Float.valueOf(mEditCoefficient.getText().toString()).intValue();
         String price = mEditSum.getText().toString();
         if (price.equals("") || price.equals("-") || price.equals("-.")) {
             work.price = 0;
@@ -470,6 +532,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mEditSum.setText("");
         else
             mEditSum.setText(Float.toString(work.price));
+
+        mEditCoefficient.setText(Integer.toString(work.coefficient));
 
         if (work_type == 2){
             if (Math.abs(work.size) < 1e-8)
