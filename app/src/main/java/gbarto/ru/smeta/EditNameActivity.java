@@ -137,6 +137,21 @@ public class EditNameActivity extends AppCompatActivity {
         d = getResources().getDrawable(R.drawable.pencil_blue);
         d.setColorFilter(color, mMode);
         d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_help);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_save);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_edit);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_view);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
+        d = getResources().getDrawable(android.R.drawable.ic_menu_share);
+        d.setColorFilter(color, mMode);
+        d.setAlpha(255);
 
 
         /*LinearLayout View_Button = (LinearLayout)findViewById(R.id.button_view);
@@ -311,6 +326,7 @@ public class EditNameActivity extends AppCompatActivity {
                 TextView textView = (TextView)this.findViewById(R.id.Project_name_uneditable);
                 textView.setVisibility(View.INVISIBLE);
                 item.setIcon(blue_pencil);
+                fab.setVisibility(View.GONE);
             }
             else
             {
@@ -320,6 +336,7 @@ public class EditNameActivity extends AppCompatActivity {
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(view.getText());
                 item.setIcon(default_pencil);
+                fab.setVisibility(View.VISIBLE);
             }
             Recalc();
             View view = this.getCurrentFocus();
@@ -529,9 +546,11 @@ public class EditNameActivity extends AppCompatActivity {
                     name += " " + Before.get(position);
                 Project.works.get(position).first.setName(name);
                 mTextName.setText(name);
+                mEditText.setText(name);
                 mEditText.setText(RoomList.get(position));
             } else {
                 mEditText.setVisibility(View.VISIBLE);
+                mEditText.setLongClickable(false);
                 mTextName.setVisibility(View.INVISIBLE);
                 mEditText.addTextChangedListener(new TextWatcher()
                 {
