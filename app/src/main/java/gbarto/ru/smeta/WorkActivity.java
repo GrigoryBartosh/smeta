@@ -222,6 +222,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mEditSize.addTextChangedListener(txt_wtch);
         mEditCoefficient.addTextChangedListener(txt_wtch);
+        mEditSum.addTextChangedListener(txt_wtch);
 
         int color = getResources().getColor(R.color.ic_menu);
         PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
@@ -306,6 +307,13 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             String s;
+
+            s = mEditSum.getText().toString();
+            if (s.equals("") || s.equals("-") || s.equals("-.") || s.equals(".")) {
+                work.price = 0;
+            } else {
+                work.price = Float.parseFloat(s);
+            }
 
             s = mEditSize.getText().toString();
             if (s.equals("") || s.equals("-") || s.equals("-.") || s.equals(".")) {
