@@ -514,8 +514,15 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     {
         work.name = mEditName.getText().toString().replaceAll("[\\s]{2,}", " ").trim();
         work.measuring = spinner_adapter.getPosition(mSpinner.getSelectedItem().toString());
-        work.coefficient = Float.valueOf(mEditCoefficient.getText().toString()).intValue();
-        String price = mEditSum.getText().toString();
+
+        String price = mEditCoefficient.getText().toString();
+        if (price.equals("") || price.equals("-") || price.equals("-.")) {
+            work.coefficient = 0;
+        } else {
+            work.coefficient = Float.valueOf(price).intValue();
+        }
+
+        price = mEditSum.getText().toString();
         if (price.equals("") || price.equals("-") || price.equals("-.")) {
             work.price = 0;
         } else {
