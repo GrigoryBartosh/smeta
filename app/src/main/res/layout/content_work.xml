@@ -95,7 +95,6 @@
             android:inputType="numberSigned|numberDecimal"
             android:maxLength="7"
             android:layout_alignBaseline="@+id/work_text_size"
-            android:layout_alignBottom="@+id/work_text_size"
             android:layout_toRightOf="@+id/work_text_size"
             android:layout_toEndOf="@+id/work_text_size" />
 
@@ -106,9 +105,9 @@
             android:text="x"
             android:textSize="16sp"
             android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:textColor="@color/black"
             android:layout_alignBaseline="@+id/work_editText_size"
-            android:layout_alignBottom="@+id/work_editText_size"
             android:layout_toRightOf="@+id/work_editText_size"
             android:layout_toEndOf="@+id/work_editText_size"/>
 
@@ -121,7 +120,6 @@
             android:inputType="numberSigned|numberDecimal"
             android:maxLength="7"
             android:layout_alignBaseline="@+id/work_text_multiplication"
-            android:layout_alignBottom="@+id/work_text_multiplication"
             android:layout_toRightOf="@+id/work_text_multiplication"
             android:layout_toEndOf="@+id/work_text_multiplication" />
 
@@ -132,9 +130,9 @@
             android:text="@string/work_coefficient"
             android:textSize="16sp"
             android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:textColor="@color/black"
             android:layout_alignBaseline="@+id/work_editText_coefficient"
-            android:layout_alignBottom="@+id/work_editText_coefficient"
             android:layout_toRightOf="@+id/work_editText_coefficient"
             android:layout_toEndOf="@+id/work_editText_coefficient"/>
 
