@@ -230,6 +230,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
                 ArrayList<WorkClass> temp = Project.get(w1);
                 if (temp != null) {
                     for (WorkClass work : temp) {
+                        double tmpsum = sum;
                         sum += work.size * work.price;
                         for (int i = 0; i < work.RealMaterials.size(); ++i)
                             if (work.RealMaterials.get(i) != null) {
@@ -247,7 +248,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
                             InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
                             sum += tool.price * work.Instruments.get(i).second;
                         }
-                        sum *= work.coefficient;
+                        sum = (sum - tmpsum) * work.coefficient + tmpsum;
                     }
                 }
                 t2.setText(String.format("%.2f", sum));
