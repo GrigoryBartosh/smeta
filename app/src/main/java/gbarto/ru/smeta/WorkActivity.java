@@ -151,8 +151,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
-        mEditSize.addTextChangedListener(txt_wtch);
-        mEditCoefficient.addTextChangedListener(txt_wtch);
         mImageNew.setOnClickListener(btn_ocl);
         mTextMaterial.setOnClickListener(list_ocl);
         mTextInstruments.setOnClickListener(list_ocl);
@@ -221,6 +219,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mLinearLayout.setLayoutParams(relativeParams);
             mLinearLayout.setPadding(0,20,0,0);
         }
+
+        mEditSize.addTextChangedListener(txt_wtch);
+        mEditCoefficient.addTextChangedListener(txt_wtch);
 
         int color = getResources().getColor(R.color.ic_menu);
         PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
@@ -304,7 +305,9 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            String s = mEditSize.getText().toString();
+            String s;
+
+            s = mEditSize.getText().toString();
             if (s.equals("") || s.equals("-") || s.equals("-.") || s.equals(".")) {
                 work.size = 0;
             } else {
