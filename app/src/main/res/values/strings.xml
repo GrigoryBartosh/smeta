@@ -118,7 +118,7 @@
     <string name="work_coefficient">(множитель)</string>
     <string name="work_list_material">Материалы</string>
     <string name="work_list_instruments">Инструменты</string>
-    <string name="work_list_hint_name">Наиминование</string>
+    <string name="work_list_hint_name">Наименование</string>
     <string name="work_list_hint_sum">Стоимость, руб</string>
     <string name="work_new_work">Новая работа</string>
     <string name="work_about_text">

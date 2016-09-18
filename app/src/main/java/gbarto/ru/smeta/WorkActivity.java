@@ -151,8 +151,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
-        //mEditSize.addTextChangedListener(txt_wtch);
-        //mEditCoefficient.addTextChangedListener(txt_wtch);
+        mEditSize.addTextChangedListener(txt_wtch);
+        mEditCoefficient.addTextChangedListener(txt_wtch);
         mImageNew.setOnClickListener(btn_ocl);
         mTextMaterial.setOnClickListener(list_ocl);
         mTextInstruments.setOnClickListener(list_ocl);
