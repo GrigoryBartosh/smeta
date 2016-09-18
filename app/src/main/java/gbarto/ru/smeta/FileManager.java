@@ -521,7 +521,7 @@ public class FileManager
                     InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
                     work_total += work.Instruments.get(i).second * tool.price;
                 }
-                ans += work_total;
+                ans += work_total * work.coefficient;
             }
         return ans;
     }
@@ -532,26 +532,7 @@ public class FileManager
         DBAdapter adapter = new DBAdapter(context);
         adapter.open();
         for (int room = 0; room < Project.works.size(); ++room)
-            for (Map.Entry<WorkTypeClass, ArrayList<WorkClass>> x : Project.works.get(room).second.entrySet())
-                for (int count_works = 0; count_works < x.getValue().size(); ++count_works)
-                {
-                    WorkClass work = x.getValue().get(count_works);
-                    ans += work.size * work.price * x.getKey().coeff;
-                    for (int i = 0; i < work.Materials.size(); ++i) {
-                        if (work.RealMaterials.get(i) == null)
-                            continue;
-                        MaterialClass material = work.RealMaterials.get(i);
-                        if (material.per_object < (1e-8))
-                            ans += work.size * work.Materials.get(i).second * material.price * x.getKey().coeff;
-                        else
-                            ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
-                    }
-
-                    for (int i = 0; i < work.Instruments.size(); ++i) {
-                        InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
-                        ans += work.Instruments.get(i).second * tool.price * x.getKey().coeff;
-                    }
-                }
+            ans += getPrice(Project, room);
         return ans;
     }
 
