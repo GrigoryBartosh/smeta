@@ -197,7 +197,7 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         if (work_type == 2) {
-            mEditName.setEnabled(false);
+            if (work.rowID != -1) mEditName.setEnabled(false);
             mSpinner.setEnabled(false);
             mSpinner.setVisibility(View.INVISIBLE);
             mSpinnerText.setText(measurements_work[work.measuring]);
@@ -452,7 +452,6 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     Boolean ok_name(){
-        if (work_type == 2) return true;
 
         String name = mEditName.getText().toString().replaceAll("[\\s]{2,}", " ");
         name = name.trim();
@@ -474,6 +473,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
                     Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (work_type == 2) return true;
 
         flag = true;
         for (int i = 0; i < used_name.size(); i++) {
@@ -589,6 +590,8 @@ public class WorkActivity extends AppCompatActivity implements AdapterView.OnIte
             mViewUnderlineMaterial.setBackgroundColor(getResources().getColor(R.color.empty));
             mViewUnderlineInstruments.setBackgroundColor(getResources().getColor(R.color.blue));
         }
+
+        mTextSum.setText(String.format("%.2f", work.getAmount()));
     }
 
     @Override
