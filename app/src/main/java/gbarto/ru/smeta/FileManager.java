@@ -223,7 +223,8 @@ public class FileManager
         ans.size = Float.valueOf(temp[6]);
         ans.name = new String(temp[7]);
         ans.rowID = Long.valueOf(temp[8]);
-        temp2 = nospaces(temp[9]).split(",");
+        ans.coefficient = Integer.valueOf(temp[9]);
+        temp2 = nospaces(temp[10]).split(",");
         for (int i = 0; i < temp2.length; ++i) {
             String[] lmao = temp2[i].split(";");
             if (lmao.length == 2)
@@ -504,21 +505,23 @@ public class FileManager
             for (int count_works = 0; count_works < x.getValue().size(); ++count_works)
             {
                 WorkClass work = x.getValue().get(count_works);
-                ans += work.size * work.price * work.coefficient;
+                double work_total = 0;
+                work_total += work.size * work.price;
                 for (int i = 0; i < work.Materials.size(); ++i) {
                     if (work.RealMaterials.get(i) == null)
                         continue;
                     MaterialClass material = work.RealMaterials.get(i);
                     if (material.per_object < (1e-8))
-                        ans += work.size * work.Materials.get(i).second * material.price * work.coefficient;
+                        work_total += work.size * work.Materials.get(i).second * material.price;
                     else
-                        ans += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price * x.getKey().coeff;
+                        work_total += Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object) * material.price;
                 }
 
                 for (int i = 0; i < work.Instruments.size(); ++i) {
                     InstrumentClass tool = (InstrumentClass) adapter.getRow(DBAdapter.INSTRUMENT_TABLE, work.Instruments.get(i).first);
-                    ans += work.Instruments.get(i).second * tool.price * work.coefficient;
+                    work_total += work.Instruments.get(i).second * tool.price;
                 }
+                ans += work_total;
             }
         return ans;
     }
