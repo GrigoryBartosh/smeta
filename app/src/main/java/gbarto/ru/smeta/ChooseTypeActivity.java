@@ -45,7 +45,7 @@ public class ChooseTypeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_type);
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.choose_works_toolbar);
         Project = (ProjectClass) getIntent().getSerializableExtra("Project");
-        setTitle(Project.works.get(Project.place).first.getVisible_name() + " : " + getString(R.string.work_types));
+        setTitle(Project.works.get(Project.place).first.getName() + " : " + getString(R.string.work_types));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.main_fab);
         fab.setOnClickListener(new View.OnClickListener()
