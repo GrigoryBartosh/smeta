@@ -110,8 +110,6 @@ public class EditNameActivity extends AppCompatActivity {
                 setTitle(getString(R.string.title_activity_edit_name));
                 Project = new ProjectClass();
                 Project.name = getString(R.string.sample_name);
-                projectname = Project.name;
-                lastProjectname = projectname;
                 mText.setText(Project.name);
                 setTitle(Project.name);
                 EditText view = (EditText)this.findViewById(R.id.Project_name_field);
