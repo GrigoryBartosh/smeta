@@ -681,7 +681,7 @@ public class FileManager
                                         double wasted = work.size * work.Materials.get(i).second * material.price;
                                         table.addCell(RightedText(String.format("%.2f", wasted)));
                                         work_total += wasted;
-                                        material_cost += wasted * x.getKey().coeff;
+                                        material_cost += wasted * work.coefficient;
                                     } else {
                                         int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
                                         table.addCell(CenteredText(Integer.toString(amount)));
@@ -689,7 +689,7 @@ public class FileManager
                                         double wasted = amount * material.price;
                                         table.addCell(RightedText(String.format("%.2f", wasted)));
                                         work_total += wasted;
-                                        material_cost += wasted * x.getKey().coeff;
+                                        material_cost += wasted * work.coefficient;
                                     }
                                 }
                                 else {
@@ -702,7 +702,7 @@ public class FileManager
                                         double wasted = work.size * work.Materials.get(i).second * material.price;
                                         table.addCell(RightedRed(String.format("%.2f", wasted)));
                                         work_total += wasted;
-                                        material_cost += wasted * x.getKey().coeff;
+                                        material_cost += wasted * work.coefficient;
                                     } else {
                                         int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
                                         table.addCell(CenteredRed(Integer.toString(amount)));
@@ -710,7 +710,7 @@ public class FileManager
                                         double wasted = amount * material.price;
                                         table.addCell(RightedRed(String.format("%.2f", wasted)));
                                         work_total += wasted;
-                                        material_cost += wasted * x.getKey().coeff;
+                                        material_cost += wasted * work.coefficient;
                                     }
                                 }
 
@@ -1064,7 +1064,7 @@ public class FileManager
                                     newCell(row, 4, material.price, Centered(simple));
                                     newCell(row, 5, worksize * work.Materials.get(i).second * material.price, Righted(simple));
                                     work_total += worksize * work.Materials.get(i).second * material.price;
-                                    material_total += worksize * work.Materials.get(i).second * material.price;
+                                    material_total += worksize * work.Materials.get(i).second * material.price * work.coefficient;
                                 } else {
                                     newCell(row, 2, context.getResources().getStringArray(R.array.measurements_material_short)[6], Centered(simple));
                                     int amount = (int) Math.ceil((double) work.size * work.Materials.get(i).second / material.per_object);
@@ -1072,7 +1072,7 @@ public class FileManager
                                     newCell(row, 4, material.price, Centered(simple));
                                     newCell(row, 5, amount * material.price, Righted(simple));
                                     work_total += amount * material.price;
-                                    material_total += amount * material.price;
+                                    material_total += amount * material.price * work.coefficient;
                                 }
                             }
                             row = sheet.createRow(rowcount++);
@@ -1097,7 +1097,7 @@ public class FileManager
                                 double wasted = work.Instruments.get(i).second * tool.price;
                                 newCell(row, 5, String.format("%.2f", wasted), Righted(simple));
                                 work_total += wasted;
-                                material_total += wasted * x.getKey().coeff;
+                                material_total += wasted * work.coefficient;
                             }
 
                             row = sheet.createRow(rowcount++);
@@ -1135,10 +1135,6 @@ public class FileManager
                 row = sheet.createRow(rowcount++);
                 newCell(row, 1, context.getString(R.string.pdf_room_cost), Lefted(simple));
                 newCell(row, 5, String.format("%.2f", room_sum), Righted(simple));
-
-                row = sheet.createRow(rowcount++);
-                newCell(row, 1, context.getString(R.string.pdf_room_cost), simple);
-                newCell(row, 5, room_sum, simple);
             }
             sheet.createRow(rowcount++);
             row = sheet.createRow(rowcount++);
