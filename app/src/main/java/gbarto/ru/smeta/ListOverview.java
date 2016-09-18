@@ -94,7 +94,9 @@ public class ListOverview extends AppCompatActivity
                             tmp3.add(y);
                     }
                 }
-                tmp3.add(new WorkClass(false, getString(R.string.unique_work), new ArrayList<Pair<Long, Float>>(), 0, 2, 0, 1));
+                WorkClass x = new WorkClass(false, getString(R.string.unique_work), new ArrayList<Pair<Long, Float>>(), 0, 2, 0, 1);
+                x.size = 1;
+                tmp3.add(x);
                 intent.putExtra("list", tmp3);
                 startActivityForResult(intent, SOSU_PENISI_ZA_2000_RUBLEY);
             }
